@@ -1,5 +1,6 @@
 package com.snail.iweibo.ui.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
@@ -52,6 +53,10 @@ public class MainActivity extends BaseAppCompatActivity<IMainActivityView> {
         int id = item.getItemId();
         switch (id){
             case R.id.main_frame:
+                break;
+            case R.id.oauth_frame:
+                Intent intent = new Intent(MainActivity.this, WBAuthActivity.class);
+                MainActivity.this.startActivity(intent);
                 break;
             default:
                 break;
