@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -52,6 +53,7 @@ public class IMainActivityView implements IBaseActivityView {
         }
         this.drawerToggle = new ActionBarDrawerToggle(activity, mDrawerLayout, R.string.tool_name, R.string.tool_name);
         drawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(drawerToggle);
     }
 
     public void onPostCreate() {
@@ -60,5 +62,9 @@ public class IMainActivityView implements IBaseActivityView {
 
     public void onConfigurationChanged(Configuration newConfig) {
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return drawerToggle.onOptionsItemSelected(item);
     }
 }
