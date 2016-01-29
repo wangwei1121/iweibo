@@ -1,10 +1,12 @@
 package com.snail.iweibo.mvp.view.impl;
+import android.content.res.Configuration;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -50,5 +52,19 @@ public class IMainActivityView implements IBaseActivityView {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         this.drawerToggle = new ActionBarDrawerToggle(activity, mDrawerLayout, R.string.tool_name, R.string.tool_name);
+        drawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.setDrawerListener(drawerToggle);
+    }
+
+    public void onPostCreate() {
+        drawerToggle.syncState();
+    }
+
+    public void onConfigurationChanged(Configuration newConfig) {
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return drawerToggle.onOptionsItemSelected(item);
     }
 }

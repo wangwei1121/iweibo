@@ -24,10 +24,18 @@
                 android:background="?attr/colorAccent"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 tools:ignore="PrivateResource"/>
+            
         </android.support.design.widget.AppBarLayout>
         <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="?attr/actionBarSize"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </android.support.design.widget.CoordinatorLayout>
-
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:headerLayout="@layout/navigation_header"
+        app:menu="@menu/navigation_menu"
+        android:layout_gravity="start" />
 </android.support.v4.widget.DrawerLayout>
