@@ -10,7 +10,7 @@
 
     <style name="AppTheme" parent="AppTheme.Base">
         <item name="colorPrimary">#000000</item>
-        <item name="colorPrimaryDark">#aaa</item>
-        <item name="colorAccent">#f4511e</item>
+        <item name="colorPrimaryDark">#f4511e</item>
+        <item name="colorAccent">#ffffffff</item>
     </style>
 </resources>

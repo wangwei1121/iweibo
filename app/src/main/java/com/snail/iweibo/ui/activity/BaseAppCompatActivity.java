@@ -2,13 +2,13 @@ package com.snail.iweibo.ui.activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.snail.iweibo.mvp.view.IBaseActivityView;
+import com.snail.iweibo.mvp.view.IBaseView;
 
 /**
  * BaseAppCompatActivity
  * Created by alexwan on 16/1/28.
  */
-public abstract class BaseAppCompatActivity<V extends IBaseActivityView> extends AppCompatActivity {
+public abstract class BaseAppCompatActivity<V extends IBaseView> extends AppCompatActivity {
     protected V view;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
