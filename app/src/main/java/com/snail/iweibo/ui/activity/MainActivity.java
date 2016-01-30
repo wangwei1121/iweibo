@@ -24,7 +24,6 @@ public class MainActivity extends BaseAppCompatActivity<IMainActivityView> {
     protected void onBindView() {
         super.onBindView();
         view.initViews(this);
-        transaction = getSupportFragmentManager().beginTransaction();
     }
 
     @Override

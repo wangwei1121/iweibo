@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.view.IBaseView;
@@ -31,7 +30,6 @@ public class IMainActivityView implements IBaseView {
     DrawerLayout mDrawerLayout;
     CoordinatorLayout mRootLayout;
     ActionBarDrawerToggle drawerToggle;
-    FrameLayout frameLayout;
     NavigationView navigationView;
     TabLayout tabLayout;
     @Override
@@ -40,7 +38,6 @@ public class IMainActivityView implements IBaseView {
         mToolbar = (Toolbar) mView.findViewById(R.id.tool_bar);
         mDrawerLayout = (DrawerLayout) mView.findViewById(R.id.drawer_layout);
         mRootLayout = (CoordinatorLayout) mView.findViewById(R.id.root_layout);
-        frameLayout = (FrameLayout) mView.findViewById(R.id.frame_layout);
         navigationView = (NavigationView) mView.findViewById(R.id.navigation);
         tabLayout = (TabLayout) mView.findViewById(R.id.tab_layout);
     }
@@ -71,6 +68,7 @@ public class IMainActivityView implements IBaseView {
         navigationView.setCheckedItem(R.id.main_frame);
         // fragment
         final HomeFragment homeFragment = new HomeFragment();
+        homeFragment.setTabLayout(tabLayout);
         final SettingFragment settingFragment = new SettingFragment();
         final FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout , homeFragment).commit();

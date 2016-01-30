@@ -11,20 +11,23 @@
         android:id="@+id/root_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <include
             layout="@layout/item_title_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-        <android.support.v4.widget.NestedScrollView
+
+        <FrameLayout
+            android:id="@+id/frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
-            <FrameLayout
-                android:id="@+id/frame_layout"
+            android:layout_height="match_parent">
+            <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="46dp"/>
-        </android.support.v4.widget.NestedScrollView>
+                android:fillViewport="true"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            </android.support.v4.widget.NestedScrollView>
+        </FrameLayout>
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView

@@ -1,5 +1,6 @@
 package com.snail.iweibo.ui.fragment;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,13 @@ public class HomeFragment extends BasePresenterFragment<IHomeFragmentView> {
 
     @Override
     protected void onBindView() {
+        view.initView(getActivity());
+        if(tabLayout != null){
+            view.setTabLayout(tabLayout);
+        }
         initData();
     }
+
 
     /**
      * initData
@@ -51,12 +57,18 @@ public class HomeFragment extends BasePresenterFragment<IHomeFragmentView> {
 
             }
         });
-
     }
-
 
     @Override
     protected Class<IHomeFragmentView> getViewClass() {
         return IHomeFragmentView.class;
+    }
+    private TabLayout tabLayout;
+    /**
+     *
+     * @param tabLayout
+     */
+    public void setTabLayout(TabLayout tabLayout) {
+        this.tabLayout = tabLayout;
     }
 }
