@@ -28,4 +28,9 @@ public class IHomeFragmentView implements IBaseView {
         return mView;
     }
 
+    /**
+     *
+     */
+    public void updateView(){
+    }
 }

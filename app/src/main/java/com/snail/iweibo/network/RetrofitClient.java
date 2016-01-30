@@ -1,6 +1,4 @@
 package com.snail.iweibo.network;
-import com.snail.iweibo.api.IStatuse;
-
 import okhttp3.OkHttpClient;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
@@ -11,19 +9,13 @@ import retrofit2.RxJavaCallAdapterFactory;
  * Created by alexwan on 16/1/30.
  */
 public class RetrofitClient {
-    private static OkHttpClient client;
-    private Retrofit retrofit;
+    private static Retrofit retrofit;
 
-    /**
-     * getStatuseService
-     * @return IStatuse
-     */
-    public static IStatuse getStatuseService() {
-        Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("https://api.weibo.com/")
+    public static Retrofit instance(String baseUrl) {
+        return new Retrofit.Builder()
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
             .client(new OkHttpClient.Builder().build()).build();
-        return retrofit.create(IStatuse.class);
     }
 }

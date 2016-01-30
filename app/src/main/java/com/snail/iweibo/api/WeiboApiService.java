@@ -8,7 +8,7 @@ import rx.Observable;
 /**
  * Created by alexwan on 16/1/30.
  */
-public interface IStatuse {
+public interface WeiboApiService {
     /**
      *
      * @param token 必选：采用OAuth授权方式为必填参数OAuth授权后获得。
@@ -20,4 +20,5 @@ public interface IStatuse {
     @GET("2/statuses/public_timeline.json")
     Observable<Statuses> getPublicTimeLine(@Query("access_token") String token, @Query("count") int count, @Query
         ("page") int page, @Query("base_app") int app);
+
 }

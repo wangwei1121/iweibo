@@ -3,15 +3,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.snail.iweibo.api.ApiServiceHelper;
 import com.snail.iweibo.mvp.model.Statuses;
 import com.snail.iweibo.mvp.view.impl.fragment.IHomeFragmentView;
-import com.snail.iweibo.network.RetrofitClient;
 
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * MessageFragment
@@ -38,29 +35,23 @@ public class HomeFragment extends BasePresenterFragment<IHomeFragmentView> {
      * initData
      */
     private void initData() {
-        RetrofitClient
-            .getStatuseService()
-            .getPublicTimeLine("SlAV32hkKG", 50, 1, 0)
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                new Subscriber<Statuses>() {
-                    @Override
-                    public void onCompleted() {
-                        Toast.makeText(getActivity(), "onCompleted : ", Toast.LENGTH_LONG).show();
-                    }
+        ApiServiceHelper.getPublicTimeLine("", 50, 1, 0).subscribe(new Subscriber<Statuses>() {
+            @Override
+            public void onCompleted() {
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toast.makeText(getActivity(), "error : " + e, Toast.LENGTH_LONG).show();
-                    }
+            }
 
-                    @Override
-                    public void onNext(Statuses statuses) {
-                        Toast.makeText(getActivity(), "statuses : " + statuses.toString(), Toast.LENGTH_LONG)
-                             .show();
-                    }
-                });
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Statuses statuses) {
+
+            }
+        });
+
     }
 
 
@@ -68,5 +59,4 @@ public class HomeFragment extends BasePresenterFragment<IHomeFragmentView> {
     protected Class<IHomeFragmentView> getViewClass() {
         return IHomeFragmentView.class;
     }
-    //
 }
