@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.snail.iweibo.api.ApiServiceHelper;
 import com.snail.iweibo.mvp.model.Statuses;
 import com.snail.iweibo.mvp.view.impl.fragment.IHomeFragmentView;
+import com.snail.iweibo.ui.base.BasePresenterFragment;
 
 import rx.Subscriber;
 
@@ -63,11 +64,8 @@ public class HomeFragment extends BasePresenterFragment<IHomeFragmentView> {
     protected Class<IHomeFragmentView> getViewClass() {
         return IHomeFragmentView.class;
     }
-    private TabLayout tabLayout;
-    /**
-     *
-     * @param tabLayout
-     */
+
+    @Override
     public void setTabLayout(TabLayout tabLayout) {
         this.tabLayout = tabLayout;
     }

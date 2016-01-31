@@ -21,5 +21,5 @@ public class ISettingFragmentView implements IBaseView {
     public View getView() {
         return mView;
     }
-    //
+
 }

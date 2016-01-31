@@ -32,6 +32,7 @@ public class IHomeFragmentView implements IBaseView {
         return mView;
     }
 
+
     /**
      * initView
      */

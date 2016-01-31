@@ -1,5 +1,6 @@
-package com.snail.iweibo.ui.fragment;
+package com.snail.iweibo.ui.base;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.snail.iweibo.mvp.view.IBaseView;
  */
 public abstract class BasePresenterFragment<V extends IBaseView> extends Fragment {
     protected V view;
+    protected TabLayout tabLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,5 +45,6 @@ public abstract class BasePresenterFragment<V extends IBaseView> extends Fragmen
 
     protected void onDestroyVU(){}
     protected void onBindView(){}
+    protected void setTabLayout(TabLayout tabLayout){};
     protected abstract Class<V> getViewClass();
 }

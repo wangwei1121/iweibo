@@ -1,10 +1,12 @@
 package com.snail.iweibo.ui.fragment;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.snail.iweibo.mvp.view.impl.fragment.ISettingFragmentView;
+import com.snail.iweibo.ui.base.BasePresenterFragment;
 
 /**
  * SettingFragment
@@ -35,5 +37,10 @@ public class SettingFragment extends BasePresenterFragment<ISettingFragmentView>
     protected Class<ISettingFragmentView> getViewClass() {
         return ISettingFragmentView.class;
     }
-    //
+
+    @Override
+    protected void setTabLayout(TabLayout tabLayout) {
+        this.tabLayout = tabLayout;
+    }
+
 }

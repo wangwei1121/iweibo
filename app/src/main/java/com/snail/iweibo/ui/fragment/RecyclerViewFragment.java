@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.snail.iweibo.mvp.view.impl.fragment.IRecyclerFragmentView;
+import com.snail.iweibo.ui.base.BasePresenterFragment;
 
 import java.util.ArrayList;
 import java.util.List;

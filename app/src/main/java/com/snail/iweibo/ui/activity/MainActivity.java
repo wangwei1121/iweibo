@@ -9,9 +9,10 @@ import android.view.MenuItem;
 
 import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.view.impl.activity.IMainActivityView;
+import com.snail.iweibo.ui.base.BasePresenterActivity;
 import com.snail.iweibo.ui.fragment.HomeFragment;
 
-public class MainActivity extends BaseAppCompatActivity<IMainActivityView> {
+public class MainActivity extends BasePresenterActivity<IMainActivityView> {
 
     private FragmentTransaction transaction;
     @Override

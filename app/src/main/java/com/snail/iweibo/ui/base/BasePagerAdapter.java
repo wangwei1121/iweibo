@@ -1,4 +1,4 @@
-package com.snail.iweibo.ui.adapter;
+package com.snail.iweibo.ui.base;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
