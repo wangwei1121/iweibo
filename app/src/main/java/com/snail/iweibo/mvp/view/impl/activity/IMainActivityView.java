@@ -1,6 +1,7 @@
 package com.snail.iweibo.mvp.view.impl.activity;
 import android.content.res.Configuration;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.design.widget.TabLayout;
@@ -20,26 +21,32 @@ import com.snail.iweibo.ui.activity.MainActivity;
 import com.snail.iweibo.ui.fragment.HomeFragment;
 import com.snail.iweibo.ui.fragment.SettingFragment;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * IMainActivityView
  * Created by alexwan on 16/1/28.
  */
 public class IMainActivityView implements IBaseView {
     private View mView;
+    @Bind(R.id.tool_bar)
     Toolbar mToolbar;
+    @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
+    @Bind(R.id.root_layout)
     CoordinatorLayout mRootLayout;
     ActionBarDrawerToggle drawerToggle;
+    @Bind(R.id.navigation)
     NavigationView navigationView;
+    @Bind(R.id.tab_layout)
     TabLayout tabLayout;
+    @Bind(R.id.fab_btn)
+    FloatingActionButton fabBtn;
     @Override
     public void init(LayoutInflater inflater, ViewGroup viewGroup) {
         mView = inflater.inflate(R.layout.activity_main, viewGroup, false);
-        mToolbar = (Toolbar) mView.findViewById(R.id.tool_bar);
-        mDrawerLayout = (DrawerLayout) mView.findViewById(R.id.drawer_layout);
-        mRootLayout = (CoordinatorLayout) mView.findViewById(R.id.root_layout);
-        navigationView = (NavigationView) mView.findViewById(R.id.navigation);
-        tabLayout = (TabLayout) mView.findViewById(R.id.tab_layout);
+        ButterKnife.bind(this, mView);
     }
 
     @Override

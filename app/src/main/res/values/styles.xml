@@ -11,6 +11,6 @@
     <style name="AppTheme" parent="AppTheme.Base">
         <item name="colorPrimary">#000000</item>
         <item name="colorPrimaryDark">#f4511e</item>
-        <item name="colorAccent">#ffffffff</item>
+        <item name="colorAccent">#E91E63</item>
     </style>
 </resources>

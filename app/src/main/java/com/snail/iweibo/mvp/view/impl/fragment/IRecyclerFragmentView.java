@@ -12,18 +12,22 @@ import com.snail.iweibo.ui.adapter.CardViewAdapter;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * IRecyclerFragmentView
  * Created by alexwan on 16/1/30.
  */
 public class IRecyclerFragmentView implements IBaseView {
     protected View view;
+    @Bind(R.id.recycler_layout)
     RecyclerView recyclerView;
     CardViewAdapter cardViewAdapter;
     @Override
     public void init(LayoutInflater inflater, ViewGroup viewGroup) {
         view = inflater.inflate(R.layout.frament_recycler , viewGroup , false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_layout);
+        ButterKnife.bind(this, view);
     }
 
     @Override
