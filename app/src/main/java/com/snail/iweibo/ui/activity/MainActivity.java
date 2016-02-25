@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.view.impl.activity.IMainActivityView;
 import com.snail.iweibo.ui.base.BasePresenterActivity;
-import com.snail.iweibo.ui.fragment.HomeFragment;
 
 public class MainActivity extends BasePresenterActivity<IMainActivityView> {
 
@@ -57,7 +56,7 @@ public class MainActivity extends BasePresenterActivity<IMainActivityView> {
         int id = item.getItemId();
         switch (id){
             case R.id.main_frame:
-                transaction.add(new HomeFragment() , "home_fragment");
+//                transaction.add(new HomeFragment() , "home_fragment");
                 break;
             case R.id.oauth_frame:
                 Intent intent = new Intent(MainActivity.this, WBAuthActivity.class);
