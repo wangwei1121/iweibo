@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.view.IBaseView;
 import com.snail.iweibo.ui.activity.MainActivity;
+import com.snail.iweibo.ui.base.BasePresenterActivity;
 import com.snail.iweibo.ui.fragment.HomeFragment;
 import com.snail.iweibo.ui.fragment.SettingFragment;
 
@@ -43,6 +45,7 @@ public class IMainActivityView implements IBaseView {
     TabLayout tabLayout;
     @Bind(R.id.fab_btn)
     FloatingActionButton fabBtn;
+    private Fragment lastFragment;
     @Override
     public void init(LayoutInflater inflater, ViewGroup viewGroup) {
         mView = inflater.inflate(R.layout.activity_main, viewGroup, false);
@@ -76,9 +79,11 @@ public class IMainActivityView implements IBaseView {
         // fragment
         final HomeFragment homeFragment = new HomeFragment();
         homeFragment.setTabLayout(tabLayout);
+        lastFragment = homeFragment;
         final SettingFragment settingFragment = new SettingFragment();
         final FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout , homeFragment).commit();
+
         // navigation
         navigationView.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
             @Override
@@ -86,19 +91,19 @@ public class IMainActivityView implements IBaseView {
                 int id = item.getItemId();
                 mDrawerLayout.closeDrawers();
                 navigationView.setCheckedItem(id);
-                FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                // Fragment 切换
                 switch (id) {
                     case R.id.main_frame:
                         tabLayout.setVisibility(View.VISIBLE);
-                        transaction.replace(R.id.frame_layout , homeFragment).commit();
+                        switchFragment(activity , lastFragment, homeFragment);
                         break;
                     case R.id.message_frame:
                         tabLayout.setVisibility(View.GONE);
-                        transaction.replace(R.id.frame_layout , settingFragment).commit();
+                        switchFragment(activity , lastFragment, settingFragment);
                         break;
                     case R.id.search_frame:
                         tabLayout.setVisibility(View.GONE);
-                        transaction.replace(R.id.frame_layout , settingFragment).commit();
+                        switchFragment(activity , lastFragment, settingFragment);
                         break;
                     default:
                         break;
@@ -118,5 +123,23 @@ public class IMainActivityView implements IBaseView {
 
     public boolean onOptionsItemSelected(MenuItem item) {
         return drawerToggle.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 切换Fragment
+     * @param activity activity
+     * @param from from
+     * @param to to
+     */
+    public void switchFragment(BasePresenterActivity activity , Fragment from , Fragment to){
+        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+        if (!to.isAdded()) {
+            // 隐藏当前的fragment，add下一个到Activity中
+            transaction.hide(from).add(R.id.frame_layout, to).commit();
+        } else {
+            // 隐藏当前的fragment，显示下一个
+            transaction.hide(from).show(to).commit();
+        }
+        lastFragment = to;
     }
 }

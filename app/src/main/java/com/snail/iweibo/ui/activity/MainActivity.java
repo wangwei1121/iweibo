@@ -3,7 +3,6 @@ package com.snail.iweibo.ui.activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,7 +12,6 @@ import com.snail.iweibo.ui.base.BasePresenterActivity;
 
 public class MainActivity extends BasePresenterActivity<IMainActivityView> {
 
-    private FragmentTransaction transaction;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         
