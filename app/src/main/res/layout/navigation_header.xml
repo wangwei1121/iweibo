@@ -8,7 +8,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#f4511e"
+        android:background="#0f8ae6"
         tools:ignore="ContentDescription"/>
 
     <ImageView

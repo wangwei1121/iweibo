@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 /**
  * Created by alexwan on 16/1/28.
  */
-public interface IBaseActivityView {
+public interface IBaseView {
     void init(LayoutInflater inflater , ViewGroup viewGroup);
     View getView();
 }
