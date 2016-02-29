@@ -58,6 +58,10 @@ public class MainActivity extends BaseAppCompatActivity<IMainActivityView> {
                 Intent intent = new Intent(MainActivity.this, WBAuthActivity.class);
                 MainActivity.this.startActivity(intent);
                 break;
+            case R.id.message_frame:
+                intent = new Intent(MainActivity.this, NewsActivity.class);
+                MainActivity.this.startActivity(intent);
+                break;
             default:
                 break;
         }

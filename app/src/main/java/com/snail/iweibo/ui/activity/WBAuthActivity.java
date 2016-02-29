@@ -1,9 +1,12 @@
 package com.snail.iweibo.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -144,12 +147,16 @@ public class WBAuthActivity extends AppCompatActivity implements View.OnClickLis
                 new java.util.Date(mAccessToken.getExpiresTime()));
         String format = getString(R.string.weibosdk_demo_token_to_string_format_1);
         mTokenText.setText(String.format(format, mAccessToken.getToken(), date));
-
         String message = String.format(format, mAccessToken.getToken(), date);
         if (hasExisted) {
             message = getString(R.string.weibosdk_demo_token_has_existed) + "\n" + message;
         }
         mTokenText.setText(message);
+
+        Log.d("com.snail.iweibo", mAccessToken.getToken());
+        SharedPreferences.Editor editor = getSharedPreferences(Constants.PROJECT_NAME, Activity.MODE_PRIVATE).edit();
+        editor.putString(Constants.SINA_TOKEN, mAccessToken.getToken());
+        editor.commit();
     }
 
 }

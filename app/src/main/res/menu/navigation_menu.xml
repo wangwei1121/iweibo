@@ -21,6 +21,6 @@
         <item
             android:id="@+id/oauth_frame"
             android:icon="@mipmap/ic_launcher"
-            android:title="好友"/>
+            android:title="认证"/>
     </group>
 </menu>
