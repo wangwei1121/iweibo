@@ -5,5 +5,4 @@ package com.snail.iweibo.util;
  */
 public class Configuration {
     public static final boolean DEBUG = true;
-    public static final String WEIBO_BASE_URL = "https://api.weibo.com/";
 }

@@ -2,6 +2,8 @@ package com.snail.iweibo.ui.activity;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,9 +14,18 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.SimpleAdapter;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.snail.iweibo.R;
+import com.snail.iweibo.api.ApiServiceHelper;
+import com.snail.iweibo.mvp.model.PublicNews;
+import com.snail.iweibo.mvp.model.Statuse;
 import com.snail.iweibo.oauth.Constants;
+import com.snail.iweibo.ui.adapter.PublicNewsAdapter;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +33,10 @@ import java.util.Map;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Action1;
+
 import android.widget.ListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
@@ -41,50 +56,58 @@ public class NewsActivity extends AppCompatActivity implements OnItemClickListen
 
         // 匹配布局文件中的ListView控件
         listView = (ListView) findViewById(R.id.listView);
-        // 数据适配器的定义
-        String[] data = new String[] { "java", "C++", "JavaScript", "Php","Python" };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(NewsActivity.this, android.R.layout.simple_list_item_1, data);
-        // 给ListView设置数据适配器
-        listView.setAdapter(adapter);
-        // 设置ListView的元素被选中时的事件处理监听器
-        listView.setOnItemClickListener(this);
 
-        new Thread(){
-            @Override
-            public void run(){
-                OkHttpClient okHttpClient = new OkHttpClient();
-                SharedPreferences sp = getSharedPreferences(Constants.PROJECT_NAME, Activity.MODE_PRIVATE);
-                Log.d("com.snail.iweibo",sp.getString(Constants.SINA_TOKEN,""));
-                Request request = new Request.Builder().url(Constants.PUBLIC_TIMELINE + "?access_token=" + sp.getString(Constants.SINA_TOKEN,"")).build();
-                try{
-                    Response response = okHttpClient.newCall(request).execute();
-                    Log.i("com.snail.iweibo","###################" + response.body().string());
-                    if(response.isSuccessful()){
-                        Log.i("com.snail.iweibo","###################" + response.body().string());
+        SharedPreferences sp = getSharedPreferences(Constants.PROJECT_NAME, Activity.MODE_PRIVATE);
+        Observable<PublicNews> observable =  ApiServiceHelper.getPublicTimeLine(sp.getString(Constants.SINA_TOKEN,""), 20, 1, 0);
+        observable.subscribe(
+                new Subscriber<PublicNews>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d("com.snail.iweibo","Completed");
                     }
-                }catch(IOException e){
-                    e.printStackTrace();
-                    Log.e("com.snail.iweibo",e.getMessage());
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        Log.e("com.snail.iweibo",e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(PublicNews publicNews) {
+                        SharedPreferences sp = getSharedPreferences(Constants.PROJECT_NAME, Activity.MODE_PRIVATE);
+                        Observable<PublicNews> observable =  ApiServiceHelper.getPublicTimeLine(sp.getString(Constants.SINA_TOKEN,""), 20, 1, 0);
+                        observable.subscribe(new Action1<PublicNews>() {
+                            @Override
+                            public void call(PublicNews publicNews) {
+                                List<Statuse> list = publicNews.getStatuses();
+                                if(null != list && list.size() > 0){
+                                    final List<String>  textList = new ArrayList<String>(list.size());
+                                    for(Statuse statuse:list){
+                                        textList.add(statuse.getText());
+                                    }
+
+                                    PublicNewsAdapter adapter = new PublicNewsAdapter(NewsActivity.this,list);
+                                    listView.setAdapter(adapter);
+                                    listView.setOnItemClickListener(NewsActivity.this);
+                                }
+                            }
+                        });
+                    }
                 }
-            }
-        }.start();
+        );
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_news, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -96,9 +119,7 @@ public class NewsActivity extends AppCompatActivity implements OnItemClickListen
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
         // TODO Auto-generated method stub
-        // 获取点击ListView item中的内容信息
         String text = listView.getItemAtPosition(position) + "";
-        // 弹出Toast信息显示点击位置和内容
         Toast.makeText(NewsActivity.this, "position=" + position + " content=" + text, Toast.LENGTH_SHORT).show();
     }
 

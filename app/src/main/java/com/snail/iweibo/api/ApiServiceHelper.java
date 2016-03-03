@@ -1,6 +1,7 @@
 package com.snail.iweibo.api;
-import com.snail.iweibo.mvp.model.Statuses;
+import com.snail.iweibo.mvp.model.PublicNews;
 import com.snail.iweibo.network.RetrofitClient;
+import com.snail.iweibo.oauth.Constants;
 import com.snail.iweibo.util.Configuration;
 
 import rx.Observable;
@@ -32,8 +33,8 @@ public class ApiServiceHelper {
      * @param page       返回结果的页码，默认为1。
      * @param app        是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。
      */
-    public static Observable<Statuses> getPublicTimeLine(String token, int count, int page, int app) {
-        return getWeiboService(Configuration.WEIBO_BASE_URL)
+    public static Observable<PublicNews> getPublicTimeLine(String token, int count, int page, int app) {
+        return getWeiboService(Constants.WEIBO_BASE_URL)
             .getPublicTimeLine(token, count, page, app)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread());

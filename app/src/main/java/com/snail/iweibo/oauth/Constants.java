@@ -13,7 +13,9 @@ public interface Constants {
             + "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
             + "follow_app_official_microblog," + "invitation_write";
 
+    String WEIBO_BASE_URL = "https://api.weibo.com/";
+
     //最新的公共微博
-    String PUBLIC_TIMELINE = "https://api.weibo.com/2/statuses/public_timeline.json";
+    String PUBLIC_TIMELINE = "2/statuses/public_timeline.json";
 
 }

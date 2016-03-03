@@ -1,5 +1,5 @@
 package com.snail.iweibo.api;
-import com.snail.iweibo.mvp.model.Statuses;
+import com.snail.iweibo.mvp.model.PublicNews;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -18,7 +18,7 @@ public interface WeiboApiService {
      * @return
      */
     @GET("2/statuses/public_timeline.json")
-    Observable<Statuses> getPublicTimeLine(@Query("access_token") String token, @Query("count") int count, @Query
+    Observable<PublicNews> getPublicTimeLine(@Query("access_token") String token, @Query("count") int count, @Query
         ("page") int page, @Query("base_app") int app);
 
 }

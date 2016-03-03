@@ -22,6 +22,7 @@ import com.sina.weibo.sdk.exception.WeiboException;
 import com.snail.iweibo.R;
 import com.snail.iweibo.oauth.AccessTokenKeeper;
 import com.snail.iweibo.oauth.Constants;
+import com.snail.iweibo.util.SharedPreferencesUtil;
 
 import java.text.SimpleDateFormat;
 
@@ -154,9 +155,8 @@ public class WBAuthActivity extends AppCompatActivity implements View.OnClickLis
         mTokenText.setText(message);
 
         Log.d("com.snail.iweibo", mAccessToken.getToken());
-        SharedPreferences.Editor editor = getSharedPreferences(Constants.PROJECT_NAME, Activity.MODE_PRIVATE).edit();
-        editor.putString(Constants.SINA_TOKEN, mAccessToken.getToken());
-        editor.commit();
+
+        SharedPreferencesUtil.saveData(this,Constants.SINA_TOKEN,mAccessToken.getToken());
     }
 
 }

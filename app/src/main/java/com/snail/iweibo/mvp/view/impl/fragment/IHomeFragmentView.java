@@ -20,9 +20,12 @@ import butterknife.ButterKnife;
  */
 public class IHomeFragmentView implements IBaseView {
     private View mView;
+
     @Bind(R.id.view_pager)
     ViewPager viewPager;
-    HomePagerAdapter homePagerAdapter;
+
+    private HomePagerAdapter homePagerAdapter;
+
     @Override
     public void init(LayoutInflater inflater, ViewGroup viewGroup) {
         mView = inflater.inflate(R.layout.fragment_home, viewGroup, false);
