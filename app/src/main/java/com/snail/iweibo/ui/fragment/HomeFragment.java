@@ -36,8 +36,7 @@ import rx.functions.Action1;
  * Created by alexwan on 16/1/30.
  */
 public class HomeFragment extends ListFragment {
-
-    private ListView listView;
+    private HomeAdapter adapter = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,12 +45,19 @@ public class HomeFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View v = inflater.inflate(R.layout.fragment_home, container, false);
+        initData();
+        return v;
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
     }
 
     private void initData() {
-        String token = SharedPreferencesUtil.getData(this.getActivity(), Constants.SINA_TOKEN);
-        if (TextUtils.isEmpty(token)) {
+        String token = SharedPreferencesUtil.getData(getContext(), Constants.SINA_TOKEN);
+        if(TextUtils.isEmpty(token)){
             return;
         }
         Observable<PublicNews> observable = ApiServiceHelper.getPublicTimeLine(token, 20, 1, 0);
@@ -72,25 +78,11 @@ public class HomeFragment extends ListFragment {
                     public void onNext(PublicNews publicNews) {
                         List<Statuse> list = publicNews.getStatuses();
                         if (null != list && list.size() > 0) {
-                            final List<String> textList = new ArrayList<String>(list.size());
-                            for (Statuse statuse : list) {
-                                textList.add(statuse.getText());
-                            }
-
-                            HomeAdapter adapter = new HomeAdapter(view, list);
-                            listView.setAdapter(adapter);
-                            listView.setOnItemClickListener(HomeFragment.this);
+                            adapter = new HomeAdapter(getActivity(), list);
+                            setListAdapter(adapter);
                         }
                     }
-
-                }
-        );
-    }
-
-    @Override
-    public void onDestroyView() {
-        this.view = null;
-        super.onDestroyView();
+                });
     }
 
 }

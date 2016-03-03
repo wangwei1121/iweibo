@@ -44,7 +44,7 @@ public class MainActivity extends BasePresenterActivity<IMainActivityView> {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.navigation_menu , menu);
+        getMenuInflater().inflate(R.menu.navigation_menu , menu);
         return super.onCreateOptionsMenu(menu);
     }
 //
@@ -55,22 +55,22 @@ public class MainActivity extends BasePresenterActivity<IMainActivityView> {
             Log.d("com.snail.iweibo","onOptionsItemSelected");
             return true;
         }
-//        int id = item.getItemId();
-//        switch (id){
-//            case R.id.main_frame:
-////                transaction.add(new HomeFragment() , "home_fragment");
-//                break;
-//            case R.id.oauth_frame:
-//                Intent intent = new Intent(MainActivity.this, WBAuthActivity.class);
-//                MainActivity.this.startActivity(intent);
-//                break;
-//            case R.id.message_frame:
-//                intent = new Intent(MainActivity.this, NewsActivity.class);
-//                MainActivity.this.startActivity(intent);
-//                break;
-//            default:
-//                break;
-//        }
+        int id = item.getItemId();
+        switch (id){
+            case R.id.main_frame:
+//                transaction.add(new HomeFragment() , "home_fragment");
+                break;
+            case R.id.oauth_frame:
+                Intent intent = new Intent(MainActivity.this, WBAuthActivity.class);
+                MainActivity.this.startActivity(intent);
+                break;
+            case R.id.message_frame:
+                intent = new Intent(MainActivity.this, NewsActivity.class);
+                MainActivity.this.startActivity(intent);
+                break;
+            default:
+                break;
+        }
         Log.d("com.snail.iweibo","onOptionsItemSelected  false");
         return super.onOptionsItemSelected(item);
     }
