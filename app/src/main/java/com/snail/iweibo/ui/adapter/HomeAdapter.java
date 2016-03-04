@@ -111,4 +111,12 @@ public class HomeAdapter extends BaseAdapter {
     public void addItem(Statuse statuse) {
         statuseList.add(statuse);
     }
+
+    public List<Statuse> getStatuseList() {
+        return statuseList;
+    }
+
+    public void setStatuseList(List<Statuse> statuseList) {
+        this.statuseList = statuseList;
+    }
 }

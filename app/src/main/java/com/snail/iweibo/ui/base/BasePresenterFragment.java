@@ -13,7 +13,7 @@ import com.snail.iweibo.mvp.view.IBaseView;
  * Created by alexwan on 16/1/30.
  */
 public abstract class BasePresenterFragment<V extends IBaseView> extends Fragment {
-    protected V view;
+    protected V mView;
     protected TabLayout tabLayout;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,9 +24,9 @@ public abstract class BasePresenterFragment<V extends IBaseView> extends Fragmen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = null;
         try {
-            this.view = getViewClass().newInstance();
-            this.view.init(inflater , container);
-            view = this.view.getView();
+            this.mView = getViewClass().newInstance();
+            this.mView.init(inflater , container);
+            view = this.mView.getView();
             onBindView();
         } catch (java.lang.InstantiationException e) {
             e.printStackTrace();
@@ -39,7 +39,7 @@ public abstract class BasePresenterFragment<V extends IBaseView> extends Fragmen
     @Override
     public void onDestroyView() {
         onDestroyVU();
-        this.view = null;
+        this.mView = null;
         super.onDestroyView();
     }
 

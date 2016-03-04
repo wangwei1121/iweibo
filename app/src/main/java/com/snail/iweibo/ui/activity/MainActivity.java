@@ -50,9 +50,7 @@ public class MainActivity extends BasePresenterActivity<IMainActivityView> {
 //
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d("com.snail.iweibo",item.getOrder() + "");
         if(view.onOptionsItemSelected(item)) {
-            Log.d("com.snail.iweibo","onOptionsItemSelected");
             return true;
         }
         int id = item.getItemId();

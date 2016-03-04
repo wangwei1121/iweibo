@@ -173,4 +173,6 @@
     <string name="weibosdk_demo_launch_mblog_detail">查看微博正文</string>
     <string name="weibosdk_demo_launch_qrcode">扫描二维码界面</string>
     <string name="title_activity_news">NewsActivity</string>
+
+    <string name="loading">正在加载...</string>
 </resources>

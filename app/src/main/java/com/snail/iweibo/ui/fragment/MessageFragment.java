@@ -30,9 +30,9 @@ public class MessageFragment extends BasePresenterFragment<IHomeFragmentView> {
 
     @Override
     protected void onBindView() {
-        view.initView(getActivity());
+        mView.initView(getActivity());
         if(tabLayout != null){
-            view.setTabLayout(tabLayout);
+            mView.setTabLayout(tabLayout);
         }
         initData();
     }

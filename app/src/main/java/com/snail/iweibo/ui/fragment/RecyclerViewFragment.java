@@ -41,7 +41,7 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
         for (int i = 0 ; i < 40 ; i ++){
             titles.add("第 "+ i +" 条微博");
         }
-        view.updateView(getActivity(), titles);
+        mView.updateView(getActivity(), titles);
     }
 
 

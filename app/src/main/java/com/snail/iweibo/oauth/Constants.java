@@ -18,4 +18,6 @@ public interface Constants {
     //最新的公共微博
     String PUBLIC_TIMELINE = "2/statuses/public_timeline.json";
 
+    //获取当前登录用户及其所关注用户的最新微博
+    String FRIENDS_TIMELINE = "2/statuses/friends_timeline.json";
 }

@@ -7,9 +7,9 @@ import java.util.List;
  */
 public class PublicNews {
     private List<Statuse> statuses;
-    private Integer previous_cursor;
+    private Long previous_cursor;
     private Long next_cursor;
-    private Integer total_number;
+    private Long total_number;
 
     public List<Statuse> getStatuses() {
         return statuses;
@@ -17,14 +17,6 @@ public class PublicNews {
 
     public void setStatuses(List<Statuse> statuses) {
         this.statuses = statuses;
-    }
-
-    public Integer getPrevious_cursor() {
-        return previous_cursor;
-    }
-
-    public void setPrevious_cursor(Integer previous_cursor) {
-        this.previous_cursor = previous_cursor;
     }
 
     public Long getNext_cursor() {
@@ -35,11 +27,19 @@ public class PublicNews {
         this.next_cursor = next_cursor;
     }
 
-    public Integer getTotal_number() {
+    public Long getPrevious_cursor() {
+        return previous_cursor;
+    }
+
+    public void setPrevious_cursor(Long previous_cursor) {
+        this.previous_cursor = previous_cursor;
+    }
+
+    public Long getTotal_number() {
         return total_number;
     }
 
-    public void setTotal_number(Integer total_number) {
+    public void setTotal_number(Long total_number) {
         this.total_number = total_number;
     }
 }
