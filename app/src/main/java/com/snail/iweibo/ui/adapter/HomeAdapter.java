@@ -14,6 +14,7 @@ import com.snail.iweibo.mvp.model.Statuse;
 import com.snail.iweibo.util.DateUtil;
 import com.snail.iweibo.util.PicassoHelper;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -73,7 +74,19 @@ public class HomeAdapter extends BaseAdapter {
         tv_repost.setText(statuse.getReposts_count() + "");
         tv_comment.setText(statuse.getComments_count() + "");
 
-        tv_time.setText(DateUtil.parse(statuse.getCreated_at()));
+        Date createDate = DateUtil.formatUS(statuse.getCreated_at());
+        if(null != createDate){
+            int diff = DateUtil.secondDiff(new Date(),createDate);
+            if(diff < 60){
+                tv_time.setText(diff + "秒前");
+            }else if(diff < 60 * 60){
+                tv_time.setText(diff / 60 + "分钟前");
+            }else if(diff < 12 * 60 * 60){
+                tv_time.setText(diff / 3600 + "小时前");
+            }else{
+                tv_time.setText(DateUtil.parseUS(statuse.getCreated_at(),"yy-MM-dd HH:mm:ss"));
+            }
+        }
 
         PicassoHelper.loadImage(context,statuse.getUser().getProfile_image_url(),iv_userhead);
 

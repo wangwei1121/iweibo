@@ -18,6 +18,7 @@ import com.snail.iweibo.mvp.model.Statuse;
 import com.snail.iweibo.oauth.Constants;
 import com.snail.iweibo.ui.adapter.HomeAdapter;
 import com.snail.iweibo.ui.base.RefreshLayout;
+import com.snail.iweibo.ui.base.RefreshListView;
 import com.snail.iweibo.util.SharedPreferencesUtil;
 
 import java.util.List;
@@ -39,25 +40,16 @@ public class HomeFragment extends ListFragment{
 
     private Handler mHandler = null;
 
-    private int count = 20;
+    @Bind(R.id.list_home)
+    RefreshListView listView;
+
+    private int count = 5;
 
     private int page = 1;
-
-    @Bind(R.id.swipe_layout_home)
-    RefreshLayout mSwipeLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mHandler = new Handler() {
-            public void handleMessage(android.os.Message msg) {
-                switch (msg.what) {
-                    case REFRESH_COMPLETE:
-                        mSwipeLayout.setRefreshing(false);
-                        break;
-                }
-            }
-        };
     }
 
     @Override
@@ -65,29 +57,21 @@ public class HomeFragment extends ListFragment{
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, v);
 
-        mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
-                android.R.color.holo_orange_light, android.R.color.holo_red_light);
-        mSwipeLayout.setSize(SwipeRefreshLayout.LARGE);
-        mSwipeLayout.setProgressViewEndTarget(true, 100);
-        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        listView.setIRefreshListener(new RefreshListView.IRefreshListener() {
             @Override
-            public void onRefresh() {
-                Log.d("com.snail.iweibo", "mSwipeLayout refresh");
+            public void onReflash() {
                 page = 1;
-                initData(page);
+                initData(1);
             }
-
         });
-
-        // 加载监听器
-        mSwipeLayout.setOnLoadListener(new RefreshLayout.OnLoadListener() {
+        listView.setILoadListener(new RefreshListView.ILoadListener(){
             @Override
             public void onLoad() {
                 page++;
-                Log.d("com.snail.iweibo", "mSwipeLayout load more " + page);
                 initData(page);
             }
         });
+
         initData(1);
         return v;
     }
@@ -99,36 +83,40 @@ public class HomeFragment extends ListFragment{
 
     private void initData(int page) {
         String token = SharedPreferencesUtil.getData(getContext(), Constants.SINA_TOKEN);
-        Log.d("com.snail.iweibo", "token-->" + token);
+        Log.e("com.snail.iweibo", "token-->" + token);
         if (TextUtils.isEmpty(token)) {
             return;
         }
-        Observable<PublicNews> observable = ApiServiceHelper.getFriendsTimeline(token,null,null,20,page,null,null,null);
+        if(page > 1){
+            try{
+                Thread.sleep(3 * 1000);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+        Log.e("com.snail.iweibo", "page-->" + page);
+        Observable<PublicNews> observable = ApiServiceHelper.getFriendsTimeline(token,null,null,count,page,null,null,null);
         observable.subscribe(
                 new Subscriber<PublicNews>() {
                     @Override
                     public void onCompleted() {
-                        Log.d("com.snail.iweibo", "Completed");
-                        mHandler.sendEmptyMessage(REFRESH_COMPLETE);
-                        mSwipeLayout.setLoading(false);
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
                         Log.e("com.snail.iweibo", e.getMessage());
-                        mSwipeLayout.setRefreshing(false);
-                        mSwipeLayout.setLoading(false);
-
                     }
 
                     @Override
                     public void onNext(PublicNews publicNews) {
-                        Log.d("com.snail.iweibo", "size-->" + publicNews.getStatuses().size());
+                        Log.e("com.snail.iweibo", "size-->" + publicNews.getStatuses().size());
                         if (null != publicNews && null != publicNews.getStatuses() && publicNews.getStatuses().size() > 0) {
                             if(null == adapter){
                                 adapter = new HomeAdapter(getActivity(),publicNews.getStatuses());
-                                setListAdapter(adapter);
+                                listView.setAdapter(adapter);
                             }else{
                                 List<Statuse> list = adapter.getStatuseList();
                                 for(Statuse statuse:publicNews.getStatuses()){
@@ -136,6 +124,9 @@ public class HomeFragment extends ListFragment{
                                 }
                                 adapter.notifyDataSetChanged();
                             }
+                            listView.reflashComplete();
+                            //通知listview加载完毕
+                            listView.loadComplete();
                         }
                     }
                 });

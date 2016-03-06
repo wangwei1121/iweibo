@@ -13,11 +13,11 @@ import java.util.Locale;
  */
 public class DateUtil {
 
-    public static String parse(String dateStr){
-        return parse(dateStr, "yyyy-MM-dd HH:mm:ss");
+    public static String parseUS(String dateStr){
+        return parseUS(dateStr, "yyyy-MM-dd HH:mm:ss");
     }
 
-    public static String parse(String dateStr,String parttern){
+    public static String parseUS(String dateStr,String parttern){
         if(TextUtils.isEmpty(dateStr)){
             return "";
         }
@@ -33,12 +33,33 @@ public class DateUtil {
 
     }
 
-    public static long hourDiff(Date date1,Date date2){
+    public static Date formatUS(String dateStr){
+        if(TextUtils.isEmpty(dateStr)){
+            return null;
+        }
+        try{
+            DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy", Locale.US);
+            return  formatter.parse(dateStr);
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Integer hourDiff(Date date1,Date date2){
         if(null == date1 || null == date2){
-            return Long.MAX_VALUE;
+            return null;
         }
         long diff = (date1.getTime() - date2.getTime()) / (1000 * 60 * 60);
-        return diff;
+        return (int)diff;
+    }
+
+    public static Integer secondDiff(Date date1,Date date2){
+        if(null == date1 || null == date2){
+            return null;
+        }
+        long diff = (date1.getTime() - date2.getTime()) / 1000;
+        return (int)diff;
     }
 
 }

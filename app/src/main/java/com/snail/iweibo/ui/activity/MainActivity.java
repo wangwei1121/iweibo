@@ -69,7 +69,6 @@ public class MainActivity extends BasePresenterActivity<IMainActivityView> {
             default:
                 break;
         }
-        Log.d("com.snail.iweibo","onOptionsItemSelected  false");
         return super.onOptionsItemSelected(item);
     }
 

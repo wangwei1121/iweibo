@@ -74,7 +74,7 @@ public class PublicNewsAdapter extends BaseAdapter {
         tv_repost.setText(statuse.getReposts_count() + "");
         tv_comment.setText(statuse.getComments_count() + "");
 
-        tv_time.setText(DateUtil.parse(statuse.getCreated_at()));
+        tv_time.setText(DateUtil.parseUS(statuse.getCreated_at()));
 
         PicassoHelper.loadImage(context,statuse.getUser().getProfile_image_url(),iv_userhead);
 
