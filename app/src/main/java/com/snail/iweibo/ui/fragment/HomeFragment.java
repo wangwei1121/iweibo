@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.snail.iweibo.R;
 import com.snail.iweibo.api.ApiServiceHelper;
@@ -40,40 +42,69 @@ public class HomeFragment extends ListFragment{
 
     private Handler mHandler = null;
 
-    @Bind(R.id.list_home)
-    RefreshListView listView;
+    private ListView listView;
 
-    private int count = 5;
+    private int count = 2;
 
     private int page = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("com.snail.iweibo","onCreate");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.e("com.snail.iweibo", "onCreateView");
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, v);
-
-        listView.setIRefreshListener(new RefreshListView.IRefreshListener() {
-            @Override
-            public void onReflash() {
-                page = 1;
-                initData(1);
-            }
-        });
-        listView.setILoadListener(new RefreshListView.ILoadListener(){
-            @Override
-            public void onLoad() {
-                page++;
-                initData(page);
-            }
-        });
-
-        initData(1);
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        Log.e("com.snail.iweibo", "onActivityCreated");
+        super.onActivityCreated(savedInstanceState);
+
+        listView = getListView();
+
+        View header = getLayoutInflater(savedInstanceState).inflate(R.layout.header_layout, null);
+        listView.addHeaderView(header);
+        Log.e("com.snail.iweibo", "headerHeight-->" + header.getMeasuredHeight());
+
+        View footer = getLayoutInflater(savedInstanceState).inflate(R.layout.footer_layout, null);
+        listView.setVisibility(View.VISIBLE);
+        listView.findViewById(R.id.load_layout).setVisibility(View.VISIBLE);
+        listView.addFooterView(header);
+        Log.e("com.snail.iweibo", "footerHeight-->" + footer.getMeasuredHeight());
+
+        String[] items = new String[14];
+        for(int i=0;i<14;i++){
+            items[i] = "---" + i + "----";
+        }
+        setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, items));
+
+        footer = getLayoutInflater(savedInstanceState).inflate(R.layout.footer_layout, null);
+        listView.setVisibility(View.VISIBLE);
+        listView.findViewById(R.id.load_layout).setVisibility(View.VISIBLE);
+        listView.addFooterView(header);
+
+        //initData(1);
+//        listView.setIRefreshListener(new RefreshListView.IRefreshListener() {
+//            @Override
+//            public void onReflash() {
+//                page = 1;
+//                initData(1);
+//            }
+//        });
+//        listView.setILoadListener(new RefreshListView.ILoadListener() {
+//            @Override
+//            public void onLoad() {
+//                page++;
+//                initData(page);
+//            }
+//        });
     }
 
     @Override
@@ -124,9 +155,9 @@ public class HomeFragment extends ListFragment{
                                 }
                                 adapter.notifyDataSetChanged();
                             }
-                            listView.reflashComplete();
+                            //listView.reflashComplete();
                             //通知listview加载完毕
-                            listView.loadComplete();
+                            //listView.loadComplete();
                         }
                     }
                 });

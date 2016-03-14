@@ -15,6 +15,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ import com.snail.iweibo.R;
 /**
  * Created by wang.weib on 2016/3/4.
  */
-public class RefreshListView extends ListView implements OnScrollListener {
+public class RefreshListView extends ListView {
     private View header;// 顶部布局文件；
     private int headerHeight;// 顶部布局文件的高度；
     private int firstVisibleItem;// 当前第一个可见的item的位置；
@@ -54,19 +55,16 @@ public class RefreshListView extends ListView implements OnScrollListener {
 
     public RefreshListView(Context context) {
         super(context);
-        // TODO Auto-generated constructor stub
         initView(context);
     }
 
     public RefreshListView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        // TODO Auto-generated constructor stub
         initView(context);
     }
 
     public RefreshListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        // TODO Auto-generated constructor stub
         initView(context);
     }
 
@@ -77,25 +75,7 @@ public class RefreshListView extends ListView implements OnScrollListener {
      */
     private void initView(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        header = inflater.inflate(R.layout.header_layout, null);
-        //measureView(header);
-        header.setVisibility(View.VISIBLE);
-        headerHeight = header.getMeasuredHeight();
-        Log.e("com.snail.iweibo","headerHeight-->" + headerHeight);
-       //topPadding(-headerHeight);
-        //header.findViewById(R.id.refresh_layout).setVisibility(View.VISIBLE);
-        this.addHeaderView(header);
-
-        footer = inflater.inflate(R.layout.footer_layout, null);
-        footer.setVisibility(View.VISIBLE);
-        footer.findViewById(R.id.load_layout).setVisibility(View.VISIBLE);
-        footerHeight = footer.getMeasuredHeight();
-        Log.e("com.snail.iweibo","footerHeight-->" + footerHeight);
-        this.addFooterView(footer);
-
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-
-        this.setOnScrollListener(this);
     }
 
     /**
@@ -121,154 +101,130 @@ public class RefreshListView extends ListView implements OnScrollListener {
         view.measure(width, height);
     }
 
-    /**
-     * 设置header 布局 上边距；
-     *
-     * @param topPadding
-     */
-    private void topPadding(int topPadding) {
-        header.setPadding(header.getPaddingLeft(), topPadding,
-                header.getPaddingRight(), header.getPaddingBottom());
-        header.invalidate();
-    }
-
-    @Override
-    public void onScroll(AbsListView view, int firstVisibleItem,
-                         int visibleItemCount, int totalItemCount) {
-        // TODO Auto-generated method stub
-//        this.firstVisibleItem = firstVisibleItem;
+//    /**
+//     * 设置header 布局 上边距；
+//     *
+//     * @param topPadding
+//     */
+//    private void topPadding(int topPadding) {
+//        header.setPadding(header.getPaddingLeft(), topPadding,
+//                header.getPaddingRight(), header.getPaddingBottom());
+//        header.invalidate();
+//    }
 //
-//        this.lastVisibleItem = firstVisibleItem + visibleItemCount;
-//        this.totalItemCount = totalItemCount;
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
-        // TODO Auto-generated method stub
-//        this.scrollState = scrollState;
 //
-//        if (totalItemCount == lastVisibleItem && scrollState == SCROLL_STATE_IDLE) {
-//            if (!isLoading) {
-//                isLoading = true;
-//                footer.findViewById(R.id.load_layout).setVisibility(View.VISIBLE);
-//                // 加载更多
-//                iLoadListener.onLoad();
-//            }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        if(1 == 1){
+//            return super.onTouchEvent(event);
 //        }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if(1 == 1){
-            return super.onTouchEvent(event);
-        }
-        // TODO Auto-generated method stub
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if (firstVisibleItem == 0) {
-                    isRemark = true;
-                    startY = (int) event.getRawY();
-                }
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if (!isRemark) {
-                    break;
-                }
-                mLastY = (int) event.getRawY();
-                int space = mLastY - startY;
-                int topPadding = space - headerHeight;
-                switch (state) {
-                    case NONE:
-                        if (space > 0) {
-                            state = PULL;
-                            reflashViewByState();
-                        }
-                        break;
-                    case PULL:
-                        topPadding(topPadding);
-                        if (space > headerHeight + 30 && scrollState == SCROLL_STATE_TOUCH_SCROLL) {
-                            state = RELESE;
-                            reflashViewByState();
-                        }
-                        break;
-                    case RELESE:
-                        topPadding(topPadding);
-                        if (space < headerHeight + 30) {
-                            state = PULL;
-                            reflashViewByState();
-                        } else if (space <= 0) {
-                            state = NONE;
-                            isRemark = false;
-                            reflashViewByState();
-                        }
-                        break;
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                if (state == RELESE) {
-                    state = REFLASHING;
-                    // 加载最新数据；
-                    reflashViewByState();
-                    iRefreshListener.onReflash();
-                } else if (state == PULL) {
-                    state = NONE;
-                    isRemark = false;
-                    reflashViewByState();
-                }
-                Log.e("com.snail.iweibo", "startY-->" + startY);
-                Log.e("com.snail.iweibo", "mLastY-->" + mLastY);
-                Log.e("com.snail.iweibo", "space-->" + (mLastY - startY));
-                break;
-        }
-        return super.onTouchEvent(event);
-    }
-
-
-    /**
-     * 根据当前状态，改变界面显示；
-     */
-    private void reflashViewByState() {
-        TextView tip = (TextView) header.findViewById(R.id.tip);
-        ImageView arrow = (ImageView) header.findViewById(R.id.arrow);
-        ProgressBar progress = (ProgressBar) header.findViewById(R.id.list_view_header_progress);
-        RotateAnimation anim = new RotateAnimation(0, 180,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
-        anim.setDuration(500);
-        anim.setFillAfter(true);
-        RotateAnimation anim1 = new RotateAnimation(180, 0,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
-        anim1.setDuration(500);
-        anim1.setFillAfter(true);
-        switch (state) {
-            case NONE:
-                arrow.clearAnimation();
-                topPadding(-headerHeight);
-                break;
-            case PULL:
-                arrow.setVisibility(View.VISIBLE);
-                progress.setVisibility(View.GONE);
-                tip.setText("下拉可以刷新！");
-                arrow.clearAnimation();
-                arrow.setAnimation(anim1);
-                break;
-            case RELESE:
-                arrow.setVisibility(View.VISIBLE);
-                progress.setVisibility(View.GONE);
-                tip.setText("松开可以刷新！");
-                arrow.clearAnimation();
-                arrow.setAnimation(anim);
-                break;
-            case REFLASHING:
-                topPadding(50);
-                arrow.setVisibility(View.GONE);
-                progress.setVisibility(View.VISIBLE);
-                tip.setText("正在刷新...");
-                arrow.clearAnimation();
-                break;
-        }
-    }
+//        // TODO Auto-generated method stub
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                if (firstVisibleItem == 0) {
+//                    isRemark = true;
+//                    startY = (int) event.getRawY();
+//                }
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                if (!isRemark) {
+//                    break;
+//                }
+//                mLastY = (int) event.getRawY();
+//                int space = mLastY - startY;
+//                int topPadding = space - headerHeight;
+//                switch (state) {
+//                    case NONE:
+//                        if (space > 0) {
+//                            state = PULL;
+//                            reflashViewByState();
+//                        }
+//                        break;
+//                    case PULL:
+//                        topPadding(topPadding);
+//                        if (space > headerHeight + 30 && scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+//                            state = RELESE;
+//                            reflashViewByState();
+//                        }
+//                        break;
+//                    case RELESE:
+//                        topPadding(topPadding);
+//                        if (space < headerHeight + 30) {
+//                            state = PULL;
+//                            reflashViewByState();
+//                        } else if (space <= 0) {
+//                            state = NONE;
+//                            isRemark = false;
+//                            reflashViewByState();
+//                        }
+//                        break;
+//                }
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                if (state == RELESE) {
+//                    state = REFLASHING;
+//                    // 加载最新数据；
+//                    reflashViewByState();
+//                    iRefreshListener.onReflash();
+//                } else if (state == PULL) {
+//                    state = NONE;
+//                    isRemark = false;
+//                    reflashViewByState();
+//                }
+//                Log.e("com.snail.iweibo", "startY-->" + startY);
+//                Log.e("com.snail.iweibo", "mLastY-->" + mLastY);
+//                Log.e("com.snail.iweibo", "space-->" + (mLastY - startY));
+//                break;
+//        }
+//        return super.onTouchEvent(event);
+//    }
+//
+//
+//    /**
+//     * 根据当前状态，改变界面显示；
+//     */
+//    private void reflashViewByState() {
+//        TextView tip = (TextView) header.findViewById(R.id.tip);
+//        ImageView arrow = (ImageView) header.findViewById(R.id.arrow);
+//        ProgressBar progress = (ProgressBar) header.findViewById(R.id.list_view_header_progress);
+//        RotateAnimation anim = new RotateAnimation(0, 180,
+//                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+//                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+//        anim.setDuration(500);
+//        anim.setFillAfter(true);
+//        RotateAnimation anim1 = new RotateAnimation(180, 0,
+//                RotateAnimation.RELATIVE_TO_SELF, 0.5f,
+//                RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+//        anim1.setDuration(500);
+//        anim1.setFillAfter(true);
+//        switch (state) {
+//            case NONE:
+//                arrow.clearAnimation();
+//                topPadding(-headerHeight);
+//                break;
+//            case PULL:
+//                arrow.setVisibility(View.VISIBLE);
+//                progress.setVisibility(View.GONE);
+//                tip.setText("下拉可以刷新！");
+//                arrow.clearAnimation();
+//                arrow.setAnimation(anim1);
+//                break;
+//            case RELESE:
+//                arrow.setVisibility(View.VISIBLE);
+//                progress.setVisibility(View.GONE);
+//                tip.setText("松开可以刷新！");
+//                arrow.clearAnimation();
+//                arrow.setAnimation(anim);
+//                break;
+//            case REFLASHING:
+//                topPadding(50);
+//                arrow.setVisibility(View.GONE);
+//                progress.setVisibility(View.VISIBLE);
+//                tip.setText("正在刷新...");
+//                arrow.clearAnimation();
+//                break;
+//        }
+//    }
 
     /**
      * 获取完数据；
@@ -276,7 +232,7 @@ public class RefreshListView extends ListView implements OnScrollListener {
     public void reflashComplete() {
         state = NONE;
         isRemark = false;
-        reflashViewByState();
+//        reflashViewByState();
         TextView lastupdatetime = (TextView) header.findViewById(R.id.lastupdate_time);
         SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
         Date date = new Date(System.currentTimeMillis());
@@ -302,7 +258,7 @@ public class RefreshListView extends ListView implements OnScrollListener {
      */
     public void loadComplete(){
         isLoading = false;
-        footer.findViewById(R.id.load_layout).setVisibility(View.GONE);
+//        footer.findViewById(R.id.load_layout).setVisibility(View.GONE);
     }
 
     public void setILoadListener(ILoadListener iLoadListener){

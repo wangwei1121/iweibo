@@ -54,9 +54,6 @@ public class IMainActivityView implements IBaseView {
     @Bind(R.id.navigation)
     NavigationView navigationView;
 
-    @Bind(R.id.fab_btn)
-    FloatingActionButton fabBtn;
-
     private Fragment lastFragment;
 
     private Map<Integer,Fragment> fragmentMap = null;
