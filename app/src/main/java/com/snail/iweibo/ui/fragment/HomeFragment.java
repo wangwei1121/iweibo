@@ -70,25 +70,24 @@ public class HomeFragment extends ListFragment{
         listView = getListView();
 
         View header = getLayoutInflater(savedInstanceState).inflate(R.layout.header_layout, null);
+        header.setVisibility(View.VISIBLE);
         listView.addHeaderView(header);
         Log.e("com.snail.iweibo", "headerHeight-->" + header.getMeasuredHeight());
 
         View footer = getLayoutInflater(savedInstanceState).inflate(R.layout.footer_layout, null);
-        listView.setVisibility(View.VISIBLE);
-        listView.findViewById(R.id.load_layout).setVisibility(View.VISIBLE);
-        listView.addFooterView(header);
+        footer.setVisibility(View.VISIBLE);
+        listView.addFooterView(footer);
         Log.e("com.snail.iweibo", "footerHeight-->" + footer.getMeasuredHeight());
 
-        String[] items = new String[14];
-        for(int i=0;i<14;i++){
-            items[i] = "---" + i + "----";
+        String[] items = new String[24];
+        for(int i=0;i<items.length;i++){
+            items[i] = "---" + (i+1) + "----";
+        }
+        for(int i=0;i<items.length;i++){
+            Log.e("com.snail.iweibo",items[i]);
         }
         setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, items));
 
-        footer = getLayoutInflater(savedInstanceState).inflate(R.layout.footer_layout, null);
-        listView.setVisibility(View.VISIBLE);
-        listView.findViewById(R.id.load_layout).setVisibility(View.VISIBLE);
-        listView.addFooterView(header);
 
         //initData(1);
 //        listView.setIRefreshListener(new RefreshListView.IRefreshListener() {
