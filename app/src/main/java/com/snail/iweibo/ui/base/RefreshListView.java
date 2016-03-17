@@ -76,6 +76,16 @@ public class RefreshListView extends ListView {
     private void initView(Context context) {
         LayoutInflater inflater = LayoutInflater.from(context);
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
+
+        Log.e("com.snail.iweibo", "initView-->");
+
+        View header = inflater.inflate(R.layout.header_layout, null);
+        header.setVisibility(View.VISIBLE);
+        this.addHeaderView(header);
+
+        View footer = inflater.inflate(R.layout.footer_layout, null);
+        footer.setVisibility(View.VISIBLE);
+        this.addFooterView(footer);
     }
 
     /**

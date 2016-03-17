@@ -42,16 +42,16 @@ public class HomeFragment extends ListFragment{
 
     private Handler mHandler = null;
 
-    private ListView listView;
+    private RefreshListView listView;
 
-    private int count = 2;
+    private int count = 20;
 
     private int page = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("com.snail.iweibo","onCreate");
+        Log.e("com.snail.iweibo", "onCreate");
     }
 
     @Override
@@ -64,52 +64,28 @@ public class HomeFragment extends ListFragment{
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        Log.e("com.snail.iweibo", "onActivityCreated");
         super.onActivityCreated(savedInstanceState);
 
-        listView = getListView();
+        Log.e("com.snail.iweibo", "onActivityCreated");
 
-        View header = getLayoutInflater(savedInstanceState).inflate(R.layout.header_layout, null);
-        header.setVisibility(View.VISIBLE);
-        listView.addHeaderView(header);
-        Log.e("com.snail.iweibo", "headerHeight-->" + header.getMeasuredHeight());
+        listView = (RefreshListView)getListView();
 
-        View footer = getLayoutInflater(savedInstanceState).inflate(R.layout.footer_layout, null);
-        footer.setVisibility(View.VISIBLE);
-        listView.addFooterView(footer);
-        Log.e("com.snail.iweibo", "footerHeight-->" + footer.getMeasuredHeight());
+       // View header =  getLayoutInflater(savedInstanceState).inflate(R.layout.header_layout, null);
+        //header.setVisibility(View.VISIBLE);
+        ///listView.addHeaderView(header);
 
-        String[] items = new String[24];
-        for(int i=0;i<items.length;i++){
-            items[i] = "---" + (i+1) + "----";
-        }
-        for(int i=0;i<items.length;i++){
-            Log.e("com.snail.iweibo",items[i]);
-        }
-        setListAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, items));
+        //View footer =  getLayoutInflater(savedInstanceState).inflate(R.layout.footer_layout, null);
+        //footer.setVisibility(View.VISIBLE);
+       // listView.addFooterView(footer);
 
-
-        //initData(1);
-//        listView.setIRefreshListener(new RefreshListView.IRefreshListener() {
-//            @Override
-//            public void onReflash() {
-//                page = 1;
-//                initData(1);
-//            }
-//        });
-//        listView.setILoadListener(new RefreshListView.ILoadListener() {
-//            @Override
-//            public void onLoad() {
-//                page++;
-//                initData(page);
-//            }
-//        });
+        initData(1);
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
     }
+
 
     private void initData(int page) {
         String token = SharedPreferencesUtil.getData(getContext(), Constants.SINA_TOKEN);
