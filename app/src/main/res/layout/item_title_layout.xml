@@ -12,14 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:background="?attr/colorPrimaryDark"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         tools:ignore="PrivateResource"/>
+
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="46dp"
+        android:visibility="gone"
         android:background="?attr/colorPrimaryDark"
         app:tabMode="scrollable"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"

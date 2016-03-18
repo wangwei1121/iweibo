@@ -4,49 +4,23 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dip"
-        android:paddingTop="10dip" >
-
-        <LinearLayout
-            android:id="@+id/layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:orientation="vertical" >
-
-            <TextView
-                android:id="@+id/tip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="下拉可以刷新！" />
-
-            <TextView
-                android:id="@+id/lastupdate_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/layout"
-            android:layout_marginRight="20dip"
-            android:src="@drawable/pull_to_refresh_arrow" />
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <ProgressBar
-            android:id="@+id/list_view_header_progress"
             style="?android:attr/progressBarStyleSmall"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/layout"
-            android:layout_marginRight="20dip"
-            android:visibility="gone" />
-    </RelativeLayout>
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dip"
+            android:gravity="center"
+            android:text="正在刷新..." />
+    </LinearLayout>
 
 </LinearLayout>

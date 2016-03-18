@@ -44,7 +44,7 @@ public class HomeFragment extends ListFragment{
 
     private RefreshListView listView;
 
-    private int count = 20;
+    private int count = 5;
 
     private int page = 1;
 
@@ -64,21 +64,25 @@ public class HomeFragment extends ListFragment{
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        Log.e("com.snail.iweibo", "onActivityCreated--111");
         super.onActivityCreated(savedInstanceState);
-
-        Log.e("com.snail.iweibo", "onActivityCreated");
-
+        Log.e("com.snail.iweibo", "onActivityCreated--222");
         listView = (RefreshListView)getListView();
-
-       // View header =  getLayoutInflater(savedInstanceState).inflate(R.layout.header_layout, null);
-        //header.setVisibility(View.VISIBLE);
-        ///listView.addHeaderView(header);
-
-        //View footer =  getLayoutInflater(savedInstanceState).inflate(R.layout.footer_layout, null);
-        //footer.setVisibility(View.VISIBLE);
-       // listView.addFooterView(footer);
-
-        initData(1);
+        listView.setIRefreshListener(new RefreshListView.IRefreshListener() {
+            @Override
+            public void onReflash() {
+                page = 1;
+                initData();
+            }
+        });
+        listView.setILoadListener(new RefreshListView.ILoadListener() {
+            @Override
+            public void onLoad() {
+                page++;
+                initData();
+            }
+        });
+        initData();
     }
 
     @Override
@@ -87,19 +91,11 @@ public class HomeFragment extends ListFragment{
     }
 
 
-    private void initData(int page) {
+    private void initData() {
         String token = SharedPreferencesUtil.getData(getContext(), Constants.SINA_TOKEN);
         Log.e("com.snail.iweibo", "token-->" + token);
         if (TextUtils.isEmpty(token)) {
             return;
-        }
-        if(page > 1){
-            try{
-                Thread.sleep(3 * 1000);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
         }
         Log.e("com.snail.iweibo", "page-->" + page);
         Observable<PublicNews> observable = ApiServiceHelper.getFriendsTimeline(token,null,null,count,page,null,null,null);
@@ -130,9 +126,9 @@ public class HomeFragment extends ListFragment{
                                 }
                                 adapter.notifyDataSetChanged();
                             }
-                            //listView.reflashComplete();
+                            listView.reflashComplete();
                             //通知listview加载完毕
-                            //listView.loadComplete();
+                            listView.loadComplete();
                         }
                     }
                 });

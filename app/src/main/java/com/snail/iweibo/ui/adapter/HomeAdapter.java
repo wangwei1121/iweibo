@@ -70,7 +70,7 @@ public class HomeAdapter extends BaseAdapter {
         //组件添加内容
         tv_content.setText(statuse.getText());
         tv_name.setText(statuse.getUser().getName());
-        tv_from.setText("来自:" + Html.fromHtml(statuse.getSource()));
+        tv_from.setText("来自:" + Html.fromHtml(statuse.getSource()) + (position+1));
         tv_repost.setText(statuse.getReposts_count() + "");
         tv_comment.setText(statuse.getComments_count() + "");
 

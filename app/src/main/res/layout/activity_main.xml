@@ -1,42 +1,53 @@
-<android.support.v4.widget.DrawerLayout
-    android:id="@+id/drawer_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/root_layout"
+    <include layout="@layout/item_title_layout" />
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent" >
 
-        <include
-            layout="@layout/item_title_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <!-- 内容界面 -->
 
-        <FrameLayout
-            android:id="@+id/frame_layout"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:background="@drawable/content"
+            android:orientation="vertical" >
 
-            <android.support.v4.widget.NestedScrollView
+            <com.snail.iweibo.ui.widget.PagerSlidingTabStrip
+                android:id="@+id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true">
+                android:layout_height="48dip" >
+            </com.snail.iweibo.ui.widget.PagerSlidingTabStrip>
 
-            </android.support.v4.widget.NestedScrollView>
-        </FrameLayout>
-    </android.support.design.widget.CoordinatorLayout>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+            </android.support.v4.view.ViewPager>
+        </LinearLayout>
 
-    <android.support.design.widget.NavigationView
-        android:id="@+id/navigation"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/navigation_header"
-        app:menu="@menu/navigation_menu"/>
-</android.support.v4.widget.DrawerLayout>
+        <!-- 侧滑菜单内容 -->
+
+        <LinearLayout
+            android:id="@+id/drawer_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@drawable/drawer"
+            android:orientation="vertical"
+            android:padding="8dp" >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </android.support.v4.widget.DrawerLayout>
+
+</LinearLayout>
