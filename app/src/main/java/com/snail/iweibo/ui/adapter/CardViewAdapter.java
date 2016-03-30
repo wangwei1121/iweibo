@@ -52,7 +52,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
         }
         holder.userName.setText(user.getScreen_name());
-        holder.createTime.setText(bean.getCreated_at());
+        holder.createTime.setText(bean.getCreatedAt());
 //        holder.textView.setText(statuse.get(position));
     }
 
