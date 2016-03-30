@@ -15,6 +15,7 @@ import com.snail.iweibo.mvp.view.IBaseView;
 public abstract class BasePresenterFragment<V extends IBaseView> extends Fragment {
     protected V view;
     protected TabLayout tabLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +26,7 @@ public abstract class BasePresenterFragment<V extends IBaseView> extends Fragmen
         View view = null;
         try {
             this.view = getViewClass().newInstance();
-            this.view.init(inflater , container);
+            this.view.init(getActivity() , inflater , container);
             view = this.view.getView();
             onBindView();
         } catch (java.lang.InstantiationException e) {

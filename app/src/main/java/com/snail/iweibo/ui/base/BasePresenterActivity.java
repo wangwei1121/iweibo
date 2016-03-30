@@ -2,6 +2,7 @@ package com.snail.iweibo.ui.base;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.snail.iweibo.mvp.view.IBaseView;
 
 /**
@@ -13,9 +14,10 @@ public abstract class BasePresenterActivity<V extends IBaseView> extends AppComp
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fresco.initialize(this);
         try {
             view = getViewClass().newInstance();
-            view.init(getLayoutInflater(), null);
+            view.init(this , getLayoutInflater(), null);
             setContentView(view.getView());
             onBindView();
         } catch (InstantiationException e) {

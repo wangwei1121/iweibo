@@ -1,4 +1,5 @@
 package com.snail.iweibo.mvp.view.impl.fragment;
+import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -22,9 +23,9 @@ public class IHomeFragmentView implements IBaseView {
     private View mView;
     @Bind(R.id.view_pager)
     ViewPager viewPager;
-    HomePagerAdapter homePagerAdapter;
+    HomePagerAdapter pagerAdapter;
     @Override
-    public void init(LayoutInflater inflater, ViewGroup viewGroup) {
+    public void init(Context context , LayoutInflater inflater, ViewGroup viewGroup) {
         mView = inflater.inflate(R.layout.fragment_home, viewGroup, false);
         ButterKnife.bind(this , mView);
     }
@@ -34,19 +35,16 @@ public class IHomeFragmentView implements IBaseView {
         return mView;
     }
 
-
-    /**
-     * initView
-     */
     public void initView(FragmentActivity activity) {
-        viewPager.setSaveEnabled(false);
+        viewPager.setSaveEnabled(true);
         FragmentManager manager = activity.getSupportFragmentManager();
-        homePagerAdapter = new HomePagerAdapter(manager);
-        viewPager.setAdapter(homePagerAdapter);
+        pagerAdapter = new HomePagerAdapter(manager);
+        viewPager.setAdapter(pagerAdapter);
     }
 
     /**
-     * @param tabLayout
+     * setTabLayout
+     * @param tabLayout tabLayout
      */
     public void setTabLayout(TabLayout tabLayout) {
         tabLayout.setupWithViewPager(viewPager);

@@ -34,21 +34,40 @@ public class Statuses {
 
     private List<StatusesBean> statuses;
 
-    public void setPrevious_cursor(int previous_cursor) { this.previous_cursor = previous_cursor;}
+    public void setPreviousCursor(int previous_cursor) {
+        this.previous_cursor = previous_cursor;
+    }
 
-    public void setNext_cursor(long next_cursor) { this.next_cursor = next_cursor;}
+    public void setNextCursor(long next_cursor) {
+        this.next_cursor = next_cursor;
+    }
 
-    public void setTotal_number(int total_number) { this.total_number = total_number;}
+    public void setTotalNumber(int total_number) {
+        this.total_number = total_number;
+    }
 
-    public void setStatuses(List<StatusesBean> statuses) { this.statuses = statuses;}
+    public void setStatuses(List<StatusesBean> statuses) {
+        this.statuses = statuses;
+    }
 
-    public int getPrevious_cursor() { return previous_cursor;}
+    public int getPreviousCursor() {
+        return previous_cursor;
+    }
 
-    public long getNext_cursor() { return next_cursor;}
+    public long getNextCursor() {
+        return next_cursor;
+    }
 
-    public int getTotal_number() { return total_number;}
+    public int getTotalNumber() {
+        return total_number;
+    }
 
-    public List<StatusesBean> getStatuses() { return statuses;}
+    public List<StatusesBean> getStatuses() {
+        return statuses;
+    }
 
+    public void addStatuses(List<StatusesBean> statuses) {
+        this.statuses.addAll(0 , statuses);
+    }
 
 }

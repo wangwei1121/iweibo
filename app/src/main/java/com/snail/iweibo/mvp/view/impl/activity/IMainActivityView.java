@@ -1,4 +1,5 @@
 package com.snail.iweibo.mvp.view.impl.activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -47,7 +48,7 @@ public class IMainActivityView implements IBaseView {
     FloatingActionButton fabBtn;
     private Fragment lastFragment;
     @Override
-    public void init(LayoutInflater inflater, ViewGroup viewGroup) {
+    public void init(Context context , LayoutInflater inflater, ViewGroup viewGroup) {
         mView = inflater.inflate(R.layout.activity_main, viewGroup, false);
         ButterKnife.bind(this, mView);
     }

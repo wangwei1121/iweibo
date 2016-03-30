@@ -5,12 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.snail.iweibo.api.ApiServiceHelper;
-import com.snail.iweibo.mvp.model.Statuses;
 import com.snail.iweibo.mvp.view.impl.fragment.IHomeFragmentView;
 import com.snail.iweibo.ui.base.BasePresenterFragment;
-
-import rx.Subscriber;
 
 /**
  * MessageFragment
@@ -42,22 +38,7 @@ public class HomeFragment extends BasePresenterFragment<IHomeFragmentView> {
      * initData
      */
     private void initData() {
-        ApiServiceHelper.getPublicTimeLine("", 50, 1, 0).subscribe(new Subscriber<Statuses>() {
-            @Override
-            public void onCompleted() {
 
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onNext(Statuses statuses) {
-
-            }
-        });
     }
 
     @Override

@@ -173,4 +173,8 @@
     <string name="weibosdk_demo_launch_mblog_detail">查看微博正文</string>
     <string name="weibosdk_demo_launch_qrcode">扫描二维码界面</string>
     <string name="title_activity_news">NewsActivity</string>
+    <string name="string_action_favorites">收藏</string>
+    <string name="string_action_repeater">转发</string>
+    <string name="string_action_comments">评论</string>
+    <string name="string_action_like">Like</string>
 </resources>

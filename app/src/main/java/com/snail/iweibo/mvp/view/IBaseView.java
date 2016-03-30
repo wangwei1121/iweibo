@@ -1,4 +1,5 @@
 package com.snail.iweibo.mvp.view;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,6 @@ import android.view.ViewGroup;
  * Created by alexwan on 16/1/28.
  */
 public interface IBaseView {
-    void init(LayoutInflater inflater , ViewGroup viewGroup);
+    void init(Context context , LayoutInflater inflater , ViewGroup viewGroup);
     View getView();
 }

@@ -1,21 +1,30 @@
 package com.snail.iweibo.ui.fragment;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.snail.iweibo.api.ApiServiceHelper;
+import com.snail.iweibo.mvp.model.Statuses;
 import com.snail.iweibo.mvp.view.impl.fragment.IRecyclerFragmentView;
+import com.snail.iweibo.oauth.Constants;
+import com.snail.iweibo.ui.adapter.CardViewAdapter;
 import com.snail.iweibo.ui.base.BasePresenterFragment;
 
-import java.util.ArrayList;
-import java.util.List;
+import rx.Subscriber;
 
 /**
  * RecyclerViewFragment
  * Created by alexwan on 16/1/30.
  */
-public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmentView> {
+public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmentView> implements OnRefreshListener{
+    private CardViewAdapter cardViewAdapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,15 +42,41 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
     @Override
     protected void onBindView() {
         super.onBindView();
+        view.setOnRefreshListener(this);
         initData();
     }
 
     private void initData() {
-        List<String> titles = new ArrayList<>();
-        for (int i = 0 ; i < 40 ; i ++){
-            titles.add("第 "+ i +" 条微博");
+        SharedPreferences preferences =  getActivity().getSharedPreferences(Constants.PROJECT_NAME , Context.MODE_PRIVATE);
+        String token = preferences.getString(Constants.SINA_TOKEN , "");
+        Log.i("RecyclerViewFragment " , token);
+        if(TextUtils.isEmpty(token)){
+            return;
         }
-        view.updateView(getActivity(), titles);
+        ApiServiceHelper.getPublicTimeLine(token, 50, 1, 0)
+                        .subscribe(new Subscriber<Statuses>() {
+            @Override
+            public void onCompleted() {
+                Log.i("RecyclerViewFragment " , "onCompleted : ");
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i("RecyclerViewFragment " , "onError - Error :" + e.getMessage());
+            }
+
+            @Override
+            public void onNext(Statuses list) {
+                if(list.getStatuses() != null && !list.getStatuses().isEmpty()){
+                    Log.i("RecyclerViewFragment " , "onNext : " +list.getStatuses().toString());
+                    cardViewAdapter = new CardViewAdapter(getActivity(), list.getStatuses());
+                    view.updateView(getActivity(), cardViewAdapter);
+                    view.refresh(false);
+                }
+            }
+        });
+
+
     }
 
 
@@ -52,5 +87,12 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
 
     public static Fragment newInstance() {
         return new RecyclerViewFragment();
+    }
+
+    @Override
+    public void onRefresh() {
+        // 下拉刷新
+
+        view.refresh(false);
     }
 }

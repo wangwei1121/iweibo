@@ -3,6 +3,8 @@ import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.snail.iweibo.ui.fragment.RecyclerViewFragment;
 
@@ -11,15 +13,28 @@ import com.snail.iweibo.ui.fragment.RecyclerViewFragment;
  * Created by alexwan on 16/1/30.
  */
 public class HomePagerAdapter extends FragmentStatePagerAdapter {
-    private FragmentManager manager;
     public HomePagerAdapter(FragmentManager fm) {
         super(fm);
-        this.manager = fm;
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        return super.instantiateItem(container, position);
     }
 
     @Override
     public Fragment getItem(int position) {
         return RecyclerViewFragment.newInstance();
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        super.destroyItem(container, position, object);
+    }
+
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return super.isViewFromObject(view, object);
     }
 
     @Override
@@ -39,7 +54,13 @@ public class HomePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-
-        return "标题";
+        switch (position) {
+            case 0:
+                return "热门";
+            case 1:
+            case 2:
+            default:
+                return "标题";
+        }
     }
 }
