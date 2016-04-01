@@ -48,12 +48,12 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
 
     private void initData() {
         SharedPreferences preferences =  getActivity().getSharedPreferences(Constants.PROJECT_NAME , Context.MODE_PRIVATE);
-        String token = preferences.getString(Constants.SINA_TOKEN , "");
-        Log.i("RecyclerViewFragment " , token);
-        if(TextUtils.isEmpty(token)){
+//        String token = preferences.getString(Constants.SINA_TOKEN , "");
+        Log.i("RecyclerViewFragment " , Constants.TOKEN);
+        if(TextUtils.isEmpty(Constants.TOKEN)){
             return;
         }
-        ApiServiceHelper.getPublicTimeLine(token, 50, 1, 0)
+        ApiServiceHelper.getPublicTimeLine(Constants.TOKEN, 50, 1, 0)
                         .subscribe(new Subscriber<Statuses>() {
             @Override
             public void onCompleted() {

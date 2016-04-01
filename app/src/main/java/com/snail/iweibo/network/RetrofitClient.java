@@ -9,7 +9,7 @@ import retrofit2.RxJavaCallAdapterFactory;
  * Created by alexwan on 16/1/30.
  */
 public class RetrofitClient {
-    private static Retrofit retrofit;
+    private static volatile Retrofit retrofit;
 
     public static Retrofit instance(String baseUrl) {
         return new Retrofit.Builder()

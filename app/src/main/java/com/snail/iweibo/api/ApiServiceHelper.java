@@ -19,8 +19,8 @@ public class ApiServiceHelper {
      *
      * @return WeiboApiService
      */
-    private static WeiboApiService getWeiboService(String baseUrl) {
-        return RetrofitClient.instance(baseUrl).create(WeiboApiService.class);
+    private static WeiBoApiService getWeiBoService(String baseUrl) {
+        return RetrofitClient.instance(baseUrl).create(WeiBoApiService.class);
     }
 
 
@@ -33,7 +33,7 @@ public class ApiServiceHelper {
      * @param app        是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。
      */
     public static Observable<Statuses> getPublicTimeLine(String token, int count, int page, int app) {
-        return getWeiboService(Configuration.WEIBO_BASE_URL)
+        return getWeiBoService(Configuration.WEIBO_BASE_URL)
             .getPublicTimeLine(token, count, page, app)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread());
