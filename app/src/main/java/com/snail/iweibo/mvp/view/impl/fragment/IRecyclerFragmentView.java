@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.view.IBaseView;
-import com.snail.iweibo.ui.adapter.CardViewAdapter;
+import com.snail.iweibo.ui.adapter.StatusListAdapter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,7 +38,7 @@ public class IRecyclerFragmentView implements IBaseView {
         return view;
     }
 
-    public void updateView(Context context , CardViewAdapter adapter){
+    public void updateView(Context context , StatusListAdapter adapter){
         recyclerView.setAdapter(adapter);
     }
 

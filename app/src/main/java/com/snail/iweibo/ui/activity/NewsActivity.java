@@ -2,18 +2,24 @@ package com.snail.iweibo.ui.activity;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
 import com.snail.iweibo.R;
 import com.snail.iweibo.oauth.Constants;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -22,10 +28,6 @@ import java.util.Map;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import android.widget.ListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Toast;
 
 public class NewsActivity extends AppCompatActivity implements OnItemClickListener,OnScrollListener {
 
@@ -110,7 +112,7 @@ public class NewsActivity extends AppCompatActivity implements OnItemClickListen
             Toast.makeText(NewsActivity.this, "用力滑一下",Toast.LENGTH_SHORT).show();
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("text", "滚动添加 "+i++);
-            map.put("image", R.drawable.ic_launcher);
+//            map.put("image", R.drawable.ic_launcher);
             list.add(map);
             listView.setAdapter(simple_adapter);
             simple_adapter.notifyDataSetChanged();

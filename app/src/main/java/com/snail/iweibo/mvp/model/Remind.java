@@ -1,9 +1,11 @@
 package com.snail.iweibo.mvp.model;
+import java.io.Serializable;
+
 /**
  * 未读消息
  * Created by alexwan on 16/4/1.
  */
-public class Remind {
+public class Remind implements Serializable {
     private int status; // 新微博未读数
     private int follower; // 新粉丝数
     private int cmt; // 新评论数

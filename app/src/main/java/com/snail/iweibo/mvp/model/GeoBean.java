@@ -1,9 +1,11 @@
 package com.snail.iweibo.mvp.model;
+import java.io.Serializable;
+
 /**
  * 地理信息
  * Created by alexwan on 16/3/30.
  */
-public class GeoBean {
+public class GeoBean implements Serializable {
     private String longitude; //经度坐标
     private String latitude; //维度坐标
     private String city; // 所在城市的城市代码

@@ -1,9 +1,11 @@
 package com.snail.iweibo.mvp.model;
+import java.io.Serializable;
+
 /**
  * 个人隐私设置
  * Created by alexwan on 16/4/1.
  */
-public class PrivacySetting {
+public class PrivacySetting implements Serializable {
     //
     private int comment; // 是否可以评论我的微博，0：所有人、1：关注的人、2：可信用户
     private int geo; // 是否开启地理信息，0：不开启、1：开启

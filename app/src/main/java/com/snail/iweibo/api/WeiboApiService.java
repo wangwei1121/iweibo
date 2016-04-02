@@ -1,5 +1,5 @@
 package com.snail.iweibo.api;
-import com.snail.iweibo.mvp.model.Statuses;
+import com.snail.iweibo.mvp.model.StatusList;
 
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -18,7 +18,7 @@ public interface WeiBoApiService {
      * @return Statuses
      */
     @GET("2/statuses/public_timeline.json")
-    Observable<Statuses> getPublicTimeLine(@Query("access_token") String token, @Query("count") int count, @Query
+    Observable<StatusList> getPublicTimeLine(@Query("access_token") String token, @Query("count") int count, @Query
         ("page") int page, @Query("base_app") int app);
 
     /**
@@ -34,8 +34,8 @@ public interface WeiBoApiService {
      * @return Statuses
      */
     @GET("2/statuses/friends_timeline.json")
-    Observable<Statuses> getFriendsTimeLine(@Query("access_token") String token, @Query("since_id") long since_id,
-                                            @Query("max_id") long max_id, @Query("count") int count,
-                                            @Query("page") int page, @Query("base_app") int app,
-                                            @Query("feature") int feature, @Query("trim_user") int trim_user);
+    Observable<StatusList> getFriendsTimeLine(@Query("access_token") String token, @Query("since_id") long since_id,
+                                              @Query("max_id") long max_id, @Query("count") int count,
+                                              @Query("page") int page, @Query("base_app") int app,
+                                              @Query("feature") int feature, @Query("trim_user") int trim_user);
 }

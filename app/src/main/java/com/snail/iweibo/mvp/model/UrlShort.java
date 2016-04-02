@@ -1,9 +1,11 @@
 package com.snail.iweibo.mvp.model;
+import java.io.Serializable;
+
 /**
  * 短链
  * Created by alexwan on 16/4/1.
  */
-public class UrlShort {
+public class UrlShort implements Serializable {
     //
     private String url_short; // 短链接
     private String url_long; // 原始长链接

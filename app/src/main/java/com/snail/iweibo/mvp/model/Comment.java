@@ -1,9 +1,11 @@
 package com.snail.iweibo.mvp.model;
+import java.io.Serializable;
+
 /**
  * 评论
  * Created by alexwan on 16/4/1.
  */
-public class Comment {
+public class Comment implements Serializable {
     private long  id; // 评论ID
     private String created_at; // 创建时间
     private String text;// 内容
@@ -11,7 +13,7 @@ public class Comment {
     private UserBean user; // 用户信息
     private String mid; // 微博MID
     private String idstr; // 字符串型的评论ID
-    private StatusesBean  status; // 微博
+    private Status status; // 微博
     private Comment reply_comment; // 回复的评论
 
     public long getId() {
@@ -70,11 +72,11 @@ public class Comment {
         this.idstr = idstr;
     }
 
-    public StatusesBean getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(StatusesBean status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

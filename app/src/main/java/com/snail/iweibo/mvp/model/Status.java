@@ -1,9 +1,12 @@
 package com.snail.iweibo.mvp.model;
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * 微博详情
  * Created by alexwan on 16/3/23.
  */
-public class StatusesBean {
+public class Status implements Serializable {
     private String created_at; // 微博创建时间
     private long id; // 微博ID
     private String mid; // 微博MID
@@ -20,14 +23,15 @@ public class StatusesBean {
     private String original_pic; // 原始图片地址，没有时不返回此字段
     private UserBean user; // 微博作者的用户信息字段
     private GeoBean geo; // 地理信息字段
-    private StatusesBean retweeted_status; // 被转发的原微博信息字段，当该微博为转发微博时返回
+    private Status retweeted_status; // 被转发的原微博信息字段，当该微博为转发微博时返回
     private int reposts_count; // 转发数
     private int comments_count; // 评论数
     private int attitudes_count; // 表态数
     private int mlevel; // 暂未支持
     // 微博配图ID。多图时返回多图ID，用来拼接图片url。
     // 用返回字段thumbnail_pic的地址配上该返回字段的图片ID，即可得到多个图片url。
-//    private pic_ids;
+    public List<ThumbnailPic> pic_urls;
+
     public void setCreatedAt(String created_at) {
         this.created_at = created_at;
     }
@@ -172,11 +176,11 @@ public class StatusesBean {
         this.source = source;
     }
 
-    public StatusesBean getRetweetedStatus() {
+    public Status getRetweetedStatus() {
         return retweeted_status;
     }
 
-    public void setRetweetedStatus(StatusesBean retweeted_status) {
+    public void setRetweetedStatus(Status retweeted_status) {
         this.retweeted_status = retweeted_status;
     }
 
@@ -186,5 +190,25 @@ public class StatusesBean {
 
     public void setAttitudesCount(int attitudes_count) {
         this.attitudes_count = attitudes_count;
+    }
+
+    public List<ThumbnailPic> getPicUrls() {
+        return pic_urls;
+    }
+
+    public void setPicUrls(List<ThumbnailPic> pic_urls) {
+        this.pic_urls = pic_urls;
+    }
+
+    public class ThumbnailPic{
+        private String thumbnail_pic;
+
+        public String getThumbnailPic() {
+            return thumbnail_pic;
+        }
+
+        public void setThumbnailPic(java.lang.String thumbnail_pic) {
+            this.thumbnail_pic = thumbnail_pic;
+        }
     }
 }

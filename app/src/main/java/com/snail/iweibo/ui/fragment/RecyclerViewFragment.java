@@ -11,10 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.snail.iweibo.api.ApiServiceHelper;
-import com.snail.iweibo.mvp.model.Statuses;
+import com.snail.iweibo.mvp.model.StatusList;
 import com.snail.iweibo.mvp.view.impl.fragment.IRecyclerFragmentView;
 import com.snail.iweibo.oauth.Constants;
-import com.snail.iweibo.ui.adapter.CardViewAdapter;
+import com.snail.iweibo.ui.adapter.StatusListAdapter;
 import com.snail.iweibo.ui.base.BasePresenterFragment;
 
 import rx.Subscriber;
@@ -24,7 +24,7 @@ import rx.Subscriber;
  * Created by alexwan on 16/1/30.
  */
 public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmentView> implements OnRefreshListener{
-    private CardViewAdapter cardViewAdapter;
+    private StatusListAdapter cardViewAdapter;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +54,7 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
             return;
         }
         ApiServiceHelper.getPublicTimeLine(Constants.TOKEN, 50, 1, 0)
-                        .subscribe(new Subscriber<Statuses>() {
+                        .subscribe(new Subscriber<StatusList>() {
             @Override
             public void onCompleted() {
                 Log.i("RecyclerViewFragment " , "onCompleted : ");
@@ -66,10 +66,10 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
             }
 
             @Override
-            public void onNext(Statuses list) {
+            public void onNext(StatusList list) {
                 if(list.getStatuses() != null && !list.getStatuses().isEmpty()){
                     Log.i("RecyclerViewFragment " , "onNext : " +list.getStatuses().toString());
-                    cardViewAdapter = new CardViewAdapter(getActivity(), list.getStatuses());
+                    cardViewAdapter = new StatusListAdapter(getActivity(), list.getStatuses());
                     view.updateView(getActivity(), cardViewAdapter);
                     view.refresh(false);
                 }
