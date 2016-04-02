@@ -20,13 +20,13 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_margin="8dp"
+            fresco:backgroundImage="@color/main_light_gray"
+            fresco:placeholderImage="@drawable/default_user_avatar"
             fresco:roundAsCircle="true"
             fresco:roundBottomLeft="false"
             fresco:roundBottomRight="true"
             fresco:roundTopLeft="true"
             fresco:roundTopRight="false"
-            fresco:placeholderImage="@drawable/default_user_avatar"
-            fresco:backgroundImage="@color/main_light_gray"
             tools:ignore="ContentDescription"/>
         <!-- 用户名 -->
         <TextView
@@ -58,7 +58,7 @@
             android:layout_below="@+id/user_name"
             android:layout_toEndOf="@id/user_avatar"
             android:layout_toRightOf="@id/created_at"
-            android:textColor="#444444"
+            android:textColor="@color/main_gray"
             android:textSize="14sp"
             tools:text="@string/string_statuses_from"/>
 
@@ -78,6 +78,7 @@
                 android:id="@+id/content_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/main_black"
                 android:textSize="15sp"
                 tools:text="微博内容"/>
             <!--图片-->
@@ -87,10 +88,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
-                app:columnCount="3"
                 app:alignmentMode="alignBounds"
-                app:useDefaultMargins="true"
-                app:rowCount="3"/>
+                app:columnCount="3"
+                app:rowCount="3"
+                app:useDefaultMargins="true"/>
             <!--转发的微博内容-->
             <LinearLayout
                 android:id="@+id/retweeted_layout"
@@ -111,44 +112,13 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/content"
-            android:background="#44444444"/>
+            android:background="@color/main_light_gray"/>
 
-        <LinearLayout
+        <include
+            layout="@layout/item_action_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/action_divider"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/string_action_favorites"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/string_action_repeater"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/string_action_comments"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/string_action_like"/>
-        </LinearLayout>
+            android:layout_height="26dp"
+            android:layout_below="@id/action_divider"/>
     </RelativeLayout>
 
 

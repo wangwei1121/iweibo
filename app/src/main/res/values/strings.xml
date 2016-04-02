@@ -176,6 +176,6 @@
     <string name="string_action_favorites">收藏</string>
     <string name="string_action_repeater">转发</string>
     <string name="string_action_comments">评论</string>
-    <string name="string_action_like">Like</string>
+    <string name="string_action_like">赞</string>
     <string name="string_statuses_from">&#160;&#160;来自&#160;&#160;%1$s</string>
 </resources>

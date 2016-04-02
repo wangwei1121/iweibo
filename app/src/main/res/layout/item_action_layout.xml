@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="26dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginTop="5dp"
+    android:baselineAligned="false"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/action_favorite_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/action_favorite_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/action_unfavorite_icon"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:id="@+id/action_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/string_action_favorites"
+            android:textColor="@color/main_gray"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/action_relay_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/action_relay_icon"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:id="@+id/action_relay"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/string_action_repeater"
+            android:textColor="@color/main_gray"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/action_comment_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/action_comment_icon"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:id="@+id/action_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/string_action_comments"
+            android:textColor="@color/main_gray"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/action_like_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/action_like_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/action_unlike_icon"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:id="@+id/action_like"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="@string/string_action_like"
+            android:textColor="@color/main_gray"/>
+    </LinearLayout>
+</LinearLayout>
