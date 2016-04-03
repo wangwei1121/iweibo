@@ -44,8 +44,8 @@ public abstract class BasePresenterFragment<V extends IBaseView> extends Fragmen
         super.onDestroyView();
     }
 
-    protected void onDestroyVU(){}
-    protected void onBindView(){}
+    protected void onDestroyVU(){};
+    protected void onBindView(){};
     protected void setTabLayout(TabLayout tabLayout){};
     protected abstract Class<V> getViewClass();
 }

@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -25,6 +23,7 @@ import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.Status.ThumbnailPic;
 import com.snail.iweibo.mvp.model.UserBean;
 import com.snail.iweibo.ui.adapter.StatusListAdapter.ViewHolder;
+import com.snail.iweibo.util.SpanUtil;
 import com.snail.iweibo.util.TimeUtils;
 
 import java.util.List;
@@ -34,7 +33,7 @@ import butterknife.ButterKnife;
 
 
 /**
- * CardViewAdapter
+ * StatusListAdapter
  * Created by alexwan on 16/1/30.
  */
 public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
@@ -75,10 +74,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
             bean.getSource()));
         holder.from.setText(span);
         // 微博内容 TODO
-//        Pattern pattern = new Pattern();
-//        Matcher matcher = new Matcher();
-        holder.contentText.setText(Html.fromHtml(bean.getText()));
-        ImageSpan imageSpan = new ImageSpan(context , R.drawable.action_comment_icon);
+        holder.contentText.setText(SpanUtil.buildSpan(context , bean.getText()));
         // 被转发的微博字段
         Status status = bean.getRetweetedStatus();
         if (status != null) {
@@ -133,13 +129,8 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
             imageView.setImageURI(UriUtil.parseUriOrNull(url));
             imageView.setLayoutParams(params);
             imageView.setPadding(0, 0, 5, 5);
-            imageView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // 查看大图
-                    Toast.makeText(context, url, Toast.LENGTH_SHORT).show();
-                }
-            });
+            imageView.setOnClickListener(onClickListener);
+            imageView.setTag(url);
             gridLayout.addView(imageView);
         }
     }

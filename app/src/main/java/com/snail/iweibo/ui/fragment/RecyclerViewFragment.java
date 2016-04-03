@@ -23,7 +23,7 @@ import com.snail.iweibo.ui.base.BasePresenterFragment;
 import rx.Subscriber;
 
 /**
- * RecyclerViewFragment
+ * RecyclerViewFragment - FragmentPresenter
  * Created by alexwan on 16/1/30.
  */
 public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmentView> implements OnRefreshListener ,
@@ -134,7 +134,11 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
                     // 用户是否登录
                     // status id
                     Toast.makeText(getContext() , "点赞" , Toast.LENGTH_SHORT).show();
+                    // 调用数据
                 }
+                break;
+            default:
+                Toast.makeText(getContext() , String.valueOf(v.getTag()) , Toast.LENGTH_SHORT).show();
                 break;
         }
     }
