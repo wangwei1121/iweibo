@@ -2,6 +2,8 @@ package com.snail.iweibo.mvp.view.impl.activity;
 import android.content.Context;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.TabLayout.OnTabSelectedListener;
+import android.support.design.widget.TabLayout.Tab;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,19 +17,23 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.FrameLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.snail.iweibo.R;
+import com.snail.iweibo.mvp.model.Comment;
 import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.Status.ThumbnailPic;
 import com.snail.iweibo.mvp.view.IBaseView;
+import com.snail.iweibo.ui.adapter.CommentListAdapter;
 import com.snail.iweibo.ui.base.BasePresenterActivity;
 import com.snail.iweibo.util.ScreenInfo;
 import com.snail.iweibo.util.SpanUtil;
 import com.snail.iweibo.util.TimeUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -65,6 +71,9 @@ public class IStatusDetailActivityView implements IBaseView {
     FrameLayout frameLayout;
     @Bind(R.id.tool_bar_layout)
     CollapsingToolbarLayout toolbarLayout;
+    @Bind(R.id.list_view)
+    ListView listView;
+    private CommentListAdapter commentAdapter;
     @Override
     public void init(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         mView = inflater.inflate(R.layout.activity_status_detail , viewGroup);
@@ -116,9 +125,28 @@ public class IStatusDetailActivityView implements IBaseView {
             int size = status.getPicUrls().size();
             updateGridLayout(size, gridLayout, status.getPicUrls());
         }
-        tabLayout.addTab(tabLayout.newTab().setText("转发 "+ status.getRepostsCount()));
-        tabLayout.addTab(tabLayout.newTab().setText("评论 "+status.getCommentsCount()));
+        Tab tab1= tabLayout.newTab().setText("转发 "+ status.getRepostsCount());
+        tabLayout.addTab(tab1);
+        Tab tab2 = tabLayout.newTab().setText("评论 "+status.getCommentsCount());
+        tabLayout.addTab(tab2);
         tabLayout.addTab(tabLayout.newTab().setText("赞 "+status.getAttitudesCount()));
+        tab2.select();
+        tabLayout.setOnTabSelectedListener(new OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(Tab tab) {
+                //
+            }
+
+            @Override
+            public void onTabUnselected(Tab tab) {
+                //
+            }
+
+            @Override
+            public void onTabReselected(Tab tab) {
+                //
+            }
+        });
     }
 
     /**
@@ -152,5 +180,11 @@ public class IStatusDetailActivityView implements IBaseView {
             imageView.setTag(url);
             gridLayout.addView(imageView);
         }
+    }
+
+    public void updateComments(ArrayList<Comment> comments) {
+        CommentListAdapter commentAdapter = new CommentListAdapter(context , R.layout.item_comment_list_layout);
+        listView.setAdapter(commentAdapter);
+        commentAdapter.setCommentList(comments);
     }
 }

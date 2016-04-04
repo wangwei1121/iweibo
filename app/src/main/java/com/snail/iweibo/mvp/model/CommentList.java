@@ -7,17 +7,17 @@ import java.util.ArrayList;
  * Created by alexwan on 16/4/1.
  */
 public class CommentList implements Serializable {
-    private ArrayList<Comment> commentList;
+    private ArrayList<Comment> comments;
     private String previous_cursor;
     private String next_cursor;
     private int total_number;
 
     public ArrayList<Comment> getCommentList() {
-        return commentList;
+        return comments;
     }
 
     public void setCommentList(ArrayList<Comment> commentList) {
-        this.commentList = commentList;
+        this.comments = commentList;
     }
 
     public String getPrevious_cursor() {

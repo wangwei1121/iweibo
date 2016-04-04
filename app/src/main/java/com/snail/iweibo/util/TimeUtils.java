@@ -1,4 +1,6 @@
 package com.snail.iweibo.util;
+import android.text.TextUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,9 +11,9 @@ import java.util.Locale;
  * Created by alexwan on 16/4/1.
  */
 public class TimeUtils {
-    private static String UTC_FORMAT_STRING = "EEE MMM dd HH:mm:ss zzz yyyy";
-    private static String DEFAULT_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
-    private static String MINUTE_SECOND = "mm:ss";
+    public static String UTC_FORMAT_STRING = "EEE MMM dd HH:mm:ss zzz yyyy";
+    public static String DEFAULT_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
+    public static String MINUTE_SECOND = "mm:ss";
 
     public static String formatUTCTime(String time) {
         // week month day hours:minus:second year
@@ -25,6 +27,23 @@ public class TimeUtils {
         }
     }
 
+    /**
+     * 指定时间格式
+     * @param time time
+     * @param format format
+     * @return String
+     */
+    public static String formatUTCTime(String time , String format){
+        SimpleDateFormat utcFormat = new SimpleDateFormat(UTC_FORMAT_STRING, Locale.US);
+        try {
+            Date date = utcFormat.parse(time);
+            String timeFormat = TextUtils.isEmpty(format) ? DEFAULT_FORMAT_STRING : format;
+            SimpleDateFormat dateFormat = new SimpleDateFormat(timeFormat, Locale.CHINA);
+            return dateFormat.format(date);
+        } catch (ParseException e) {
+            return "";
+        }
+    }
     public static String formatUTCTimes(String timeString) {
         SimpleDateFormat format = new SimpleDateFormat(UTC_FORMAT_STRING, Locale.US);
         try {

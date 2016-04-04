@@ -1,4 +1,5 @@
 package com.snail.iweibo.api;
+import com.snail.iweibo.mvp.model.CommentList;
 import com.snail.iweibo.mvp.model.StatusList;
 import com.snail.iweibo.network.RetrofitClient;
 import com.snail.iweibo.util.Configuration;
@@ -23,7 +24,9 @@ public class ApiServiceHelper {
         return RetrofitClient.instance(baseUrl).create(WeiBoApiService.class);
     }
 
-
+    private static CommentApiService getCommentService(String url){
+        return RetrofitClient.instance(url).create(CommentApiService.class);
+    }
     /**
      * getPublicTimeLine
      *
@@ -40,4 +43,14 @@ public class ApiServiceHelper {
     }
 
 
+    /**
+     * 单条微博的评论数
+     */
+    public static Observable<CommentList> getComments(String token, long statusId, long sinceId, long maxId
+        , int count, int page, int app) {
+        return getCommentService(Configuration.WEIBO_BASE_URL)
+            .getComments(token, statusId, sinceId, maxId, count, page, app)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread());
+    }
 }
