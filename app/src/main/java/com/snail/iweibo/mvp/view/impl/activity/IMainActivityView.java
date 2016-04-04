@@ -70,6 +70,7 @@ public class IMainActivityView implements IBaseView {
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
+            // add back icon
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         // drawer toggle

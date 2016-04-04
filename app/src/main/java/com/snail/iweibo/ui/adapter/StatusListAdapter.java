@@ -41,10 +41,13 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
     private List<Status> statuses;
     private Context context;
     private OnClickListener onClickListener;
-    public StatusListAdapter(Context context, List<Status> statuses , OnClickListener onClickListener) {
+    private OnItemClickListener itemClick;
+    public StatusListAdapter(Context context, List<Status> statuses , OnClickListener onClickListener ,
+                             OnItemClickListener itemClick) {
         this.context = context;
         this.statuses = statuses;
         this.onClickListener = onClickListener;
+        this.itemClick = itemClick;
     }
 
     @Override
@@ -104,7 +107,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         if(bean.getAttitudesCount() != 0){
             holder.likeTxt.setText(String.valueOf(bean.getAttitudesCount()));
         }
-
+        holder.setOnItemClickListener(itemClick);
     }
 
     /**
@@ -145,12 +148,15 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.notifyDataSetChanged();
     }
 
+    public Status getStatus(int position){
+        return statuses.get(position);
+    }
     @Override
     public int getItemCount() {
         return statuses == null ? 0 : statuses.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener{
         @Bind(R.id.user_avatar)
         SimpleDraweeView userAvatar;
         @Bind(R.id.user_name)
@@ -195,7 +201,23 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
+        }
+
+
+        @Override
+        public void onClick(View v) {
+            if(listener != null){
+                listener.onItemClick(getAdapterPosition());
+            }
+        }
+        private OnItemClickListener listener;
+
+        public void setOnItemClickListener(OnItemClickListener listener){
+            this.listener = listener;
         }
     }
-
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
 }

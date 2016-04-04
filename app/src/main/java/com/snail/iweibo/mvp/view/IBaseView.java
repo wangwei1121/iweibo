@@ -10,4 +10,5 @@ import android.view.ViewGroup;
 public interface IBaseView {
     void init(Context context , LayoutInflater inflater , ViewGroup viewGroup);
     View getView();
+
 }

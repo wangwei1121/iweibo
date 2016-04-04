@@ -200,7 +200,7 @@ public class Status implements Serializable {
         this.pic_urls = pic_urls;
     }
 
-    public class ThumbnailPic{
+    public class ThumbnailPic implements Serializable{
         private String thumbnail_pic;
 
         public String getThumbnailPic() {
