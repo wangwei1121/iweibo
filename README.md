@@ -2,4 +2,3 @@
 <div>
 <image src="https://github.com/wangwei1121/iweibo/blob/master/iweibo_mvp.png">
 <div>
-[!img](https://github.com/wangwei1121/iweibo/blob/master/iweibo_mvp.png)
