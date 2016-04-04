@@ -123,6 +123,7 @@
                             android:layout_height="wrap_content"/>
                     </LinearLayout>
                 </RelativeLayout>
+
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/tool_bar"
                     android:layout_width="match_parent"
@@ -132,12 +133,18 @@
                     tools:ignore="PrivateResource"/>
 
             </android.support.design.widget.CollapsingToolbarLayout>
-
+            <View
+                android:layout_below="@id/retweeted_layout"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="@color/main_light_gray"/>
             <android.support.design.widget.TabLayout
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
-                android:background="@color/main_light_gray"
+                app:tabGravity="fill"
+                app:tabSelectedTextColor="@color/main_black"
+                app:tabTextColor="@color/main_gray"
                 tools:ignore="PrivateResource"/>
         </android.support.design.widget.AppBarLayout>
         <!-- comment info -->
@@ -157,13 +164,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
                     <ListView
                         android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:cacheColorHint="@color/main_transparent"
-                        android:scrollbars="none"
-                        android:listSelector="@color/main_transparent"
                         android:divider="@null"
-                        android:layout_height="match_parent"/>
+                        android:listSelector="@color/main_transparent"
+                        android:scrollbars="none"/>
                 </LinearLayout>
             </android.support.v4.widget.NestedScrollView>
         </FrameLayout>

@@ -23,6 +23,7 @@ import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.Status.ThumbnailPic;
 import com.snail.iweibo.mvp.model.UserBean;
 import com.snail.iweibo.ui.adapter.StatusListAdapter.ViewHolder;
+import com.snail.iweibo.util.ScreenInfo;
 import com.snail.iweibo.util.SpanUtil;
 import com.snail.iweibo.util.TimeUtils;
 
@@ -118,7 +119,9 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
      * @param pics       pics
      */
     private void updateGridLayout(int size, GridLayout gridLayout, final List<ThumbnailPic> pics) {
-        MarginLayoutParams params = new MarginLayoutParams(gridLayout.getWidth() / 3, gridLayout.getWidth() / 3);
+        ScreenInfo screenInfo = new ScreenInfo(context);
+        MarginLayoutParams params = new MarginLayoutParams(screenInfo.getWidth() / 3 - 20 , screenInfo.getWidth() / 3
+            - 20);
         int column = (size >= 1 && size <= 3) ? size : ((size == 4) ? 2 : 3);
         int row = (int) Math.ceil(size / 3);
         gridLayout.setColumnCount(column);

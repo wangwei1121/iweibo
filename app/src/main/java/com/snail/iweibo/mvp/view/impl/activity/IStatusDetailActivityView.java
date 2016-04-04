@@ -116,7 +116,9 @@ public class IStatusDetailActivityView implements IBaseView {
             int size = status.getPicUrls().size();
             updateGridLayout(size, gridLayout, status.getPicUrls());
         }
-
+        tabLayout.addTab(tabLayout.newTab().setText("转发 "+ status.getRepostsCount()));
+        tabLayout.addTab(tabLayout.newTab().setText("评论 "+status.getCommentsCount()));
+        tabLayout.addTab(tabLayout.newTab().setText("赞 "+status.getAttitudesCount()));
     }
 
     /**
