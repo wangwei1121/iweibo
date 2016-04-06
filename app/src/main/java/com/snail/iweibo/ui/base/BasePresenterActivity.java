@@ -20,9 +20,7 @@ public abstract class BasePresenterActivity<V extends IBaseView> extends AppComp
             view.init(this , getLayoutInflater(), null);
             setContentView(view.getView());
             onBindView();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -55,4 +53,6 @@ public abstract class BasePresenterActivity<V extends IBaseView> extends AppComp
      * 清除View
      */
     protected void onDestroyView(){}
+
+
 }

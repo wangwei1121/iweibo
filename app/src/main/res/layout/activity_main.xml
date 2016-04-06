@@ -42,7 +42,6 @@
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"
-            android:src="@drawable/ic_add_white_36dp"
             app:fabSize="normal"
             tools:ignore="PrivateResource"/>
     </android.support.design.widget.CoordinatorLayout>
@@ -52,6 +51,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:itemIconTint="@drawable/item_menu_selector"
+        app:itemTextColor="@drawable/item_menu_selector"
         app:headerLayout="@layout/navigation_header"
+        app:itemBackground="@drawable/item_menu_color_selector"
         app:menu="@menu/navigation_menu"/>
 </android.support.v4.widget.DrawerLayout>

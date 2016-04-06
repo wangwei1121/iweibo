@@ -1,46 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="180dp"
-             android:orientation="vertical">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/main_blue"
+    android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#0f8ae6"
-        tools:ignore="ContentDescription"/>
-
-    <ImageView
+    <!-- user avatar -->
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/user_avatar"
-        android:src="@mipmap/ic_launcher"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_gravity="start"
         android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
         android:layout_marginTop="35dp"
+        app:backgroundImage="@color/main_white"
+        app:placeholderImage="@drawable/default_user_avatar"
+        app:placeholderImageScaleType="fitCenter"
+        app:roundAsCircle="true"
         tools:ignore="ContentDescription"/>
-
+    <!--user name-->
     <TextView
         android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="姓名"
-        android:layout_marginLeft="35dp"
-        android:layout_gravity="bottom"
         android:layout_below="@id/user_avatar"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
         android:layout_marginTop="20dp"
         android:textColor="@android:color/white"
-        android:textSize="18sp"/>
+        android:textSize="16sp"
+        tools:text="姓名"/>
+    <!--user state-->
     <TextView
-        android:id="@+id/user_sign"
+        android:id="@+id/user_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="当前状态"
-        android:layout_marginLeft="35dp"
-        android:layout_gravity="bottom"
         android:layout_below="@id/user_name"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginStart="35dp"
         android:layout_marginTop="10dp"
         android:textColor="@android:color/white"
-        android:textSize="18sp"/>
+        android:textSize="14sp"
+        tools:text="当前状态"/>
 </RelativeLayout>

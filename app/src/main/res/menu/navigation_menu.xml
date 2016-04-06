@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="all">
+    <group android:id="@+id/main_menu" android:checkableBehavior="all">
         <item
             android:id="@+id/main_frame"
-            android:icon="@mipmap/ic_launcher"
-            android:title="主页"/>
+            android:icon="@drawable/icon_menu_home_gray"
+            android:title="@string/string_menu_home"/>
         <item
             android:id="@+id/message_frame"
-            android:icon="@mipmap/ic_launcher"
-            android:title="消息"/>
+            android:icon="@drawable/icon_menu_message_gray"
+            android:title="@string/string_menu_message"/>
         <item
             android:id="@+id/search_frame"
-            android:icon="@mipmap/ic_launcher"
-            android:title="搜索"/>
+            android:icon="@drawable/icon_menu_search_gray"
+            android:title="@string/string_menu_search"/>
         <item
             android:id="@+id/friend_frame"
-            android:icon="@mipmap/ic_launcher"
-            android:title="好友"/>
+            android:icon="@drawable/icon_menu_friends_gray"
+            android:title="@string/string_menu_friend"/>
 
         <item
             android:id="@+id/oauth_frame"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@drawable/icon_menu_message_gray"
             android:title="认证"/>
     </group>
 </menu>

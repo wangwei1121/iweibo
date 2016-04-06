@@ -181,4 +181,10 @@
 
     <!--微博-->
     <string name="string_status_detail_title">微博正文</string>
+    <!--menu-->
+    <string name="string_menu_home">主页</string>
+    <string name="string_menu_setting">设置</string>
+    <string name="string_menu_friend">好友</string>
+    <string name="string_menu_message">消息</string>
+    <string name="string_menu_search">搜索</string>
 </resources>
