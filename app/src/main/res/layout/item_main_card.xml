@@ -10,9 +10,10 @@
     android:layout_height="wrap_content"
     android:layout_margin="5dp">
 
-    <RelativeLayout
+    <com.snail.iweibo.widget.theme.ThemeRelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
+        android:background="?attr/theme_background"
         android:layout_height="wrap_content">
 
         <com.facebook.drawee.view.SimpleDraweeView
@@ -29,14 +30,14 @@
             fresco:roundTopRight="false"
             tools:ignore="ContentDescription"/>
         <!-- 用户名 -->
-        <TextView
+        <com.snail.iweibo.widget.theme.ThemeTextView
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_toEndOf="@id/user_avatar"
             android:layout_toRightOf="@id/user_avatar"
-            android:textColor="#444444"
+            android:textColor="?attr/theme_text_view"
             android:textSize="14sp"
             tools:text="alexwan"/>
 
@@ -74,12 +75,12 @@
             android:paddingRight="10dp"
             android:paddingStart="10dp">
             <!-- 文字内容 -->
-            <TextView
+            <com.snail.iweibo.widget.theme.ThemeTextView
                 android:id="@+id/content_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/content_text"
                 android:textSize="15sp"
+                android:textColor="?attr/theme_text_view"
                 tools:text="微博内容"/>
             <!--图片-->
             <android.support.v7.widget.GridLayout
@@ -107,19 +108,19 @@
             </LinearLayout>
         </LinearLayout>
 
-        <View
+        <com.snail.iweibo.widget.theme.ThemeDividerView
             android:id="@+id/action_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/content"
-            android:background="@color/main_light_gray"/>
+            android:background="?attr/theme_divider"/>
 
         <include
             layout="@layout/item_action_layout"
             android:layout_width="match_parent"
             android:layout_height="26dp"
             android:layout_below="@id/action_divider"/>
-    </RelativeLayout>
+    </com.snail.iweibo.widget.theme.ThemeRelativeLayout>
 
 
 </android.support.v7.widget.CardView>

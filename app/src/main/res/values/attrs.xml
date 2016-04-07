@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="navigation_back" format="color"/>
-    <attr name="content_text" format="color"/>
+    <attr name="navigation_back" format="reference|color"/>
+    <attr name="theme_text_view" format="reference|color"/>
+    <attr name="theme_action_bar" format="reference|color"/>
+    <attr name="theme_tab_layout" format="reference|color"/>
+    <attr name="theme_background" format="reference|color"/>
+    <attr name="theme_divider" format="reference|color"/>
+    <attr name="theme_menu" format="reference"/>
 </resources>

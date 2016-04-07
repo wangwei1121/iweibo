@@ -13,27 +13,37 @@
         <item name="android:windowNoTitle">true</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <!-- day theme -->
     <style name="AppTheme" parent="AppTheme.Base.Light">
-        <item name="colorPrimary">@color/main_dark_blue</item>
-        <item name="colorPrimaryDark">@color/main_blue</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/main_orange</item>
         <item name="android:textColorPrimary">@color/main_white</item>
         <item name="android:textColorSecondary">@color/main_gray</item>
         <item name="android:textColorPrimaryInverse">@color/main_half_black</item>
         <item name="android:textColorSecondaryInverse">@color/main_gray</item>
         <item name="navigation_back">@color/main_blue</item>
-        <item name="content_text">@color/main_black</item>
+        <item name="theme_text_view">@color/main_black</item>
+        <item name="theme_tab_layout">@color/main_blue</item>
+        <item name="theme_background">@color/main_white</item>
+        <item name="theme_divider">@color/main_light_gray</item>
+        <item name="theme_menu">@drawable/item_menu_selector</item>
     </style>
+
+    <!--night theme -->
     <style name="AppTheme.Dark" parent="AppTheme.Base.Dark">
-        <item name="colorPrimary">@color/theme_primary_inverse</item>
-        <item name="colorPrimaryDark">@color/theme_primary_dark_inverse</item>
+        <item name="colorPrimary">@color/color_primary_dark_inverse</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark_inverse</item>
         <item name="colorAccent">@color/main_orange</item>
-        <!-- 标题栏字体颜色 -->
         <item name="android:textColorPrimary">@color/main_white</item>
         <item name="android:textColorSecondary">@color/main_gray</item>
         <item name="android:textColorPrimaryInverse">@color/main_half_black</item>
         <item name="android:textColorSecondaryInverse">@color/main_gray</item>
-        <item name="navigation_back">@color/theme_primary_inverse</item>
-        <item name="content_text">@color/main_light_gray</item>
+        <item name="navigation_back">@color/color_primary_inverse</item>
+        <item name="theme_text_view">@color/main_gray</item>
+        <item name="theme_tab_layout">@color/color_primary_inverse</item>
+        <item name="theme_background">@color/color_primary_dark_inverse</item>
+        <item name="theme_divider">@color/main_gray</item>
+        <item name="theme_menu">@drawable/item_menu_selector</item>
     </style>
 </resources>

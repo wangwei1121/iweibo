@@ -14,14 +14,13 @@ public class MainActivity extends BasePresenterActivity<IMainActivityView> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        
         super.onCreate(savedInstanceState);
     }
 
     @Override
     protected void onBindView() {
         super.onBindView();
-        view.initViews(this);
+        view.initViews();
     }
 
     @Override
@@ -32,25 +31,26 @@ public class MainActivity extends BasePresenterActivity<IMainActivityView> {
     @Override
     public void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        view.onPostCreate();
+        view.getDrawerToggle().syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        view.onConfigurationChanged(newConfig);
+        view.getDrawerToggle().onConfigurationChanged(newConfig);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.navigation_menu , menu);
+//        getMenuInflater().inflate(R.menu.navigation_menu , menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(view.onOptionsItemSelected(item))
+        if(view.getDrawerToggle().onOptionsItemSelected(item)){
             return true;
+        }
         int id = item.getItemId();
         switch (id){
             case R.id.main_frame:

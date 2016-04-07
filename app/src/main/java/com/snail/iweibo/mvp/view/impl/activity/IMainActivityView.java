@@ -3,9 +3,8 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build.VERSION;
@@ -33,11 +32,11 @@ import android.view.WindowManager;
 
 import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.view.IBaseView;
-import com.snail.iweibo.ui.activity.MainActivity;
 import com.snail.iweibo.ui.base.BasePresenterActivity;
 import com.snail.iweibo.ui.fragment.HomeFragment;
 import com.snail.iweibo.ui.fragment.SettingFragment;
 import com.snail.iweibo.util.SharePreferencesUtil;
+import com.snail.iweibo.widget.theme.ThemeUIInterface;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,7 +53,6 @@ public class IMainActivityView implements IBaseView {
     DrawerLayout mDrawerLayout;
     @Bind(R.id.root_layout)
     CoordinatorLayout mRootLayout;
-    ActionBarDrawerToggle drawerToggle;
     @Bind(R.id.navigation)
     NavigationView navigationView;
     @Bind(R.id.tab_layout)
@@ -62,10 +60,14 @@ public class IMainActivityView implements IBaseView {
     @Bind(R.id.fab_btn)
     FloatingActionButton fabBtn;
     private Fragment lastFragment;
+    private BasePresenterActivity context;
+    private ActionBarDrawerToggle drawerToggle;
+
     @Override
-    public void init(Context context , LayoutInflater inflater, ViewGroup viewGroup) {
+    public void init(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         mView = inflater.inflate(R.layout.activity_main, viewGroup, false);
         ButterKnife.bind(this, mView);
+        this.context = (BasePresenterActivity) context;
     }
 
     @Override
@@ -74,14 +76,12 @@ public class IMainActivityView implements IBaseView {
     }
 
     /**
-     * 初始化界面
-     *
-     * @param activity activity
+     * 初始化View
      */
-    public void initViews(final MainActivity activity) {
+    public void initViews() {
         // toolbar
-        activity.setSupportActionBar(mToolbar);
-        final ActionBar actionBar = activity.getSupportActionBar();
+        context.setSupportActionBar(mToolbar);
+        final android.support.v7.app.ActionBar actionBar = context.getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
@@ -89,85 +89,23 @@ public class IMainActivityView implements IBaseView {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         // drawer toggle
-        this.drawerToggle = new ActionBarDrawerToggle(activity, mDrawerLayout, R.string.tool_name, R.string.tool_name);
+        this.drawerToggle = new ActionBarDrawerToggle(context, mDrawerLayout, R.string.tool_name, R.string.tool_name);
         drawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(drawerToggle);
         navigationView.setCheckedItem(R.id.main_frame);
         // fragment
-
         final HomeFragment homeFragment = new HomeFragment();
         homeFragment.setTabLayout(tabLayout);
         lastFragment = homeFragment;
         final SettingFragment settingFragment = new SettingFragment();
-        final FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout , homeFragment).commit();
+        final FragmentTransaction transaction = context.getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_layout, homeFragment).commit();
         View view = navigationView.getHeaderView(0);
         view.findViewById(R.id.theme_switch).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharePreferencesUtil.setDarkTheme(activity);
-                Window window = activity.getWindow();
-                final View contentView = window.getDecorView().findViewById(android.R.id.content);
-
-                contentView.setDrawingCacheEnabled(true);
-                mView.buildDrawingCache();
-                final Bitmap bitmap = Bitmap.createBitmap(contentView.getDrawingCache());
-                contentView.setDrawingCacheEnabled(false);
-                Log.i("IMainActivityView" , bitmap.toString());
-                boolean isDark = SharePreferencesUtil.isDarkTheme(activity);
-                final View animView = new View(contentView.getContext().getApplicationContext());
-                animView.setVisibility(View.VISIBLE);
-                if(VERSION.SDK_INT > VERSION_CODES.JELLY_BEAN){
-                    animView.setBackground(new BitmapDrawable(activity.getResources() , bitmap));
-                }else {
-                    animView.setBackgroundDrawable(new BitmapDrawable(activity.getResources() , bitmap));
-                }
-                // 添加container 到当前屏幕
-                ((ViewGroup)contentView).addView(animView , new LayoutParams(LayoutParams.MATCH_PARENT , LayoutParams.MATCH_PARENT));
-                // 改变状态颜色
-                if(VERSION.SDK_INT > VERSION_CODES.LOLLIPOP){
-                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-                    activity.getResources().newTheme().setTo(activity.getTheme());
-                    window.setStatusBarColor(activity.getResources().getColor(isDark ? R.color.theme_primary_dark_inverse : R
-                        .color.main_dark_blue));
-                }
-                //
-                String color = isDark ? "#424242" : "#1976D2";
-                ColorDrawable drawable = new ColorDrawable(Color.parseColor(color));
-                if(actionBar != null){
-                    actionBar.setBackgroundDrawable(drawable);
-                }
-                tabLayout.setBackgroundDrawable(drawable);
-                navigationView.getHeaderView(0).setBackgroundDrawable(drawable);
-                //
-                ObjectAnimator animator = ObjectAnimator.ofFloat(animView , "alpha" , 0f).setDuration(200);
-                animator.addListener(new AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        ((ViewGroup) contentView).removeView(animView);
-                        bitmap.recycle();
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-                });
-                animator.start();
-
-                mDrawerLayout.closeDrawers();
+                SharePreferencesUtil.setDarkTheme(context);
+                switchTheme();
             }
         });
         // navigation
@@ -181,15 +119,15 @@ public class IMainActivityView implements IBaseView {
                 switch (id) {
                     case R.id.main_frame:
                         tabLayout.setVisibility(View.VISIBLE);
-                        switchFragment(activity , lastFragment, homeFragment);
+                        switchFragment(context, lastFragment, homeFragment);
                         break;
                     case R.id.message_frame:
                         tabLayout.setVisibility(View.GONE);
-                        switchFragment(activity , lastFragment, settingFragment);
+                        switchFragment(context, lastFragment, settingFragment);
                         break;
                     case R.id.search_frame:
                         tabLayout.setVisibility(View.GONE);
-                        switchFragment(activity , lastFragment, settingFragment);
+                        switchFragment(context, lastFragment, settingFragment);
                         break;
                     default:
                         break;
@@ -199,25 +137,14 @@ public class IMainActivityView implements IBaseView {
         });
     }
 
-    public void onPostCreate() {
-        drawerToggle.syncState();
-    }
-
-    public void onConfigurationChanged(Configuration newConfig) {
-        drawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return drawerToggle.onOptionsItemSelected(item);
-    }
-
     /**
      * 切换Fragment
+     *
      * @param activity activity
-     * @param from from
-     * @param to to
+     * @param from     from
+     * @param to       to
      */
-    public void switchFragment(BasePresenterActivity activity , Fragment from , Fragment to){
+    public void switchFragment(BasePresenterActivity activity, Fragment from, Fragment to) {
         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
         if (!to.isAdded()) {
             // 隐藏当前的fragment，add下一个到Activity中
@@ -227,5 +154,96 @@ public class IMainActivityView implements IBaseView {
             transaction.hide(from).show(to).commit();
         }
         lastFragment = to;
+    }
+
+    /**
+     * 切换主题
+     */
+    public void switchTheme() {
+        Window window = context.getWindow();
+        // get current window decor view
+        final View contentView = window.getDecorView().findViewById(android.R.id.content);
+        contentView.setDrawingCacheEnabled(true);
+        mView.buildDrawingCache();
+        // build decor view bitmap
+        final Bitmap bitmap = Bitmap.createBitmap(contentView.getDrawingCache());
+        contentView.setDrawingCacheEnabled(false);
+        // theme config
+        boolean isDark = SharePreferencesUtil.isDarkTheme(context);
+        // generate animation view
+        final View animView = new View(contentView.getContext().getApplicationContext());
+        if (VERSION.SDK_INT > VERSION_CODES.JELLY_BEAN) {
+            animView.setBackground(new BitmapDrawable(context.getResources(), bitmap));
+        } else {
+            animView.setBackgroundDrawable(new BitmapDrawable(context.getResources(), bitmap));
+        }
+        // add animation view to window's decor
+        ((ViewGroup) contentView)
+            .addView(animView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+
+        // change theme
+        context.setTheme(isDark ? R.style.AppTheme_Dark : R.style.AppTheme);
+        changeTheme(mDrawerLayout, context.getTheme());
+        // change status bar
+        int statusColor =
+            context.getResources().getColor(isDark ? R.color.color_primary_dark_inverse : R.color.main_dark_blue);
+        if (VERSION.SDK_INT > VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(statusColor);
+        }
+        // action bar
+        ActionBar actionBar = context.getSupportActionBar();
+        int actionBarColor =
+            context.getResources().getColor(isDark ? R.color.color_primary_dark_inverse : R.color.main_blue);
+        if (actionBar != null) {
+            actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
+        }
+        int colorId = isDark ? R.color.color_primary_dark_inverse : R.color.main_white;
+        navigationView.setBackgroundColor(context.getResources().getColor(colorId));
+        // navigation view
+        ObjectAnimator animator = ObjectAnimator.ofFloat(animView, "alpha", 0f).setDuration(200);
+        animator.addListener(new AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                ((ViewGroup) contentView).removeView(animView);
+                bitmap.recycle();
+                Runtime.getRuntime().gc();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        animator.start();
+    }
+
+    public void changeTheme(View view, Resources.Theme theme) {
+
+        if (view instanceof ThemeUIInterface) {
+            Log.i("IMainActivityView" , view.toString() +" - ");
+            ((ThemeUIInterface) view).setTheme(theme);
+        }
+        if (view instanceof ViewGroup) {
+            int count = ((ViewGroup) view).getChildCount();
+            for (int i = 0; i < count; i++) {
+                changeTheme(((ViewGroup) view).getChildAt(i), theme);
+            }
+        }
+    }
+
+    public ActionBarDrawerToggle getDrawerToggle() {
+        return drawerToggle;
     }
 }
