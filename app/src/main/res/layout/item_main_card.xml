@@ -47,7 +47,7 @@
             android:layout_below="@+id/user_name"
             android:layout_toEndOf="@id/user_avatar"
             android:layout_toRightOf="@id/user_avatar"
-            android:textColor="#f4511e"
+            android:textColor="@color/main_orange"
             android:textSize="14sp"
             tools:text="22分钟之前"/>
 
@@ -78,7 +78,7 @@
                 android:id="@+id/content_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/main_black"
+                android:textColor="?attr/content_text"
                 android:textSize="15sp"
                 tools:text="微博内容"/>
             <!--图片-->
