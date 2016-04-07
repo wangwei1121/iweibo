@@ -6,12 +6,12 @@
     android:soundEffectsEnabled="true"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
+    <com.snail.iweibo.widget.theme.ThemeRecyclerView
         android:id="@+id/recycler_layout"
-        android:background="#22444444"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/theme_background"
         android:orientation="vertical">
 
-    </android.support.v7.widget.RecyclerView>
+    </com.snail.iweibo.widget.theme.ThemeRecyclerView>
 </android.support.v4.widget.SwipeRefreshLayout>
