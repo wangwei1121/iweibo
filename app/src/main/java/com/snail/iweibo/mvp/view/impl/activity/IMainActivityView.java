@@ -29,6 +29,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.view.IBaseView;
@@ -101,10 +102,15 @@ public class IMainActivityView implements IBaseView {
         final FragmentTransaction transaction = context.getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, homeFragment).commit();
         View view = navigationView.getHeaderView(0);
-        view.findViewById(R.id.theme_switch).setOnClickListener(new OnClickListener() {
+        final ImageView themeWitch = (ImageView) view.findViewById(R.id.theme_switch);
+        themeWitch.setImageResource(SharePreferencesUtil.isDarkTheme(context) ? R.drawable.icon_theme_day :
+            R.drawable.icon_theme_night);
+        themeWitch.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharePreferencesUtil.setDarkTheme(context);
+                themeWitch.setImageResource(SharePreferencesUtil.isDarkTheme(context) ? R.drawable.icon_theme_day :
+                    R.drawable.icon_theme_night);
                 switchTheme();
             }
         });
