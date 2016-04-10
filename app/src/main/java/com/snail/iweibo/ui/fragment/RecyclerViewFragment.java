@@ -13,11 +13,13 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.snail.iweibo.R;
 import com.snail.iweibo.api.ApiServiceHelper;
 import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.StatusList;
 import com.snail.iweibo.mvp.view.impl.fragment.IRecyclerFragmentView;
+import com.snail.iweibo.oauth.AccessTokenKeeper;
 import com.snail.iweibo.oauth.Constants;
 import com.snail.iweibo.ui.activity.StatusDetailActivity;
 import com.snail.iweibo.ui.adapter.StatusListAdapter;
@@ -61,7 +63,14 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
         if(TextUtils.isEmpty(Constants.TOKEN)){
             return;
         }
-        ApiServiceHelper.getPublicTimeLine(Constants.TOKEN, 50, 1, 0)
+        String token;
+        Oauth2AccessToken accessToken = AccessTokenKeeper.readAccessToken(getActivity());
+        if(!TextUtils.isEmpty(accessToken.getToken())){
+            token = accessToken.getToken();
+        }else{
+            token = Constants.TOKEN;
+        }
+        ApiServiceHelper.getPublicTimeLine(token , 50, 1, 0)
                         .subscribe(new Subscriber<StatusList>() {
             @Override
             public void onCompleted() {

@@ -53,4 +53,5 @@ public class ApiServiceHelper {
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread());
     }
+
 }

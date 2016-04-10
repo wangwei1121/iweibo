@@ -187,4 +187,7 @@
     <string name="string_menu_friend">好友</string>
     <string name="string_menu_message">消息</string>
     <string name="string_menu_search">搜索</string>
+    <!--login -->
+    <string name="string_action_login">马上登录</string>
+    <string name="string_action_browse">随便看看</string>
 </resources>
