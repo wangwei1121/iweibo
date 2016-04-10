@@ -27,6 +27,10 @@ public class ApiServiceHelper {
     private static CommentApiService getCommentService(String url){
         return RetrofitClient.instance(url).create(CommentApiService.class);
     }
+
+    public static <T> T getApiService(final String url , final Class<T> service){
+        return RetrofitClient.instance(url).create(service);
+    }
     /**
      * getPublicTimeLine
      *

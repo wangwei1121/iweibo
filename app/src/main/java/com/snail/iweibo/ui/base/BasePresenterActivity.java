@@ -59,5 +59,8 @@ public abstract class BasePresenterActivity<V extends IBaseView> extends AppComp
      */
     protected void onDestroyView(){}
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

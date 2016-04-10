@@ -49,7 +49,7 @@ public class SplashActivity extends BasePresenterActivity<ISplashActivityView> i
                     view.setProgressBarVisible(false);
                     finish();
                 }
-            } , 4000);
+            } , 200);
 
         }
     }
@@ -119,5 +119,10 @@ public class SplashActivity extends BasePresenterActivity<ISplashActivityView> i
     @Override
     public void onCancel() {
         //
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 }

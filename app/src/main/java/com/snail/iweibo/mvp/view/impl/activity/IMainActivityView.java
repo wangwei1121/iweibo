@@ -3,6 +3,7 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -21,6 +22,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,9 +32,16 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.facebook.common.util.UriUtil;
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.snail.iweibo.R;
+import com.snail.iweibo.mvp.model.UserBean;
 import com.snail.iweibo.mvp.view.IBaseView;
+import com.snail.iweibo.ui.activity.UserDetailActivity;
 import com.snail.iweibo.ui.base.BasePresenterActivity;
 import com.snail.iweibo.ui.fragment.HomeFragment;
 import com.snail.iweibo.ui.fragment.SettingFragment;
@@ -60,10 +69,18 @@ public class IMainActivityView implements IBaseView {
     TabLayout tabLayout;
     @Bind(R.id.fab_btn)
     FloatingActionButton fabBtn;
+    @Bind(R.id.navigate_icon)
+    LinearLayout navigateBtn;
+    @Bind(R.id.tab_user_avatar)
+    SimpleDraweeView userHeader;
+    @Bind(R.id.tab_user_name)
+    TextView tabUserName;
     private Fragment lastFragment;
     private BasePresenterActivity context;
     private ActionBarDrawerToggle drawerToggle;
-
+    private SimpleDraweeView userAvatar;
+    private TextView userName;
+    private TextView userState;
     @Override
     public void init(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         mView = inflater.inflate(R.layout.activity_main, viewGroup, false);
@@ -87,7 +104,7 @@ public class IMainActivityView implements IBaseView {
             actionBar.setDisplayShowHomeEnabled(true);
             actionBar.setDisplayShowTitleEnabled(true);
             // add back icon
-            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(false);
         }
         // drawer toggle
         this.drawerToggle = new ActionBarDrawerToggle(context, mDrawerLayout, R.string.tool_name, R.string.tool_name);
@@ -101,8 +118,9 @@ public class IMainActivityView implements IBaseView {
         final SettingFragment settingFragment = new SettingFragment();
         final FragmentTransaction transaction = context.getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, homeFragment).commit();
-        View view = navigationView.getHeaderView(0);
-        final ImageView themeWitch = (ImageView) view.findViewById(R.id.theme_switch);
+        View headerView = navigationView.getHeaderView(0);
+        final ImageView themeWitch = (ImageView) headerView.findViewById(R.id.theme_switch);
+
         themeWitch.setImageResource(SharePreferencesUtil.isDarkTheme(context) ? R.drawable.icon_theme_day :
             R.drawable.icon_theme_night);
         themeWitch.setOnClickListener(new OnClickListener() {
@@ -114,6 +132,22 @@ public class IMainActivityView implements IBaseView {
                 switchTheme();
             }
         });
+        // 用户头像
+        userAvatar = (SimpleDraweeView) headerView.findViewById(R.id.user_avatar);
+        RoundingParams roundingParams = userAvatar.getHierarchy().getRoundingParams();
+        roundingParams.setBorder(R.color.main_white , 2);
+        userAvatar.getHierarchy().setRoundingParams(roundingParams);
+        userAvatar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context , UserDetailActivity.class);
+                context.startActivity(intent);
+            }
+        });
+        // 用户名
+        userName = (TextView) headerView.findViewById(R.id.user_name);
+        // 用户描述
+        userState = (TextView) headerView.findViewById(R.id.user_state);
         // navigation
         navigationView.setNavigationItemSelectedListener(new OnNavigationItemSelectedListener() {
             @Override
@@ -139,6 +173,13 @@ public class IMainActivityView implements IBaseView {
                         break;
                 }
                 return false;
+            }
+        });
+        //
+        navigateBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDrawerLayout.openDrawer(Gravity.LEFT);
             }
         });
     }
@@ -251,5 +292,14 @@ public class IMainActivityView implements IBaseView {
 
     public ActionBarDrawerToggle getDrawerToggle() {
         return drawerToggle;
+    }
+
+    public void updateUserInfo(UserBean userBean) {
+        userAvatar.setImageURI(UriUtil.parseUriOrNull(userBean.getAvatar_hd()));
+        userName.setText(userBean.getScreen_name());
+        userState.setText(userBean.getDescription());
+        //
+        userHeader.setImageURI(UriUtil.parseUriOrNull(userBean.getAvatar_hd()));
+        tabUserName.setText(userBean.getScreen_name());
     }
 }

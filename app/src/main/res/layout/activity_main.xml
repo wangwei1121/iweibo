@@ -57,4 +57,5 @@
         app:headerLayout="@layout/navigation_header"
         app:itemBackground="@drawable/item_menu_color_selector"
         app:menu="@menu/navigation_menu"/>
+
 </com.snail.iweibo.widget.theme.ThemeDrawerLayout>

@@ -10,10 +10,45 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/tool_bar"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="?attr/actionBarSize"
+        app:contentInsetEnd="0dp"
+        app:contentInsetStart="5dp"
         app:layout_scrollFlags="scroll|enterAlways|exitUntilCollapsed"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        tools:ignore="PrivateResource"/>
+        tools:ignore="PrivateResource">
+
+        <LinearLayout
+            android:id="@+id/navigate_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:src="@drawable/icon_drawer_home"
+                tools:ignore="ContentDescription"/>
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/tab_user_avatar"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="center_vertical"
+                android:padding="10dp"
+                app:backgroundImage="@color/main_white"
+                app:placeholderImage="@drawable/default_user_avatar"
+                app:roundAsCircle="true"
+                />
+
+            <TextView
+                android:id="@+id/tab_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="未登录"
+                android:textColor="@color/main_white"
+                android:textSize="16sp"/>
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
 
     <com.snail.iweibo.widget.theme.ThemeTabLayout
         android:id="@+id/tab_layout"
