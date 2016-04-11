@@ -118,17 +118,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
-                    tools:ignore="PrivateResource">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="用户详情"
-                        android:textColor="@color/main_white"
-                        android:textSize="20sp"
-                        />
-                </android.support.v7.widget.Toolbar>
+                    tools:ignore="PrivateResource"/>
 
             </android.support.design.widget.CollapsingToolbarLayout>
 

@@ -86,6 +86,9 @@ public class IUserDetailActivity implements IBaseView {
             //注意不是设置 ContentView 的 FitsSystemWindows, 而是设置 ContentView 的第一个子 View . 使其不为系统 View 预留空间.
             ViewCompat.setFitsSystemWindows(mChildView, false);
         }
+        toolbarLayout.setTitle("用户详情");
+        toolbarLayout.setExpandedTitleColor(0);
+        toolbarLayout.setCollapsedTitleTextColor(context.getResources().getColor(R.color.main_white));
     }
 
     public void updateView(UserBean userBean) {

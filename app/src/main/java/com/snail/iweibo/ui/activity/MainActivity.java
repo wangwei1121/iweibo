@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.snail.iweibo.R;
@@ -119,13 +118,14 @@ public class MainActivity extends BasePresenterActivity<IMainActivityView> {
 
     @Override
     public void onBackPressed() {
-        long current = System.currentTimeMillis();
-        long minus = current - last;
-        if(minus > 1000){
-            last = current;
-            Toast.makeText(this , "再次点击退出程序" , Toast.LENGTH_SHORT).show();
-        }else{
-            super.onBackPressed();
-        }
+//        long current = System.currentTimeMillis();
+//        long minus = current - last;
+//        if(minus > 1000){
+//            last = current;
+//            Toast.makeText(this , "再次点击退出程序" , Toast.LENGTH_SHORT).show();
+//        }else{
+//            super.onBackPressed();
+//        }
+        moveTaskToBack(true);
     }
 }
