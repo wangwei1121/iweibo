@@ -13,7 +13,7 @@ import java.util.Locale;
 public class TimeUtils {
     public static String UTC_FORMAT_STRING = "EEE MMM dd HH:mm:ss zzz yyyy";
     public static String DEFAULT_FORMAT_STRING = "yyyy-MM-dd HH:mm:ss";
-    public static String MINUTE_SECOND = "mm:ss";
+    public static String MINUTE_SECOND = "HH:mm";
 
     public static String formatUTCTime(String time) {
         // week month day hours:minus:second year

@@ -50,6 +50,7 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        view.unBindView();
     }
 
     @Override

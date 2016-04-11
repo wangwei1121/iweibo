@@ -30,7 +30,10 @@ public class HomeFragment extends BasePresenterFragment<IHomeFragmentView> {
         view.updateView();
     }
 
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
 
     @Override
     protected Class<IHomeFragmentView> getViewClass() {

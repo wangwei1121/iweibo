@@ -190,4 +190,8 @@
     <!--login -->
     <string name="string_action_login">马上登录</string>
     <string name="string_action_browse">随便看看</string>
+    <!-- user detail-->
+    <string name="string_user_friends_count">关注: %1$s</string>
+    <string name="string_user_follower_count">粉丝: %1$s</string>
+    <string name="string_user_description">简介: %1$s</string>
 </resources>

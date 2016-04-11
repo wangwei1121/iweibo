@@ -35,6 +35,8 @@ public class ThemeRecyclerView extends RecyclerView implements ThemeUIInterface 
     public void setTheme(Theme themeId) {
         if(backgroundColor != 0){
             ViewAttributeUtil.applyBackgroundDrawable(this , themeId , backgroundColor);
+            // TODO
         }
     }
+
 }

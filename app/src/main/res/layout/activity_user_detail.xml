@@ -5,11 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         android:orientation="vertical">
         <!-- title -->
         <android.support.design.widget.AppBarLayout
@@ -29,34 +31,42 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="46dp"
+                    android:background="?attr/theme_background"
                     android:orientation="vertical">
-
-                    <com.facebook.drawee.view.SimpleDraweeView
-                        android:id="@+id/user_avatar"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="50dp"
-                        app:backgroundImage="@color/main_white"
-                        app:roundAsCircle="true"/>
 
                     <com.facebook.drawee.view.SimpleDraweeView
                         android:id="@+id/header_bg"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="150dp"
+                        android:background="@drawable/default_header_bg"
+                        />
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/user_avatar"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="110dp"
+                        app:backgroundImage="@color/main_light_gray"
+                        app:placeholderImage="@drawable/default_user_avatar"
+                        app:placeholderImageScaleType="fitXY"
+                        app:roundAsCircle="true"/>
 
                     <TextView
                         android:id="@+id/user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
                         android:layout_below="@id/user_avatar"
-                        android:layout_centerHorizontal="true"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="20dp"
-                        android:text="用户名称"
-                        android:textColor="@color/main_white"
-                        android:textSize="16sp"/>
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:textColor="?attr/theme_text_view"
+                        android:textSize="16sp"
+                        tools:text="用户名称"/>
 
                     <RelativeLayout
                         android:id="@+id/award_layout"
@@ -66,25 +76,30 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="6dp">
 
-                        <View
-                            android:id="@+id/divider"
-                            android:layout_width="1dp"
-                            android:layout_height="10dp"
-                            android:layout_centerInParent="true"
-                            android:background="@color/main_white"/>
 
                         <TextView
                             android:id="@+id/friend_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
-                            android:layout_marginRight="10dp"
-                            android:layout_toLeftOf="@id/divider"
-                            android:layout_toStartOf="@id/divider"
-                            android:text="关注：100000"
-                            android:textColor="@color/main_white"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
+                            android:textColor="@color/main_gray"
                             android:textSize="14sp"
-                            />
+                            tools:ignore="RelativeOverlap"
+                            tools:text="关注：100000"/>
+
+                        <View
+                            android:id="@+id/divider"
+                            android:layout_width="1dp"
+                            android:layout_height="10dp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_toEndOf="@id/friend_count"
+                            android:layout_toRightOf="@id/friend_count"
+                            android:background="@color/main_gray"/>
 
                         <TextView
                             android:id="@+id/follower_count"
@@ -94,23 +109,32 @@
                             android:layout_marginStart="10dp"
                             android:layout_toEndOf="@id/divider"
                             android:layout_toRightOf="@id/divider"
-                            android:text="粉丝：100000"
-                            android:textColor="@color/main_white"
+                            android:textColor="@color/main_gray"
                             android:textSize="14sp"
+                            tools:text="粉丝：100000"
                             />
                     </RelativeLayout>
 
                     <TextView
+                        android:id="@+id/user_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
                         android:layout_below="@id/award_layout"
-                        android:layout_centerHorizontal="true"
-                        android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="20dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginTop="5dp"
-                        android:text="简介：xxxxxxxxx"
-                        android:textColor="@color/main_white"
-                        android:textSize="16sp"/>
+                        android:textColor="@color/main_gray"
+                        android:textSize="12sp"
+                        tools:text="简介：xxxxxxxxx"/>
+                    <View
+                        android:layout_height="2dp"
+                        android:layout_width="match_parent"
+                        android:background="?attr/theme_divider"
+                        android:layout_below="@id/user_description"
+                        />
                 </RelativeLayout>
 
                 <android.support.v7.widget.Toolbar
@@ -123,9 +147,12 @@
             </android.support.design.widget.CollapsingToolbarLayout>
 
             <android.support.design.widget.TabLayout
+                android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/main_white"/>
+                android:layout_height="40dp"
+                app:tabTextColor="?attr/theme_text_view"
+                app:tabSelectedTextColor="@color/main_orange"
+                android:background="?attr/theme_background"/>
         </android.support.design.widget.AppBarLayout>
         <!-- comment info -->
         <FrameLayout
@@ -138,22 +165,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fillViewport="true">
-
-                <ProgressBar
-                    style="@style/Widget.AppCompat.ProgressBar"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"/>
             </android.support.v4.widget.NestedScrollView>
         </FrameLayout>
 
-        <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginLeft="16dp"-->
-        <!--android:layout_marginStart="16dp"-->
-        <!--app:fabSize="normal"-->
-        <!--app:layout_anchor="@id/header_bg"-->
-        <!--app:layout_anchorGravity="bottom|start|left"/>-->
     </android.support.design.widget.CoordinatorLayout>
 </android.support.v4.widget.DrawerLayout>

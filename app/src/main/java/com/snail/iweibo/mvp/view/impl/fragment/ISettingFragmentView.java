@@ -26,4 +26,7 @@ public class ISettingFragmentView implements IBaseView {
         return mView;
     }
 
+    public void unBindView(){
+        ButterKnife.unbind(this);
+    }
 }

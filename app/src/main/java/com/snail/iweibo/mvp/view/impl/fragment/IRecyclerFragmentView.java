@@ -55,4 +55,8 @@ public class IRecyclerFragmentView implements IBaseView {
     public void setOnRefreshListener(OnRefreshListener listener){
         refreshLayout.setOnRefreshListener(listener);
     }
+
+    public void unBindView(){
+        ButterKnife.unbind(this);
+    }
 }

@@ -20,5 +20,5 @@ public class ICommentAdapterView implements IBaseView {
     public View getView() {
         return null;
     }
-    //
+
 }

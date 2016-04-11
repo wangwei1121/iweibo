@@ -47,7 +47,7 @@
         <item name="theme_text_view">@color/main_gray</item>
         <item name="theme_tab_layout">@color/color_primary_inverse</item>
         <item name="theme_background">@color/color_primary_dark_inverse</item>
-        <item name="theme_divider">@color/main_gray</item>
+        <item name="theme_divider">@color/main_dark_gray</item>
         <item name="theme_menu">@drawable/item_menu_selector</item>
     </style>
 </resources>
