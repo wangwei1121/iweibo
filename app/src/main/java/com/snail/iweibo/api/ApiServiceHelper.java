@@ -18,16 +18,8 @@ public class ApiServiceHelper {
     /**
      * 微博API接口
      *
-     * @return WeiboApiService
+     * @return T Service
      */
-    private static WeiBoApiService getWeiBoService(String baseUrl) {
-        return RetrofitClient.instance(baseUrl).create(WeiBoApiService.class);
-    }
-
-    private static CommentApiService getCommentService(String url){
-        return RetrofitClient.instance(url).create(CommentApiService.class);
-    }
-
     public static <T> T getApiService(final String url , final Class<T> service){
         return RetrofitClient.instance(url).create(service);
     }
@@ -40,19 +32,18 @@ public class ApiServiceHelper {
      * @param app        是否只获取当前应用的数据。0为否（所有数据），1为是（仅当前应用），默认为0。
      */
     public static Observable<StatusList> getPublicTimeLine(String token, int count, int page, int app) {
-        return getWeiBoService(Configuration.WEIBO_BASE_URL)
+        return getApiService(Configuration.WEIBO_BASE_URL , WeiBoApiService.class)
             .getPublicTimeLine(token, count, page, app)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread());
     }
-
 
     /**
      * 单条微博的评论数
      */
     public static Observable<CommentList> getComments(String token, long statusId, long sinceId, long maxId
         , int count, int page, int app) {
-        return getCommentService(Configuration.WEIBO_BASE_URL)
+        return getApiService(Configuration.WEIBO_BASE_URL , CommentApiService.class)
             .getComments(token, statusId, sinceId, maxId, count, page, app)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread());

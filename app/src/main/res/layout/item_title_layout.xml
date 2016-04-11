@@ -56,6 +56,7 @@
         android:layout_height="46dp"
         android:background="?attr/colorPrimary"
         app:tabMode="fixed"
+        android:visibility="gone"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         tools:ignore="PrivateResource"/>
 </android.support.design.widget.AppBarLayout>

@@ -1,7 +1,5 @@
 package com.snail.iweibo.ui.fragment;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -16,6 +14,7 @@ import android.widget.Toast;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.snail.iweibo.R;
 import com.snail.iweibo.api.ApiServiceHelper;
+import com.snail.iweibo.api.WeiBoApiService;
 import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.StatusList;
 import com.snail.iweibo.mvp.view.impl.fragment.IRecyclerFragmentView;
@@ -27,6 +26,8 @@ import com.snail.iweibo.ui.adapter.StatusListAdapter.OnItemClickListener;
 import com.snail.iweibo.ui.base.BasePresenterFragment;
 
 import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * RecyclerViewFragment - FragmentPresenter
@@ -35,6 +36,8 @@ import rx.Subscriber;
 public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmentView> implements OnRefreshListener ,
     OnClickListener , OnItemClickListener{
     private StatusListAdapter cardViewAdapter;
+    private int position;
+    private boolean isVisible;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,12 +60,6 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
     }
 
     private void initData() {
-        SharedPreferences preferences =  getActivity().getSharedPreferences(Constants.PROJECT_NAME , Context.MODE_PRIVATE);
-//        String token = preferences.getString(Constants.SINA_TOKEN , "");
-        Log.i("RecyclerViewFragment " , Constants.TOKEN);
-        if(TextUtils.isEmpty(Constants.TOKEN)){
-            return;
-        }
         String token;
         Oauth2AccessToken accessToken = AccessTokenKeeper.readAccessToken(getActivity());
         if(!TextUtils.isEmpty(accessToken.getToken())){
@@ -70,7 +67,10 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
         }else{
             token = Constants.TOKEN;
         }
-        ApiServiceHelper.getPublicTimeLine(token , 50, 1, 0)
+        ApiServiceHelper.getApiService(Constants.WEIBO_BASE_URL , WeiBoApiService.class)
+                        .getFriendsTimeLine(token ,0 ,0,  50, 1, 0 , 0 , 0)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<StatusList>() {
             @Override
             public void onCompleted() {
@@ -103,14 +103,13 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
         return IRecyclerFragmentView.class;
     }
 
-    public static Fragment newInstance() {
+    public static Fragment newInstance(int position) {
         return new RecyclerViewFragment();
     }
 
     @Override
     public void onRefresh() {
         // 下拉刷新
-
         view.refresh(false);
     }
 
@@ -155,6 +154,12 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
                 Toast.makeText(getContext() , String.valueOf(v.getTag()) , Toast.LENGTH_SHORT).show();
                 break;
         }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+
     }
 
     @Override

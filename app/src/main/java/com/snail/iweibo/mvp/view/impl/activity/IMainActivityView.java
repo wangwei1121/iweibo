@@ -158,7 +158,7 @@ public class IMainActivityView implements IBaseView {
                 // Fragment 切换
                 switch (id) {
                     case R.id.main_frame:
-                        tabLayout.setVisibility(View.VISIBLE);
+                        tabLayout.setVisibility(View.GONE);
                         switchFragment(context, lastFragment, homeFragment);
                         break;
                     case R.id.message_frame:

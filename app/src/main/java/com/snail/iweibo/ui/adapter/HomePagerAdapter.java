@@ -24,7 +24,7 @@ public class HomePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return RecyclerViewFragment.newInstance();
+        return RecyclerViewFragment.newInstance(position);
     }
 
     @Override
@@ -49,18 +49,17 @@ public class HomePagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 4;
+        return 1;
     }
+
 
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "热门";
-            case 1:
-            case 2:
+                return "首页";
             default:
-                return "标题";
+                return "";
         }
     }
 }

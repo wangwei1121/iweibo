@@ -26,20 +26,11 @@ public class HomeFragment extends BasePresenterFragment<IHomeFragmentView> {
 
     @Override
     protected void onBindView() {
-        view.initView(getActivity());
-        if(tabLayout != null){
-            view.setTabLayout(tabLayout);
-        }
-        initData();
+        super.onBindView();
+        view.updateView();
     }
 
 
-    /**
-     * initData
-     */
-    private void initData() {
-
-    }
 
     @Override
     protected Class<IHomeFragmentView> getViewClass() {

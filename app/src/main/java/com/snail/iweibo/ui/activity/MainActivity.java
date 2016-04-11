@@ -118,14 +118,12 @@ public class MainActivity extends BasePresenterActivity<IMainActivityView> {
 
     @Override
     public void onBackPressed() {
-//        long current = System.currentTimeMillis();
-//        long minus = current - last;
-//        if(minus > 1000){
-//            last = current;
-//            Toast.makeText(this , "再次点击退出程序" , Toast.LENGTH_SHORT).show();
-//        }else{
-//            super.onBackPressed();
-//        }
-        moveTaskToBack(true);
+        long current = System.currentTimeMillis();
+        long minus = current - last;
+        if(minus > 1000){
+            last = current;
+        }else{
+            moveTaskToBack(true);
+        }
     }
 }
