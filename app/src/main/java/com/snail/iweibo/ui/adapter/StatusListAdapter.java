@@ -75,16 +75,19 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.createTime.setText(TimeUtils.formatUTCTimes(bean.getCreatedAt()));
         // 来自
         Spanned span = Html.fromHtml(String.format(context.getResources().getString(R.string.string_statuses_from),
-            bean.getSource()));
+                bean.getSource()));
         holder.from.setText(span);
         // 微博内容 TODO
-        holder.contentText.setText(SpanUtil.buildSpan(context , bean.getText()));
+        holder.contentText.setText(SpanUtil.buildSpan(context, bean.getText()));
         // 被转发的微博字段
         Status status = bean.getRetweetedStatus();
         if (status != null) {
             Log.i("StatusListAdapter", status.toString());
             holder.retweetedLayout.setVisibility(View.VISIBLE);
-            holder.nameContent.setText("@" + status.getUser().getName() + ":" + status.getText());
+            String name = status.getUser() == null || status.getUser().getName() == null ? "" : status.getUser().getName();
+            holder.nameContent.setText("@" + name + ":" + status.getText());
+        } else {
+            holder.retweetedLayout.setVisibility(View.GONE);
         }
         // 组合图片
         holder.statusPicGrid.removeAllViews();
