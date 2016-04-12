@@ -57,6 +57,6 @@ public class IRecyclerFragmentView implements IBaseView {
     }
 
     public void unBindView(){
-        ButterKnife.unbind(this);
+        ButterKnife.unbind(view);
     }
 }

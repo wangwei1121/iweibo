@@ -40,7 +40,6 @@ public abstract class BasePresenterFragment<V extends IBaseView> extends Fragmen
     @Override
     public void onDestroyView() {
         onDestroyVU();
-        this.view = null;
         super.onDestroyView();
     }
 

@@ -1,6 +1,6 @@
 package com.snail.iweibo.mvp.view.impl.activity;
 import android.content.Context;
-import android.graphics.Rect;
+import android.graphics.Color;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -18,7 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.facebook.common.util.UriUtil;
@@ -39,12 +39,8 @@ import butterknife.ButterKnife;
 public class IUserDetailActivity implements IBaseView {
     private View view;
     private BasePresenterActivity context;
-    @Bind(R.id.frame_layout)
-    FrameLayout frameLayout;
     @Bind(R.id.tool_bar)
     Toolbar toolbar;
-    @Bind(R.id.header_bg)
-    SimpleDraweeView headerBg;
     @Bind(R.id.user_avatar)
     SimpleDraweeView userAvatar;
     @Bind(R.id.tool_bar_layout)
@@ -87,63 +83,37 @@ public class IUserDetailActivity implements IBaseView {
                 context.finish();
             }
         });
-//        ScreenInfo info = new ScreenInfo(context);
-//        LayoutParams params = new LayoutParams(info.getWidth() , info.getWidth() * 9 / 24);
-//        headerBg.setLayoutParams(params);
         Window window = context.getWindow();
-        Rect rect = new Rect();
-        window.getDecorView().getWindowVisibleDisplayFrame(rect);
-        int statusBarHeight = rect.height();
-        // 设置透明状态栏
-        if (VERSION.SDK_INT > VERSION_CODES.LOLLIPOP) {
-            // 需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            // 设置透明状态栏,这样才能让 ContentView 向上
+        if (VERSION.SDK_INT > VERSION_CODES.KITKAT) {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            ViewGroup mContentView = (ViewGroup) context.findViewById(Window.ID_ANDROID_CONTENT);
-            View mChildView = mContentView.getChildAt(0);
-            if (mChildView != null) {
-                //注意不是设置 ContentView 的 FitsSystemWindows, 而是设置 ContentView 的第一个子 View . 使其不为系统 View 预留空间.
-                ViewCompat.setFitsSystemWindows(mChildView, false);
-//                DrawerLayout.LayoutParams lp = (DrawerLayout.LayoutParams) mChildView.getLayoutParams();
-//                lp.topMargin = statusBarHeight;
-//                mChildView.setLayoutParams(lp);
+            //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
+            if(VERSION.SDK_INT > VERSION_CODES.LOLLIPOP){
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             }
-        }else if(VERSION.SDK_INT > VERSION_CODES.KITKAT){
-//            // 设置透明状态栏,这样才能让 ContentView 向上
-//            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            //避免多次调用该方法时,多次移除了 View
-//            if (mChildView != null && mChildView.getLayoutParams() != null && mChildView.getLayoutParams().height == 46) {
-//                //移除假的 View.
-//                mContentView.removeView(mChildView);
-//                mChildView = mContentView.getChildAt(0);
-//            }
-//            if (mChildView != null) {
-//                FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mChildView.getLayoutParams();
-//                //清除 ChildView 的 marginTop 属性
-//                if (lp != null && lp.topMargin >= 46) {
-//                    lp.topMargin -= 46;
-//                    mChildView.setLayoutParams(lp);
-//                }
-//            }
+            //设置状态栏颜色
+            window.setStatusBarColor(Color.TRANSPARENT);
+            ViewGroup contentView = (ViewGroup) context.findViewById(Window.ID_ANDROID_CONTENT);
+            View view = contentView.getChildAt(0);
+            if(view != null){
+                ViewCompat.setFitsSystemWindows(view , false);
+            }
         }
-//        toolbarLayout.setTitle("用户详情");
         toolbarLayout.setExpandedTitleColor(0);
         toolbarLayout.setCollapsedTitleTextColor(context.getResources().getColor(R.color.main_white));
-
+        ProgressBar progressBar = new ProgressBar(context);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     public void updateView(UserBean userBean) {
 
         userAvatar.setImageURI(UriUtil.parseUriOrNull(userBean.getAvatar_hd()));
-//        toolbar.setTitle(userBean.getScreen_name());
         userName.setText(userBean.getScreen_name());
         friends.setText(context.getString(R.string.string_user_friends_count , userBean.getFriends_count()));
         followers.setText(context.getString(R.string.string_user_follower_count , userBean.getFollowers_count()));
         description.setText(context.getString(R.string.string_user_description , userBean.getDescription()));
-        tabLayout.addTab(tabLayout.newTab().setTag(TabIndicator.First).setText("主页"));
-        tabLayout.addTab(tabLayout.newTab().setTag(TabIndicator.Second).setText("微博"));
-        tabLayout.addTab(tabLayout.newTab().setTag(TabIndicator.Third).setText("相册"));
+        tabLayout.addTab(tabLayout.newTab().setTag(TabIndicator.First).setText(R.string.string_user_home_page));
+        tabLayout.addTab(tabLayout.newTab().setTag(TabIndicator.Second).setText(R.string.string_user_status_page));
+        tabLayout.addTab(tabLayout.newTab().setTag(TabIndicator.Third).setText(R.string.string_user_gallery_page));
 
         FragmentTransaction transaction = fManager.beginTransaction();
         UserDetailStatusFragment statusFragment = new UserDetailStatusFragment();
@@ -156,7 +126,6 @@ public class IUserDetailActivity implements IBaseView {
                 if(indicator == null){
                     return;
                 }
-//                FragmentTransaction transaction = fManager.beginTransaction();
                 switch (indicator){
                     case First:
                         //
@@ -168,7 +137,6 @@ public class IUserDetailActivity implements IBaseView {
                         //
                         break;
                 }
-//                transaction.commitAllowingStateLoss();
             }
 
             @Override

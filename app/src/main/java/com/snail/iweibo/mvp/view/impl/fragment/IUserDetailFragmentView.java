@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.model.Status;
@@ -29,7 +30,8 @@ public class IUserDetailFragmentView implements IBaseView , OnClickListener , On
     private StatusListAdapter adapter;
     @Bind(R.id.list_view)
     RecyclerView recyclerView;
-
+    @Bind(R.id.progress_bar)
+    ProgressBar progressBar;
     @Override
     public void init(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         view = inflater.inflate(R.layout.fragment_common_list, viewGroup, false);
@@ -50,6 +52,7 @@ public class IUserDetailFragmentView implements IBaseView , OnClickListener , On
             adapter.addAll(statusList);
         }
         recyclerView.setAdapter(adapter);
+        progressBar.setVisibility(View.GONE);
     }
 
     public void unBindView() {

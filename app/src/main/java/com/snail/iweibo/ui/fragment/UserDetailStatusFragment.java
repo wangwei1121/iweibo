@@ -27,29 +27,34 @@ public class UserDetailStatusFragment extends BasePresenterFragment<IUserDetailF
         loadData();
     }
 
+    /**
+     * 加载用户最新微博信息
+     */
     private void loadData() {
         Oauth2AccessToken token = AccessTokenKeeper.readAccessToken(getActivity());
-        ApiServiceHelper.getApiService(Constants.WEIBO_BASE_URL, WeiBoApiService.class)
-                        .getUserTimeLine(token.getToken(),token.getUid() , 0, 0, 50, 1, 0, 0, 0)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                            new Subscriber<StatusList>() {
-                                @Override
-                                public void onCompleted() {
+        ApiServiceHelper
+            .getApiService(Constants.WEIBO_BASE_URL, WeiBoApiService.class)
+            .getUserTimeLine(token.getToken(), token.getUid(), 0, 0, 50, 1, 0, 0, 0)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Subscriber<StatusList>() {
+                @Override
+                public void onCompleted() {
+                }
 
-                                }
+                @Override
+                public void onError(Throwable e) {
+                    Log.e("UserDetailFragment", "loadData - onError : " + e.getMessage());
+                }
 
-                                @Override
-                                public void onError(Throwable e) {
-                                    Log.e("UserDetailFragment", "loadData - onError : " + e.getMessage());
-                                }
-
-                                @Override
-                                public void onNext(StatusList statusList) {
-                                    view.updateView(statusList.getStatuses());
-                                }
-                            });
+                @Override
+                public void onNext(StatusList statuses) {
+                    if (statuses != null && statuses.getStatuses() != null
+                        && !statuses.getStatuses().isEmpty()) {
+                        view.updateView(statuses.getStatuses());
+                    }
+                }
+            });
     }
 
     @Override
@@ -57,4 +62,10 @@ public class UserDetailStatusFragment extends BasePresenterFragment<IUserDetailF
         return IUserDetailFragmentView.class;
     }
 
+    @Override
+    protected void onDestroyVU() {
+        super.onDestroyVU();
+        view.unBindView();
+        view = null;
+    }
 }

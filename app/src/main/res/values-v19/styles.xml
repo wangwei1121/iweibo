@@ -31,6 +31,7 @@
         <item name="theme_background">@color/main_light_gray</item>
         <item name="theme_divider">@color/main_light_gray</item>
         <item name="theme_menu">@drawable/item_menu_selector</item>
+
     </style>
 
     <!--night theme -->
@@ -51,3 +52,4 @@
         <item name="theme_item_tab">@color/color_primary_dark_inverse</item>
     </style>
 </resources>
+

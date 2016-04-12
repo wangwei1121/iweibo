@@ -31,8 +31,10 @@ public class HomeFragment extends BasePresenterFragment<IHomeFragmentView> {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    protected void onDestroyVU() {
+        super.onDestroyVU();
+        view.unBindView();
+        view = null;
     }
 
     @Override

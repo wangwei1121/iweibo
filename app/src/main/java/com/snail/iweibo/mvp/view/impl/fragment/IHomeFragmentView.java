@@ -50,4 +50,7 @@ public class IHomeFragmentView implements IBaseView {
 //        tabLayout.setupWithViewPager(viewPager);
     }
 
+    public void unBindView() {
+        ButterKnife.unbind(this);
+    }
 }

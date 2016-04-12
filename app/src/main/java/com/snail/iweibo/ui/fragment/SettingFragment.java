@@ -29,9 +29,10 @@ public class SettingFragment extends BasePresenterFragment<ISettingFragmentView>
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    protected void onDestroyVU() {
+        super.onDestroyVU();
         view.unBindView();
+        view = null;
     }
 
     @Override

@@ -3,7 +3,6 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -17,12 +16,13 @@ import android.support.design.widget.NavigationView.OnNavigationItemSelectedList
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,9 +38,11 @@ import android.widget.TextView;
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.model.UserBean;
 import com.snail.iweibo.mvp.view.IBaseView;
+import com.snail.iweibo.oauth.AccessTokenKeeper;
 import com.snail.iweibo.ui.activity.UserDetailActivity;
 import com.snail.iweibo.ui.base.BasePresenterActivity;
 import com.snail.iweibo.ui.fragment.HomeFragment;
@@ -111,13 +113,16 @@ public class IMainActivityView implements IBaseView {
         drawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(drawerToggle);
         navigationView.setCheckedItem(R.id.main_frame);
-        // fragment
+        // 默认首页HomeFragment
         final HomeFragment homeFragment = new HomeFragment();
         homeFragment.setTabLayout(tabLayout);
         lastFragment = homeFragment;
+
+        // 设置SettingFragment
         final SettingFragment settingFragment = new SettingFragment();
         final FragmentTransaction transaction = context.getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, homeFragment).commit();
+        //
         View headerView = navigationView.getHeaderView(0);
         final ImageView themeWitch = (ImageView) headerView.findViewById(R.id.theme_switch);
 
@@ -140,8 +145,13 @@ public class IMainActivityView implements IBaseView {
         userAvatar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context , UserDetailActivity.class);
-                context.startActivity(intent);
+                // 判断用户有没有登录
+                Oauth2AccessToken token = AccessTokenKeeper.readAccessToken(context);
+                if(!TextUtils.isEmpty(token.getToken())){
+                    UserDetailActivity.start(context , token);
+                }else{
+
+                }
             }
         });
         // 用户名
@@ -179,7 +189,7 @@ public class IMainActivityView implements IBaseView {
         navigateBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDrawerLayout.openDrawer(Gravity.LEFT);
+                mDrawerLayout.openDrawer(GravityCompat.START);
             }
         });
     }
@@ -276,6 +286,11 @@ public class IMainActivityView implements IBaseView {
         animator.start();
     }
 
+    /**
+     * 修改主题
+     * @param view view
+     * @param theme theme
+     */
     public void changeTheme(View view, Resources.Theme theme) {
 
         if (view instanceof ThemeUIInterface) {
@@ -283,6 +298,7 @@ public class IMainActivityView implements IBaseView {
             ((ThemeUIInterface) view).setTheme(theme);
         }
         if (view instanceof ViewGroup) {
+
             int count = ((ViewGroup) view).getChildCount();
             for (int i = 0; i < count; i++) {
                 changeTheme(((ViewGroup) view).getChildAt(i), theme);
@@ -298,7 +314,6 @@ public class IMainActivityView implements IBaseView {
         userAvatar.setImageURI(UriUtil.parseUriOrNull(userBean.getAvatar_hd()));
         userName.setText(userBean.getScreen_name());
         userState.setText(userBean.getDescription());
-        //
         userHeader.setImageURI(UriUtil.parseUriOrNull(userBean.getAvatar_hd()));
         tabUserName.setText(userBean.getScreen_name());
     }
