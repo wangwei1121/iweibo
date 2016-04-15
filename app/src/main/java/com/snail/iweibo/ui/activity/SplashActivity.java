@@ -2,7 +2,6 @@ package com.snail.iweibo.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -19,6 +18,7 @@ import com.snail.iweibo.mvp.view.impl.activity.ISplashActivityView;
 import com.snail.iweibo.oauth.AccessTokenKeeper;
 import com.snail.iweibo.oauth.Constants;
 import com.snail.iweibo.ui.base.BasePresenterActivity;
+import com.snail.iweibo.util.LogUtils;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -46,7 +46,8 @@ public class SplashActivity extends BasePresenterActivity<ISplashActivityView>
             view.setLoginViewVisible(true);
         } else {
             view.setLoginViewVisible(false);
-            /// 判断token是否过期
+            LogUtils.info("initData");
+            // 判断token是否过期
             ApiServiceHelper
                 .getApiService(Constants.WEIBO_BASE_URL, OAuth2ApiService.class)
                 .getTokenInfo(accessToken.getToken()).subscribeOn(Schedulers.io())
@@ -123,7 +124,7 @@ public class SplashActivity extends BasePresenterActivity<ISplashActivityView>
             String code = bundle.getString("code");
             String message = getString(R.string.weibosdk_demo_toast_auth_failed);
             if (!TextUtils.isEmpty(code)) {
-                Log.e("SplashActivity", message + " code : " + code);
+                LogUtils.error(message + " code : " + code);
             }
         }
     }
