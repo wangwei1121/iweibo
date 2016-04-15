@@ -8,4 +8,5 @@
     <attr name="theme_divider" format="reference|color"/>
     <attr name="theme_menu" format="reference|color"/>
     <attr name="theme_item_tab" format="reference|color"/>
+    <attr name="theme_card_view" format="reference|color"/>
 </resources>

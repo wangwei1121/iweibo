@@ -1,4 +1,6 @@
 package com.snail.iweibo.ui.activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.util.Log;
 
@@ -21,6 +23,11 @@ import rx.functions.Func1;
  */
 public class StatusDetailActivity extends BasePresenterActivity<IStatusDetailActivityView> {
 
+    public static void start(Context context , Status status){
+        Intent intent = new Intent(context , StatusDetailActivity.class);
+        intent.putExtra("status", status);
+        context.startActivity(intent);
+    }
     @Override
     protected Class<IStatusDetailActivityView> getViewClass() {
         return IStatusDetailActivityView.class;

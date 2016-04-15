@@ -45,4 +45,9 @@ public class IHomeFragmentView implements IBaseView {
     public void unBindView() {
         ButterKnife.unbind(this);
     }
+
+    public void changeTheme(){
+//        adapter.notifyAll();
+//        adapter.notifyDataSetChanged();
+    }
 }

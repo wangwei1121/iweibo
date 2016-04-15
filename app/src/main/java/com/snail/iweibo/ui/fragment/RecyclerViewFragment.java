@@ -1,5 +1,4 @@
 package com.snail.iweibo.ui.fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
@@ -36,8 +35,6 @@ import rx.schedulers.Schedulers;
 public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmentView> implements OnRefreshListener,
     OnClickListener, OnItemClickListener {
     private StatusListAdapter cardViewAdapter;
-    private int position;
-    private boolean isVisible;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,8 +91,7 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
                 public void onNext(StatusList list) {
                     if (list.getStatuses() != null && !list.getStatuses().isEmpty()) {
                         Log.i("RecyclerViewFragment ", "onNext : " + list.getStatuses().toString());
-                        cardViewAdapter =
-                            new StatusListAdapter(getActivity(), list.getStatuses(), RecyclerViewFragment
+                        cardViewAdapter = new StatusListAdapter(getActivity(), list.getStatuses(), RecyclerViewFragment
                                 .this, RecyclerViewFragment.this);
                         view.updateView(getActivity(), cardViewAdapter);
                     }
@@ -167,14 +163,11 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
 //        super.setUserVisibleHint(isVisibleToUser);
-
     }
 
     @Override
     public void onItemClick(int position) {
         Status status = cardViewAdapter.getStatus(position);
-        Intent intent = new Intent(this.getActivity(), StatusDetailActivity.class);
-        intent.putExtra("status", status);
-        this.startActivity(intent);
+        StatusDetailActivity.start(getActivity() , status);
     }
 }

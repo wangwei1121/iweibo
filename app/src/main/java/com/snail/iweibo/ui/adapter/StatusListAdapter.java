@@ -1,6 +1,7 @@
 package com.snail.iweibo.ui.adapter;
 import android.content.Context;
 import android.net.Uri;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -24,6 +25,7 @@ import com.snail.iweibo.mvp.model.Status.ThumbnailPic;
 import com.snail.iweibo.mvp.model.UserBean;
 import com.snail.iweibo.ui.adapter.StatusListAdapter.ViewHolder;
 import com.snail.iweibo.util.ScreenInfo;
+import com.snail.iweibo.util.SharePreferencesUtil;
 import com.snail.iweibo.util.SpanUtil;
 import com.snail.iweibo.util.TimeUtils;
 
@@ -62,6 +64,8 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, int position) {
         Status bean = statuses.get(position);
         UserBean user = bean.getUser();
+        boolean isDarkTheme = SharePreferencesUtil.isDarkTheme(context);
+        holder.cardView.setCardBackgroundColor(context.getResources().getColor(isDarkTheme ? R.color.color_primary_dark_inverse  : R.color.main_white));
         // 用户头像
         if (!TextUtils.isEmpty(user.getProfile_image_url())) {
             Uri uri = UriUtil.parseUriOrNull(user.getAvatar_large());
@@ -71,6 +75,8 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
         // 名称
         holder.userName.setText(user.getScreen_name());
+        holder.userName.setTextColor(context.getResources().getColor(isDarkTheme ? R.color.main_gray  : R.color
+            .main_black));
         // 时间
         holder.createTime.setText(TimeUtils.formatUTCTimes(bean.getCreatedAt()));
         // 来自
@@ -79,8 +85,11 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.from.setText(span);
         // 微博内容 TODO
         holder.contentText.setText(SpanUtil.buildSpan(context , bean.getText()));
+        holder.contentText.setTextColor(context.getResources().getColor(isDarkTheme ? R.color.main_gray  : R.color
+            .main_black));
         // 被转发的微博字段
         Status status = bean.getRetweetedStatus();
+        holder.retweetedLayout.setVisibility(View.GONE);
         if (status != null) {
             Log.i("StatusListAdapter", status.toString());
             holder.retweetedLayout.setVisibility(View.VISIBLE);
@@ -108,6 +117,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         if(bean.getAttitudesCount() != 0){
             holder.likeTxt.setText(String.valueOf(bean.getAttitudesCount()));
         }
+        holder.divider.setBackgroundResource(isDarkTheme ? R.color.main_dark_gray : R.color.main_light_gray);
         holder.setOnItemClickListener(itemClick);
     }
 
@@ -200,7 +210,10 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         LinearLayout likeBtn;
         @Bind(R.id.action_like_icon)
         ImageView likeIcon;
-
+        @Bind(R.id.card_view)
+        CardView cardView;
+        @Bind(R.id.action_divider)
+        View divider;
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
