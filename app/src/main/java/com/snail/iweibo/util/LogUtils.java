@@ -20,7 +20,7 @@ public class LogUtils {
      * @param msg msg
      */
     public static void error(String tag, String msg) {
-        printLog(LEVEL_ERROR, tag, msg + callMethodLine());
+        printLog(LEVEL_ERROR, tag, msg);
     }
 
     /**
@@ -29,7 +29,7 @@ public class LogUtils {
      * @param msg msg
      */
     public static void error(String msg) {
-        printLog(LEVEL_ERROR, getClassName(), msg + callMethodLine());
+        printLog(LEVEL_ERROR, getClassName(), msg);
     }
 
     /**
@@ -39,7 +39,7 @@ public class LogUtils {
      * @param msg msg
      */
     public static void info(String tag, String msg) {
-        printLog(LEVEL_INFO, tag, msg + callMethodLine());
+        printLog(LEVEL_INFO, tag, msg);
     }
 
     /**
@@ -48,7 +48,7 @@ public class LogUtils {
      * @param msg msg
      */
     public static void info(String msg) {
-        printLog(LEVEL_INFO, getClassName(), msg + callMethodLine());
+        printLog(LEVEL_INFO, getClassName(), msg);
     }
 
     /**
@@ -58,7 +58,7 @@ public class LogUtils {
      * @param msg msg
      */
     public static void debug(String tag, String msg) {
-        printLog(LEVEL_DEBUG, tag, msg + callMethodLine());
+        printLog(LEVEL_DEBUG, tag, msg);
     }
 
     /**
@@ -67,7 +67,7 @@ public class LogUtils {
      * @param msg msg
      */
     public static void debug(String msg) {
-        printLog(LEVEL_DEBUG, getClassName(), msg + callMethodLine());
+        printLog(LEVEL_DEBUG, getClassName(), msg);
     }
 
     /**
@@ -113,10 +113,10 @@ public class LogUtils {
      *
      * @return String
      */
-    private static String callMethodLine() {
-        StackTraceElement traceElement = (new Exception()).getStackTrace()[1];
-        return " : at " + traceElement.getClassName() + traceElement.getMethodName() +
-            " ( " + traceElement.getFileName() + " : " + traceElement.getLineNumber() + " ) ";
+    public static String callMethodLine() {
+        final StackTraceElement traceElement = Thread.currentThread().getStackTrace()[1];
+        return " : at " + traceElement.getClassName() +"."+ traceElement.getMethodName() +
+            " (" + traceElement.getFileName() + " : " + traceElement.getLineNumber() + ") ";
     }
 
 }
