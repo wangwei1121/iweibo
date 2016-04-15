@@ -33,15 +33,17 @@ import rx.schedulers.Schedulers;
  * RecyclerViewFragment - FragmentPresenter
  * Created by alexwan on 16/1/30.
  */
-public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmentView> implements OnRefreshListener ,
-    OnClickListener , OnItemClickListener{
+public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmentView> implements OnRefreshListener,
+    OnClickListener, OnItemClickListener {
     private StatusListAdapter cardViewAdapter;
     private int position;
     private boolean isVisible;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -64,37 +66,41 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
     private void initData() {
         String token;
         Oauth2AccessToken accessToken = AccessTokenKeeper.readAccessToken(getActivity());
-        if(!TextUtils.isEmpty(accessToken.getToken())){
+        if (!TextUtils.isEmpty(accessToken.getToken())) {
             token = accessToken.getToken();
-        }else{
+        } else {
             token = Constants.TOKEN;
         }
-        ApiServiceHelper.getApiService(Constants.WEIBO_BASE_URL , WeiBoApiService.class)
-                        .getFriendsTimeLine(token ,0 ,0,  50, 1, 0 , 0 , 0)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Subscriber<StatusList>() {
-            @Override
-            public void onCompleted() {
-                Log.i("RecyclerViewFragment " , "onCompleted : ");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.i("RecyclerViewFragment " , "onError - Error :" + e.getMessage());
-            }
-
-            @Override
-            public void onNext(StatusList list) {
-                if(list.getStatuses() != null && !list.getStatuses().isEmpty()){
-                    Log.i("RecyclerViewFragment " , "onNext : " +list.getStatuses().toString());
-                    cardViewAdapter = new StatusListAdapter(getActivity(), list.getStatuses() , RecyclerViewFragment
-                        .this , RecyclerViewFragment.this);
-                    view.updateView(getActivity(), cardViewAdapter);
+        view.refresh(true);
+        ApiServiceHelper
+            .getApiService(Constants.WEIBO_BASE_URL, WeiBoApiService.class)
+            .getFriendsTimeLine(token, 0, 0, 50, 1, 0, 0, 0)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Subscriber<StatusList>() {
+                @Override
+                public void onCompleted() {
                     view.refresh(false);
+                    Log.i("RecyclerViewFragment ", "onCompleted : ");
                 }
-            }
-        });
+
+                @Override
+                public void onError(Throwable e) {
+                    view.refresh(false);
+                    Log.i("RecyclerViewFragment ", "onError - Error :" + e.getMessage());
+                }
+
+                @Override
+                public void onNext(StatusList list) {
+                    if (list.getStatuses() != null && !list.getStatuses().isEmpty()) {
+                        Log.i("RecyclerViewFragment ", "onNext : " + list.getStatuses().toString());
+                        cardViewAdapter =
+                            new StatusListAdapter(getActivity(), list.getStatuses(), RecyclerViewFragment
+                                .this, RecyclerViewFragment.this);
+                        view.updateView(getActivity(), cardViewAdapter);
+                    }
+                }
+            });
 
 
     }
@@ -118,42 +124,42 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id){
+        switch (id) {
             case R.id.action_favorite_layout:
                 // 收藏
-                if(cardViewAdapter != null){
+                if (cardViewAdapter != null) {
                     // 调用收藏接口 用户是否登录
                     // status id
-                    Toast.makeText(getContext() , "收藏" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "收藏", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.action_relay_layout:
                 // 转发
-                if(cardViewAdapter != null){
+                if (cardViewAdapter != null) {
                     // 用户是否登录
                     // status id
-                    Toast.makeText(getContext() , "转发" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "转发", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.action_comment_layout:
                 // 评论跳转到微博正文
-                if(cardViewAdapter != null){
+                if (cardViewAdapter != null) {
                     // 用户是否登录
                     // status id
-                    Toast.makeText(getContext() , "评论" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "评论", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.action_like_layout:
                 // 点赞
-                if(cardViewAdapter != null){
+                if (cardViewAdapter != null) {
                     // 用户是否登录
                     // status id
-                    Toast.makeText(getContext() , "点赞" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "点赞", Toast.LENGTH_SHORT).show();
                     // 调用数据
                 }
                 break;
             default:
-                Toast.makeText(getContext() , String.valueOf(v.getTag()) , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), String.valueOf(v.getTag()), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -167,8 +173,8 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
     @Override
     public void onItemClick(int position) {
         Status status = cardViewAdapter.getStatus(position);
-        Intent intent = new Intent(this.getActivity() , StatusDetailActivity.class);
-        intent.putExtra("status" , status);
+        Intent intent = new Intent(this.getActivity(), StatusDetailActivity.class);
+        intent.putExtra("status", status);
         this.startActivity(intent);
     }
 }

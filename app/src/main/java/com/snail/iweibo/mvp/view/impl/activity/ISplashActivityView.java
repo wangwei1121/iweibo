@@ -46,9 +46,11 @@ public class ISplashActivityView implements IBaseView {
     public void initView(OnClickListener onClickListener){
         Window window = context.getWindow();
         // 设置透明状态栏
-        if (VERSION.SDK_INT > VERSION_CODES.LOLLIPOP) {
+        if (VERSION.SDK_INT > VERSION_CODES.KITKAT) {
             // 需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            if(VERSION.SDK_INT > VERSION_CODES.LOLLIPOP){
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            }
             // 设置透明状态栏,这样才能让 ContentView 向上
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
@@ -58,7 +60,7 @@ public class ISplashActivityView implements IBaseView {
             //注意不是设置 ContentView 的 FitsSystemWindows, 而是设置 ContentView 的第一个子 View . 使其不为系统 View 预留空间.
             ViewCompat.setFitsSystemWindows(mChildView, false);
         }
-        imageView.setImageURI(UriUtil.parseUriOrNull("http://imglf0.nosdn0.126.net/img/cmRidERRTER6N1JVajBHZTRsb3hQc3FiVGlXZktVcHZISEx6M3M5SzdKZ2tUUnZ5TGZ6Wm9nPT0.jpg?imageView&thumbnail=500x0&quality=96&stripmeta=0&type=jpg%7Cwatermark&type=2&text=wqkg54Wu54af55qE6bit5a2QIC8gYWxleGJhcnJ5LmxvZnRlci5jb20=&font=bXN5aA==&gravity=southwest&dissolve=30&fontsize=240&dx=8&dy=10&stripmeta=0"));
+        imageView.setImageURI(UriUtil.parseUriOrNull("https://dn-ioliu.qbox.me/bing/CabodeGata_ZH-CN12858688851_1280x768.jpg"));
         loginBtn.setOnClickListener(onClickListener);
         browseBtn.setOnClickListener(onClickListener);
     }
@@ -68,8 +70,8 @@ public class ISplashActivityView implements IBaseView {
     }
 
     public void setLoginViewVisible(boolean visible){
-        loginBtn.setVisibility(visible ? View.VISIBLE : View.GONE);
-        browseBtn.setVisibility(visible ? View.VISIBLE : View.GONE);
+        loginBtn.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+//        browseBtn.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     public void setProgressBarVisible(boolean visible){
