@@ -12,7 +12,6 @@ import com.snail.iweibo.oauth.AccessTokenKeeper;
 import com.snail.iweibo.oauth.Constants;
 import com.snail.iweibo.ui.base.BasePresenterActivity;
 
-import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -66,26 +65,26 @@ public class UserDetailActivity extends BasePresenterActivity<IUserDetailActivit
         String uid = getIntent().getStringExtra(INTENT_UID);
         UserBean userBean = (UserBean) getIntent().getSerializableExtra(INTENT_USER);
         if (userBean == null) {
-            Observable<UserBean> user;
-            ApiServiceHelper.getApiService(Constants.WEIBO_BASE_URL, AccountApiService.class)
-                            .getUserInfoByUID(token, uid)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Observer<UserBean>() {
-                                @Override
-                                public void onCompleted() {
-                                }
+            ApiServiceHelper
+                .getApiService(Constants.WEIBO_BASE_URL, AccountApiService.class)
+                .getUserInfoByUID(token, uid)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<UserBean>() {
+                    @Override
+                    public void onCompleted() {
+                    }
 
-                                @Override
-                                public void onError(Throwable e) {
-                                    Log.i("UserDetailActivity", "onError - error : " + e.getMessage());
-                                }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("UserDetailActivity", "onError - error : " + e.getMessage());
+                    }
 
-                                @Override
-                                public void onNext(UserBean userBean) {
-                                    view.updateView(userBean);
-                                }
-                            });
+                    @Override
+                    public void onNext(UserBean userBean) {
+                        view.updateView(userBean);
+                    }
+                });
         } else {
             view.updateView(userBean);
         }
