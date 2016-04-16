@@ -60,7 +60,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.item_main_card, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view );
     }
 
     @Override
@@ -125,14 +125,20 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         // 转发数
         if( bean.getRepostsCount() != 0){
             holder.relayTxt.setText(String.valueOf(bean.getRepostsCount()));
+        }else{
+            holder.relayTxt.setText(R.string.string_action_repeater);
         }
         // 评论数
         if(bean.getCommentsCount() != 0){
             holder.commentTxt.setText(String.valueOf(bean.getCommentsCount()));
+        }else{
+            holder.commentTxt.setText(R.string.string_action_comments);
         }
         // 赞
         if(bean.getAttitudesCount() != 0){
             holder.likeTxt.setText(String.valueOf(bean.getAttitudesCount()));
+        }else{
+            holder.likeTxt.setText(R.string.string_action_like);
         }
         holder.divider.setBackgroundResource(isDarkTheme ? R.color.main_dark_gray : R.color.main_light_gray);
         holder.setOnItemClickListener(itemClick);

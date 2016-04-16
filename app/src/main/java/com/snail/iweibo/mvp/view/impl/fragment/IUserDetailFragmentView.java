@@ -51,7 +51,6 @@ public class IUserDetailFragmentView implements IBaseView , OnClickListener , On
         } else {
             adapter.addAll(statusList);
         }
-        recyclerView.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(adapter);
     }
 

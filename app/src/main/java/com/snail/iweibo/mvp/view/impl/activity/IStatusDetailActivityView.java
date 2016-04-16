@@ -6,6 +6,8 @@ import android.support.design.widget.TabLayout.OnTabSelectedListener;
 import android.support.design.widget.TabLayout.Tab;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
@@ -17,7 +19,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.FrameLayout;
-import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.facebook.common.util.UriUtil;
@@ -35,7 +37,6 @@ import com.snail.iweibo.util.ScreenInfo;
 import com.snail.iweibo.util.SpanUtil;
 import com.snail.iweibo.util.TimeUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -67,16 +68,18 @@ public class IStatusDetailActivityView implements IBaseView {
     Toolbar toolbar;
     @Bind(R.id.tab_layout)
     TabLayout tabLayout;
-    @Bind(R.id.frame_layout)
-    FrameLayout frameLayout;
+//    @Bind(R.id.frame_layout)
+//    FrameLayout frameLayout;
     @Bind(R.id.tool_bar_layout)
     CollapsingToolbarLayout toolbarLayout;
     @Bind(R.id.list_view)
-    ListView listView;
+    RecyclerView listView;
     @Bind(R.id.retweeted_layout)
     FrameLayout relayLayout;
     @Bind(R.id.relay_content)
     TextView relayContent;
+    @Bind(R.id.progress)
+    ProgressBar progressBar;
     private CommentListAdapter commentAdapter;
     @Override
     public void init(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
@@ -114,7 +117,6 @@ public class IStatusDetailActivityView implements IBaseView {
         toolbarLayout.setTitleEnabled(false);
     }
 
-
     public void updateView(final Status status){
 
         this.status = status;
@@ -149,6 +151,11 @@ public class IStatusDetailActivityView implements IBaseView {
         }else{
             relayLayout.setVisibility(View.GONE);
         }
+        // ListView 必须设置LayoutManager和Adapter才能配合CoordinatorLayout使用
+        commentAdapter = new CommentListAdapter(context);
+        listView.setLayoutManager(new LinearLayoutManager(context));
+        listView.setAdapter(commentAdapter);
+        // TAB
         Tab tab1= tabLayout.newTab().setText("转发 "+ status.getRepostsCount());
         tabLayout.addTab(tab1);
         Tab tab2 = tabLayout.newTab().setText("评论 "+status.getCommentsCount());
@@ -159,6 +166,20 @@ public class IStatusDetailActivityView implements IBaseView {
             @Override
             public void onTabSelected(Tab tab) {
                 //
+                int position = tab.getPosition();
+                switch (position){
+                    case 0:
+                        listView.setVisibility(View.GONE);
+                        break;
+                    case 1:
+                        listView.setVisibility(View.VISIBLE);
+                        listView.setAdapter(commentAdapter);
+                        commentAdapter.notifyDataSetChanged();
+                        break;
+                    case 2:
+                        listView.setVisibility(View.GONE);
+                        break;
+                }
             }
 
             @Override
@@ -207,9 +228,14 @@ public class IStatusDetailActivityView implements IBaseView {
         }
     }
 
-    public void updateComments(ArrayList<Comment> comments) {
-        CommentListAdapter commentAdapter = new CommentListAdapter(context , R.layout.item_comment_list_layout);
-        listView.setAdapter(commentAdapter);
+    public void updateComments(List<Comment> comments) {
         commentAdapter.setCommentList(comments);
     }
+
+    public void setProgressBarVisible(boolean isVisible){
+        progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+//    public void updateRelays(List<>){
+//
+//    }
 }
