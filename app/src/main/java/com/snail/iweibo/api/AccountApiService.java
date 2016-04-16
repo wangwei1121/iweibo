@@ -15,11 +15,12 @@ public interface AccountApiService {
      * getUserInfo
      * @param token      采用OAuth授权方式为必填参数，OAuth授权后获得。必选
      * @param uid        需要查询的用户ID。
-     * @param screenName 需要查询的用户昵称。
      * @return UserBean  参数uid与screen_name二者必选其一，且只能选其一；
      */
     @GET("2/users/show.json")
-    Observable<UserBean> getUserInfo(@Query("access_token") String token,
-                                     @Query("uid") String uid,
+    Observable<UserBean> getUserInfoByUID(@Query("access_token") String token,
+                                     @Query("uid") String uid);
+    @GET("2/users/show.json")
+    Observable<UserBean> getUserInfoByName(@Query("access_token") String token,
                                      @Query("screen_name") String screenName);
 }

@@ -26,7 +26,9 @@ import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.model.Comment;
 import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.Status.ThumbnailPic;
+import com.snail.iweibo.mvp.model.UserBean;
 import com.snail.iweibo.mvp.view.IBaseView;
+import com.snail.iweibo.ui.activity.UserDetailActivity;
 import com.snail.iweibo.ui.adapter.CommentListAdapter;
 import com.snail.iweibo.ui.base.BasePresenterActivity;
 import com.snail.iweibo.util.ScreenInfo;
@@ -113,11 +115,18 @@ public class IStatusDetailActivityView implements IBaseView {
     }
 
 
-    public void updateView(Status status){
+    public void updateView(final Status status){
 
         this.status = status;
-        userAvatar.setImageURI(UriUtil.parseUriOrNull(status.getUser().getAvatar_hd()));
-        userName.setText(status.getUser().getName());
+        final UserBean user = status.getUser();
+        userAvatar.setImageURI(UriUtil.parseUriOrNull(user.getAvatar_hd()));
+        userAvatar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserDetailActivity.start(context , user);
+            }
+        });
+        userName.setText(user.getName());
         createTime.setText(TimeUtils.formatUTCTimes(status.getCreatedAt()));
         Spanned span = Html.fromHtml(String.format(context.getResources().getString(R.string.string_statuses_from),
             status.getSource()));

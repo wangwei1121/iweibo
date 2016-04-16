@@ -51,10 +51,15 @@ public class IUserDetailFragmentView implements IBaseView , OnClickListener , On
         } else {
             adapter.addAll(statusList);
         }
+        recyclerView.setVisibility(View.VISIBLE);
         recyclerView.setAdapter(adapter);
-        progressBar.setVisibility(View.GONE);
     }
 
+    public void setProgressBarVisible(boolean isVisible){
+        if(progressBar != null){
+            progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        }
+    }
     public void unBindView() {
         ButterKnife.unbind(this);
     }

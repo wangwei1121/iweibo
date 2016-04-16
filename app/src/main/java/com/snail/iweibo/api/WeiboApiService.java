@@ -44,7 +44,7 @@ public interface WeiBoApiService {
      * 指定获取他人的微博，参数uid与screen_name二者必选其一，且只能选其一；
      *
      * @param token 采用OAuth授权方式为必填参数，OAuth授权后获得。
-     * @param uid 需要查询的用户ID。
+     * @param screen_name 需要查询的用户昵称。
      * @param since_id 若指定此参数，则返回ID比since_id大的微博（即比since_id时间晚的微博），默认为0。
      * @param max_id 若指定此参数，则返回ID小于或等于max_id的微博，默认为0。
      * @param count 单页返回的记录条数，最大不超过100，超过100以100处理，默认为20。
@@ -56,7 +56,7 @@ public interface WeiBoApiService {
      */
     @GET("2/statuses/user_timeline.json")
     Observable<StatusList> getUserTimeLine(@Query("access_token") String token,
-                                           @Query("uid") String uid,
+                                           @Query("screen_name") String screen_name,
                                            @Query("since_id") long since_id,
                                            @Query("max_id") long max_id,
                                            @Query("count") int count,

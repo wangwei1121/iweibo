@@ -25,6 +25,7 @@ import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.Status.ThumbnailPic;
 import com.snail.iweibo.mvp.model.UserBean;
+import com.snail.iweibo.ui.activity.UserDetailActivity;
 import com.snail.iweibo.ui.adapter.StatusListAdapter.ViewHolder;
 import com.snail.iweibo.util.ScreenInfo;
 import com.snail.iweibo.util.SharePreferencesUtil;
@@ -65,7 +66,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Status bean = statuses.get(position);
-        UserBean user = bean.getUser();
+        final UserBean user = bean.getUser();
         boolean isDarkTheme = SharePreferencesUtil.isDarkTheme(context);
         holder.cardView.setCardBackgroundColor(context.getResources().getColor(isDarkTheme ? R.color.color_primary_dark_inverse  : R.color.main_white));
         // 用户头像
@@ -75,6 +76,12 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
                 holder.userAvatar.setImageURI(uri);
             }
         }
+        holder.userAvatar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserDetailActivity.start(context , user);
+            }
+        });
         // 名称
         holder.userName.setText(user.getScreen_name());
         holder.userName.setTextColor(context.getResources().getColor(isDarkTheme ? R.color.main_gray  : R.color

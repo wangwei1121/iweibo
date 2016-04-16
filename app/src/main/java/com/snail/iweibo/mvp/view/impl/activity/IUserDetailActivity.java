@@ -3,6 +3,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
@@ -117,6 +118,9 @@ public class IUserDetailActivity implements IBaseView {
 
         FragmentTransaction transaction = fManager.beginTransaction();
         UserDetailStatusFragment statusFragment = new UserDetailStatusFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("name" , userBean.getScreen_name());
+        statusFragment.setArguments(bundle);
         transaction.replace(R.id.frame_layout , statusFragment).commitAllowingStateLoss();
 
         tabLayout.setOnTabSelectedListener(new OnTabSelectedListener() {

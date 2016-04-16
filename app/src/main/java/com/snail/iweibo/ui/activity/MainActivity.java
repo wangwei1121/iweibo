@@ -66,7 +66,7 @@ public class MainActivity extends BasePresenterActivity<IMainActivityView> imple
         }
         ApiServiceHelper
             .getApiService(Constants.WEIBO_BASE_URL, AccountApiService.class)
-            .getUserInfo(token.getToken(), token.getUid(), "")
+            .getUserInfoByUID(token.getToken(), token.getUid())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Observer<UserBean>() {
@@ -162,7 +162,7 @@ public class MainActivity extends BasePresenterActivity<IMainActivityView> imple
                     mSsoHandler = new SsoHandler(this, mAuthInfo);
                     mSsoHandler.authorize(this);
                 }else{
-                    UserDetailActivity.start(this , token);
+                    UserDetailActivity.start(this);
                 }
                 break;
 
