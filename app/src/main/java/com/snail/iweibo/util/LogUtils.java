@@ -114,7 +114,7 @@ public class LogUtils {
      * @return String
      */
     public static String callMethodLine() {
-        final StackTraceElement traceElement = Thread.currentThread().getStackTrace()[1];
+        final StackTraceElement traceElement = (new Exception()).getStackTrace()[1];
         return " : at " + traceElement.getClassName() +"."+ traceElement.getMethodName() +
             " (" + traceElement.getFileName() + " : " + traceElement.getLineNumber() + ") ";
     }

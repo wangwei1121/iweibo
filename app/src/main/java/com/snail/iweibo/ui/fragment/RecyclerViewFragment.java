@@ -14,14 +14,11 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.snail.iweibo.R;
 import com.snail.iweibo.api.ApiServiceHelper;
 import com.snail.iweibo.api.WeiBoApiService;
-import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.StatusList;
 import com.snail.iweibo.mvp.view.impl.fragment.IRecyclerFragmentView;
 import com.snail.iweibo.oauth.AccessTokenKeeper;
 import com.snail.iweibo.oauth.Constants;
-import com.snail.iweibo.ui.activity.StatusDetailActivity;
 import com.snail.iweibo.ui.adapter.StatusListAdapter;
-import com.snail.iweibo.ui.adapter.StatusListAdapter.OnItemClickListener;
 import com.snail.iweibo.ui.base.BasePresenterFragment;
 
 import rx.Subscriber;
@@ -33,7 +30,7 @@ import rx.schedulers.Schedulers;
  * Created by alexwan on 16/1/30.
  */
 public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmentView> implements OnRefreshListener,
-    OnClickListener, OnItemClickListener {
+    OnClickListener{
     private StatusListAdapter cardViewAdapter;
 
     @Override
@@ -92,7 +89,7 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
                     if (list.getStatuses() != null && !list.getStatuses().isEmpty()) {
                         Log.i("RecyclerViewFragment ", "onNext : " + list.getStatuses().toString());
                         cardViewAdapter = new StatusListAdapter(getActivity(), list.getStatuses(), RecyclerViewFragment
-                                .this, RecyclerViewFragment.this);
+                                .this, view);
                         view.updateView(getActivity(), cardViewAdapter);
                     }
                 }
@@ -165,9 +162,5 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
 //        super.setUserVisibleHint(isVisibleToUser);
     }
 
-    @Override
-    public void onItemClick(int position) {
-        Status status = cardViewAdapter.getStatus(position);
-        StatusDetailActivity.start(getActivity() , status);
-    }
+
 }

@@ -7,12 +7,14 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -83,17 +85,25 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         Spanned span = Html.fromHtml(String.format(context.getResources().getString(R.string.string_statuses_from),
             bean.getSource()));
         holder.from.setText(span);
-        // 微博内容 TODO
+        // 微博内容
         holder.contentText.setText(SpanUtil.buildSpan(context , bean.getText()));
         holder.contentText.setTextColor(context.getResources().getColor(isDarkTheme ? R.color.main_gray  : R.color
             .main_black));
+        holder.contentText.setMovementMethod(LinkMovementMethod.getInstance());
         // 被转发的微博字段
         Status status = bean.getRetweetedStatus();
-        holder.retweetedLayout.setVisibility(View.GONE);
         if (status != null) {
             Log.i("StatusListAdapter", status.toString());
-            holder.retweetedLayout.setVisibility(View.VISIBLE);
-            holder.nameContent.setText("@" + status.getUser().getName() + ":" + status.getText());
+            holder.relayLayout.setVisibility(View.VISIBLE);
+            holder.relayLayout.setBackgroundColor(context.getResources().getColor(isDarkTheme ? R.color.color_primary_inverse : R
+                    .color.main_light_gray));
+            String reContent = "@" + status.getUser().getName() + ":" + status.getText();
+            holder.relayContent.setText(SpanUtil.buildSpan(context , reContent));
+            holder.relayContent.setTextColor(context.getResources().getColor(isDarkTheme ? R.color.main_gray  : R.color
+                .main_black));
+            holder.relayContent.setMovementMethod(LinkMovementMethod.getInstance());
+        }else{
+            holder.relayLayout.setVisibility(View.GONE);
         }
         // 组合图片
         holder.statusPicGrid.removeAllViews();
@@ -181,9 +191,9 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         @Bind(R.id.content_text)
         TextView contentText;
         @Bind(R.id.retweeted_layout)
-        LinearLayout retweetedLayout;
-        @Bind(R.id.name_content)
-        TextView nameContent;
+        FrameLayout relayLayout;
+        @Bind(R.id.relay_content)
+        TextView relayContent;
         @Bind(R.id.status_pic_grid)
         GridLayout statusPicGrid;
         // 收藏
@@ -224,7 +234,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         @Override
         public void onClick(View v) {
             if(listener != null){
-                listener.onItemClick(getAdapterPosition());
+                listener.onItemClick(v);
             }
         }
         private OnItemClickListener listener;
@@ -234,6 +244,6 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
     public interface OnItemClickListener{
-        void onItemClick(int position);
+        void onItemClick(View v);
     }
 }

@@ -1,5 +1,6 @@
 package com.snail.iweibo.widget;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Parcel;
@@ -8,7 +9,9 @@ import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
+import com.facebook.common.util.UriUtil;
 import com.snail.iweibo.R;
+import com.snail.iweibo.util.LogUtils;
 
 /**
  * URLClickSpan
@@ -23,8 +26,17 @@ public class URLClickSpan extends ClickableSpan implements ParcelableSpan {
     }
     @Override
     public void onClick(View widget) {
-        // TODO
-
+        LogUtils.debug("View -> " + widget.getClass().getSimpleName() + " , url -> " + this.url);
+        Uri uri = UriUtil.parseUriOrNull(url);
+        if(uri.getScheme().startsWith("http")){
+            LogUtils.debug(" Web Scheme -> " + uri.getScheme());
+        }else {
+            //
+            LogUtils.debug(" Scheme -> " + uri.getScheme() + " , packageName -> " + context.getPackageName());
+//            Intent intent = new Intent(Intent.ACTION_VIEW , uri);
+//            intent.putExtra(Browser.EXTRA_APPLICATION_ID , context.getPackageName());
+//            context.startActivity(intent);
+        }
     }
 
     @Override

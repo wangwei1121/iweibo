@@ -9,8 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.snail.iweibo.R;
+import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.view.IBaseView;
+import com.snail.iweibo.ui.activity.StatusDetailActivity;
 import com.snail.iweibo.ui.adapter.StatusListAdapter;
+import com.snail.iweibo.ui.adapter.StatusListAdapter.OnItemClickListener;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -19,18 +22,19 @@ import butterknife.ButterKnife;
  * IRecyclerFragmentView
  * Created by alexwan on 16/1/30.
  */
-public class IRecyclerFragmentView implements IBaseView {
+public class IRecyclerFragmentView implements IBaseView , OnItemClickListener {
     protected View view;
     @Bind(R.id.recycler_layout)
     RecyclerView recyclerView;
     @Bind(R.id.swipe_refresh_container)
     SwipeRefreshLayout refreshLayout;
-
+    private Context context;
     @Override
     public void init(Context context , LayoutInflater inflater, ViewGroup viewGroup) {
         view = inflater.inflate(R.layout.frament_recycler , viewGroup , false);
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        this.context = context;
     }
 
     @Override
@@ -58,5 +62,13 @@ public class IRecyclerFragmentView implements IBaseView {
 
     public void unBindView(){
         ButterKnife.unbind(view);
+    }
+
+
+    @Override
+    public void onItemClick(View v) {
+       int position = recyclerView.getChildAdapterPosition(v);
+        Status status = ((StatusListAdapter)recyclerView.getAdapter()).getStatus(position);
+        StatusDetailActivity.start(context , status);
     }
 }

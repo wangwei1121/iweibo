@@ -65,7 +65,7 @@ public class IUserDetailFragmentView implements IBaseView , OnClickListener , On
     }
 
     @Override
-    public void onItemClick(int position) {
+    public void onItemClick(View v) {
 
     }
 }

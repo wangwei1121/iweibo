@@ -94,18 +94,19 @@
                 app:rowCount="3"
                 app:useDefaultMargins="true"/>
             <!--转发的微博内容-->
-            <LinearLayout
+            <com.snail.iweibo.widget.theme.ThemeFrameLayout
                 android:id="@+id/retweeted_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#440f8ae6"
+                android:background="?attr/theme_background"
                 android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/name_content"
+                <com.snail.iweibo.widget.theme.ThemeTextView
+                    android:id="@+id/relay_content"
+                    android:textColor="?attr/theme_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
-            </LinearLayout>
+            </com.snail.iweibo.widget.theme.ThemeFrameLayout>
         </LinearLayout>
 
         <com.snail.iweibo.widget.theme.ThemeDividerView
