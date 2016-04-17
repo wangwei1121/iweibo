@@ -14,12 +14,15 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.snail.iweibo.R;
 import com.snail.iweibo.api.ApiServiceHelper;
 import com.snail.iweibo.api.WeiBoApiService;
+import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.StatusList;
 import com.snail.iweibo.mvp.view.impl.fragment.IRecyclerFragmentView;
 import com.snail.iweibo.oauth.AccessTokenKeeper;
 import com.snail.iweibo.oauth.Constants;
 import com.snail.iweibo.ui.adapter.StatusListAdapter;
 import com.snail.iweibo.ui.base.BasePresenterFragment;
+
+import java.util.List;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -30,9 +33,9 @@ import rx.schedulers.Schedulers;
  * Created by alexwan on 16/1/30.
  */
 public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmentView> implements OnRefreshListener,
-    OnClickListener{
+    OnClickListener {
     private StatusListAdapter cardViewAdapter;
-
+    private Status lastStatus;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,10 +90,12 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
                 @Override
                 public void onNext(StatusList list) {
                     if (list.getStatuses() != null && !list.getStatuses().isEmpty()) {
+                        List<Status> statuses =  list.getStatuses();
                         Log.i("RecyclerViewFragment ", "onNext : " + list.getStatuses().toString());
-                        cardViewAdapter = new StatusListAdapter(getActivity(), list.getStatuses(), RecyclerViewFragment
-                                .this, view);
+                        cardViewAdapter = new StatusListAdapter(getActivity(), statuses, RecyclerViewFragment
+                            .this, view);
                         view.updateView(getActivity(), cardViewAdapter);
+                        lastStatus = statuses.get(statuses.size() - 1);
                     }
                 }
             });
@@ -98,6 +103,43 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
 
     }
 
+    public void loadMore() {
+        //
+        Oauth2AccessToken token = AccessTokenKeeper.readAccessToken(getActivity());
+        long sinceID = lastStatus == null? 0 : lastStatus.getId();
+        ApiServiceHelper
+            .getApiService(Constants.WEIBO_BASE_URL, WeiBoApiService.class)
+            .getFriendsTimeLine(token.getToken(), sinceID , 0, 50, 1, 0, 0, 0)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Subscriber<StatusList>() {
+                @Override
+                public void onCompleted() {
+                    view.refresh(false);
+                    Log.i("RecyclerViewFragment ", "onCompleted : ");
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    view.refresh(false);
+                    Log.i("RecyclerViewFragment ", "onError - Error :" + e.getMessage());
+                }
+
+                @Override
+                public void onNext(StatusList list) {
+                    if (list.getStatuses() != null && !list.getStatuses().isEmpty()) {
+                        Log.i("RecyclerViewFragment ", "onNext : " + list.getStatuses().toString());
+                        if (cardViewAdapter == null) {
+                            cardViewAdapter = new StatusListAdapter(getActivity(),
+                                list.getStatuses(), RecyclerViewFragment.this, view);
+                            view.updateView(getActivity(), cardViewAdapter);
+                        }else{
+                            cardViewAdapter.addAll(list.getStatuses());
+                        }
+                    }
+                }
+            });
+    }
 
     @Override
     protected Class<IRecyclerFragmentView> getViewClass() {
@@ -111,7 +153,8 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
     @Override
     public void onRefresh() {
         // 下拉刷新
-        view.refresh(false);
+        view.refresh(true);
+        loadMore();
     }
 
     @Override
