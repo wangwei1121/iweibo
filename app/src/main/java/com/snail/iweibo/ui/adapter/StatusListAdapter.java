@@ -102,7 +102,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
             Log.i("StatusListAdapter", status.toString());
             holder.relayLayout.setVisibility(View.VISIBLE);
             String name = status.getUser() == null || status.getUser().getName() == null ? "" : status.getUser().getName();
-            holder.contentText.setText("@" + name + ":" + status.getText());
+            holder.contentText.setText(SpanUtil.buildSpan(context, "@" + name + ":" + status.getText()));
         } else {
             holder.relayLayout.setVisibility(View.GONE);
         }
