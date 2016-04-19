@@ -39,7 +39,6 @@ public abstract class BasePresenterActivity<V extends IBaseView> extends AppComp
     @Override
     protected void onDestroy() {
         onDestroyView();
-        view = null;
         super.onDestroy();
     }
 
