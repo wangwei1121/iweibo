@@ -15,13 +15,14 @@ import com.snail.iweibo.util.LogUtils;
 
 import rx.Observable;
 import rx.Observer;
+import rx.Subscription;
 
 /**
  * 微博正文Activity
  * Created by alexwan on 16/4/4.
  */
 public class StatusDetailActivity extends BasePresenterActivity<IStatusDetailActivityView> {
-
+    private Subscription subscription;
     public static void start(Context context, Status status) {
         Intent intent = new Intent(context, StatusDetailActivity.class);
         intent.putExtra("status", status);
@@ -45,7 +46,7 @@ public class StatusDetailActivity extends BasePresenterActivity<IStatusDetailAct
         Observable<CommentList> comment =
             ApiServiceHelper.getComments(token.getToken(), status.getId(), 0, 0, 50, 1, 0);
 
-        comment.retry(3)
+        subscription = comment.retry(3)
                .subscribe(new Observer<CommentList>() {
                    @Override
                    public void onCompleted() {
@@ -64,12 +65,14 @@ public class StatusDetailActivity extends BasePresenterActivity<IStatusDetailAct
                    }
                });
 
-
     }
 
     @Override
     protected void onDestroyView() {
         super.onDestroyView();
+        if(subscription != null){
+            subscription.unsubscribe();
+        }
     }
 
     @Override
