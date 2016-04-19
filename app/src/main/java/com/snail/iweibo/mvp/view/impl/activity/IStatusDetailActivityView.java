@@ -233,9 +233,8 @@ public class IStatusDetailActivityView implements IBaseView {
     }
 
     public void setProgressBarVisible(boolean isVisible){
-        progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        if(progressBar != null){
+            progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        }
     }
-//    public void updateRelays(List<>){
-//
-//    }
 }

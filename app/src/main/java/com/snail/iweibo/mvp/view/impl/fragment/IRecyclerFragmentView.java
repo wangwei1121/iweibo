@@ -22,19 +22,20 @@ import butterknife.ButterKnife;
  * IRecyclerFragmentView
  * Created by alexwan on 16/1/30.
  */
-public class IRecyclerFragmentView implements IBaseView , OnItemClickListener {
+public class IRecyclerFragmentView implements IBaseView, OnItemClickListener {
     protected View view;
     @Bind(R.id.recycler_layout)
     RecyclerView recyclerView;
     @Bind(R.id.swipe_refresh_container)
     SwipeRefreshLayout refreshLayout;
     private Context context;
+
     @Override
-    public void init(Context context , LayoutInflater inflater, ViewGroup viewGroup) {
-        view = inflater.inflate(R.layout.frament_recycler , viewGroup , false);
+    public void init(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
+        this.context = context;
+        view = inflater.inflate(R.layout.frament_recycler, viewGroup, false);
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        this.context = context;
     }
 
     @Override
@@ -42,33 +43,34 @@ public class IRecyclerFragmentView implements IBaseView , OnItemClickListener {
         return view;
     }
 
-    public void updateView(Context context , StatusListAdapter adapter){
+    public void updateView(Context context, StatusListAdapter adapter) {
         recyclerView.setAdapter(adapter);
     }
 
     /**
      * 停止或开始刷新
+     *
      * @param refresh refresh
      */
-    public void refresh(boolean refresh){
-        if((refresh && refreshLayout.isRefreshing()) || !refresh){
+    public void refresh(boolean refresh) {
+        if ((refresh && refreshLayout.isRefreshing()) || !refresh) {
             refreshLayout.setRefreshing(refresh);
         }
     }
 
-    public void setOnRefreshListener(OnRefreshListener listener){
+    public void setOnRefreshListener(OnRefreshListener listener) {
         refreshLayout.setOnRefreshListener(listener);
     }
 
-    public void unBindView(){
+    public void unBindView() {
         ButterKnife.unbind(view);
     }
 
 
     @Override
     public void onItemClick(View v) {
-       int position = recyclerView.getChildAdapterPosition(v);
-        Status status = ((StatusListAdapter)recyclerView.getAdapter()).getStatus(position);
-        StatusDetailActivity.start(context , status);
+        int position = recyclerView.getChildAdapterPosition(v);
+        Status status = ((StatusListAdapter) recyclerView.getAdapter()).getStatus(position);
+        StatusDetailActivity.start(context, status);
     }
 }

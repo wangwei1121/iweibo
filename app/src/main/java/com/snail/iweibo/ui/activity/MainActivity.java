@@ -162,6 +162,7 @@ public class MainActivity extends BasePresenterActivity<IMainActivityView> imple
                     mSsoHandler = new SsoHandler(this, mAuthInfo);
                     mSsoHandler.authorize(this);
                 }else{
+                    // 判断TOken是否过期
                     UserDetailActivity.start(this);
                 }
                 break;
