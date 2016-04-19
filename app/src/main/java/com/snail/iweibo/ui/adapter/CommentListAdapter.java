@@ -1,10 +1,11 @@
 package com.snail.iweibo.ui.adapter;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,10 +13,12 @@ import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.model.Comment;
+import com.snail.iweibo.util.LogUtils;
 import com.snail.iweibo.util.SpanUtil;
 import com.snail.iweibo.util.TimeUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,26 +27,42 @@ import butterknife.ButterKnife;
  * CommonListAdapter
  * Created by alexwan on 16/4/4.
  */
-public class CommentListAdapter extends ArrayAdapter<Comment> {
-    private ArrayList<Comment> comments = new ArrayList<>();
-    private int resource;
-    public CommentListAdapter(Context context, int resource) {
-        super(context, resource);
-        this.resource = resource;
+public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.ViewHolder> {
+    private List<Comment> comments = new ArrayList<>();
+    private Context context;
+    public CommentListAdapter(Context context) {
+        this.context = context;
     }
 
-    @Override
-    public int getCount() {
-        return 0;
-    }
-
-    public void setCommentList(ArrayList<Comment> comments){
-        this.comments = comments;
+    public void setCommentList(List<Comment> comments){
+        LogUtils.info("setCommentList : comment size -> " + comments.size());
+        this.comments.addAll(comments);
         notifyDataSetChanged();
     }
+
     @Override
-    public Comment getItem(int position) {
-        return comments.get(position);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View view = inflater.inflate( R.layout.item_comment_list_layout  , parent , false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        Comment comment = comments.get(position);
+        LogUtils.info("Comment : content -> " + comment.getText() + " user -> " + comment.getUser().getName());
+        holder.userAvatar.setImageURI(UriUtil.parseUriOrNull(comment.getUser().getAvatar_hd()));
+        holder.userName.setText(comment.getUser().getName());
+        holder.createTime.setText(TimeUtils.formatUTCTime(comment.getCreatedAt() , TimeUtils.MINUTE_SECOND));
+        holder.content.setText(SpanUtil.buildSpan(context , comment.getText()));
+        holder.content.setMovementMethod(LinkMovementMethod.getInstance());
+        holder.likeBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //
+
+            }
+        });
     }
 
     @Override
@@ -52,32 +71,11 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-        if(convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(resource , parent);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
-        }else{
-            holder = (ViewHolder) convertView.getTag();
-        }
-        if(comments == null || comments.isEmpty()){
-            return convertView;
-        }
-        Comment comment = comments.get(position);
-
-        holder.userAvatar.setImageURI(UriUtil.parseUriOrNull(comment.getUser().getAvatar_hd()));
-        holder.userName.setText(comment.getUser().getName());
-        holder.createTime.setText(TimeUtils.formatUTCTime(comment.getCreatedAt() , TimeUtils.MINUTE_SECOND));
-        holder.content.setText(SpanUtil.buildSpan(getContext() , comment.getText()));
-        holder.likeBtn.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
-        return convertView;
+    public int getItemCount() {
+        return comments == null ? 0 : comments.size();
     }
-    public static class ViewHolder{
+
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         @Bind(R.id.user_avatar)
         SimpleDraweeView userAvatar;
         @Bind(R.id.user_name)
@@ -89,6 +87,7 @@ public class CommentListAdapter extends ArrayAdapter<Comment> {
         @Bind(R.id.action_like)
         ImageView likeBtn;
         public ViewHolder(View itemView){
+            super(itemView);
             ButterKnife.bind(this , itemView);
         }
     }

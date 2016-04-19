@@ -148,7 +148,7 @@ public class UserStatusListAdapter extends ArrayAdapter<Status> implements OnCli
         TextView contentText;
         @Bind(R.id.retweeted_layout)
         LinearLayout retweetedLayout;
-        @Bind(R.id.name_content)
+        @Bind(R.id.relay_content)
         TextView nameContent;
         @Bind(R.id.status_pic_grid)
         GridLayout statusPicGrid;

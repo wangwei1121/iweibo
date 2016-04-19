@@ -52,9 +52,13 @@ public class IUserDetailFragmentView implements IBaseView , OnClickListener , On
             adapter.addAll(statusList);
         }
         recyclerView.setAdapter(adapter);
-        progressBar.setVisibility(View.GONE);
     }
 
+    public void setProgressBarVisible(boolean isVisible){
+        if(progressBar != null){
+            progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        }
+    }
     public void unBindView() {
         ButterKnife.unbind(this);
     }
@@ -65,7 +69,7 @@ public class IUserDetailFragmentView implements IBaseView , OnClickListener , On
     }
 
     @Override
-    public void onItemClick(int position) {
+    public void onItemClick(View v) {
 
     }
 }

@@ -4,8 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="?attr/theme_background"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/theme_background">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -16,15 +16,15 @@
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/main_white"
+            android:background="?attr/theme_card_view"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
             <!-- title -->
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/tool_bar_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize"
-                app:contentScrim="@color/main_white"
+                app:contentScrim="?attr/theme_card_view"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
                 <!-- status header-->
 
@@ -32,7 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="?attr/actionBarSize"
-                    android:background="?attr/theme_background"
+                    android:paddingBottom="8dp"
                     android:paddingEnd="8dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
@@ -110,19 +110,20 @@
                         app:rowCount="3"
                         app:useDefaultMargins="true"/>
                     <!-- retweeted status-->
-                    <LinearLayout
+                    <com.snail.iweibo.widget.theme.ThemeFrameLayout
                         android:id="@+id/retweeted_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/status_pic_grid"
-                        android:background="#440f8ae6"
-                        android:visibility="gone">
+                        android:layout_below="@+id/status_pic_grid"
+                        android:background="?attr/theme_background"
+                        android:visibility="visible">
 
-                        <TextView
-                            android:id="@+id/name_content"
+                        <com.snail.iweibo.widget.theme.ThemeTextView
+                            android:id="@+id/relay_content"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-                    </LinearLayout>
+                            android:layout_height="wrap_content"
+                            android:textColor="?attr/theme_text_view"/>
+                    </com.snail.iweibo.widget.theme.ThemeFrameLayout>
                 </RelativeLayout>
 
                 <android.support.v7.widget.Toolbar
@@ -134,18 +135,20 @@
                     tools:ignore="PrivateResource"/>
 
             </android.support.design.widget.CollapsingToolbarLayout>
+
             <View
-                android:layout_below="@id/retweeted_layout"
                 android:layout_width="match_parent"
-                android:layout_height="10dp"
+                android:layout_height="5dp"
+                android:layout_below="@id/retweeted_layout"
                 android:background="?attr/theme_divider"/>
+
             <android.support.design.widget.TabLayout
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="46dp"
+                android:background="?attr/theme_item_tab"
                 app:tabGravity="fill"
-                android:background="?attr/theme_background"
-                app:tabSelectedTextColor="@color/main_black"
+                app:tabSelectedTextColor="@color/main_orange"
                 app:tabTextColor="@color/main_gray"
                 tools:ignore="PrivateResource"/>
         </android.support.design.widget.AppBarLayout>
@@ -154,29 +157,22 @@
             android:id="@+id/frame_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fillViewport="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <android.support.v4.widget.NestedScrollView
+            <ProgressBar
+                android:id="@+id/progress"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="?attr/actionBarSize"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fillViewport="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-                    <ListView
-                        android:id="@+id/list_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:cacheColorHint="@color/main_transparent"
-                        android:divider="@null"
-                        android:listSelector="@color/main_transparent"
-                        android:scrollbars="none"/>
-                </LinearLayout>
-            </android.support.v4.widget.NestedScrollView>
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
         </FrameLayout>
 
 

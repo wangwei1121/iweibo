@@ -9,8 +9,8 @@
         android:id="@+id/progress_bar"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_gravity="center"
-        />
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_gravity="center"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list_view"

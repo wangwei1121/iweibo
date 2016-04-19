@@ -1,17 +1,21 @@
 package com.snail.iweibo.ui.adapter;
+
 import android.content.Context;
 import android.net.Uri;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,8 +26,10 @@ import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.Status.ThumbnailPic;
 import com.snail.iweibo.mvp.model.UserBean;
+import com.snail.iweibo.ui.activity.UserDetailActivity;
 import com.snail.iweibo.ui.adapter.StatusListAdapter.ViewHolder;
 import com.snail.iweibo.util.ScreenInfo;
+import com.snail.iweibo.util.SharePreferencesUtil;
 import com.snail.iweibo.util.SpanUtil;
 import com.snail.iweibo.util.TimeUtils;
 
@@ -43,7 +49,8 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
     private Context context;
     private OnClickListener onClickListener;
     private OnItemClickListener itemClick;
-    public StatusListAdapter(Context context, List<Status> statuses , OnClickListener onClickListener ,
+
+    public StatusListAdapter(Context context, List<Status> statuses, OnClickListener onClickListener,
                              OnItemClickListener itemClick) {
         this.context = context;
         this.statuses = statuses;
@@ -61,7 +68,9 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Status bean = statuses.get(position);
-        UserBean user = bean.getUser();
+        final UserBean user = bean.getUser();
+        boolean isDarkTheme = SharePreferencesUtil.isDarkTheme(context);
+        holder.cardView.setCardBackgroundColor(context.getResources().getColor(isDarkTheme ? R.color.color_primary_dark_inverse : R.color.main_white));
         // 用户头像
         if (!TextUtils.isEmpty(user.getProfile_image_url())) {
             Uri uri = UriUtil.parseUriOrNull(user.getAvatar_large());
@@ -69,8 +78,16 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
                 holder.userAvatar.setImageURI(uri);
             }
         }
+        holder.userAvatar.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserDetailActivity.start(context, user);
+            }
+        });
         // 名称
         holder.userName.setText(user.getScreen_name());
+        holder.userName.setTextColor(context.getResources().getColor(isDarkTheme ? R.color.main_gray : R.color
+                .main_black));
         // 时间
         holder.createTime.setText(TimeUtils.formatUTCTimes(bean.getCreatedAt()));
         // 来自
@@ -83,11 +100,11 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         Status status = bean.getRetweetedStatus();
         if (status != null) {
             Log.i("StatusListAdapter", status.toString());
-            holder.retweetedLayout.setVisibility(View.VISIBLE);
+            holder.relayLayout.setVisibility(View.VISIBLE);
             String name = status.getUser() == null || status.getUser().getName() == null ? "" : status.getUser().getName();
-            holder.nameContent.setText("@" + name + ":" + status.getText());
+            holder.contentText.setText("@" + name + ":" + status.getText());
         } else {
-            holder.retweetedLayout.setVisibility(View.GONE);
+            holder.relayLayout.setVisibility(View.GONE);
         }
         // 组合图片
         holder.statusPicGrid.removeAllViews();
@@ -100,15 +117,15 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.commentBtn.setOnClickListener(onClickListener);
         holder.likeBtn.setOnClickListener(onClickListener);
         // 转发数
-        if( bean.getRepostsCount() != 0){
+        if (bean.getRepostsCount() != 0) {
             holder.relayTxt.setText(String.valueOf(bean.getRepostsCount()));
         }
         // 评论数
-        if(bean.getCommentsCount() != 0){
+        if (bean.getCommentsCount() != 0) {
             holder.commentTxt.setText(String.valueOf(bean.getCommentsCount()));
         }
         // 赞
-        if(bean.getAttitudesCount() != 0){
+        if (bean.getAttitudesCount() != 0) {
             holder.likeTxt.setText(String.valueOf(bean.getAttitudesCount()));
         }
         holder.setOnItemClickListener(itemClick);
@@ -123,8 +140,8 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
      */
     private void updateGridLayout(int size, GridLayout gridLayout, final List<ThumbnailPic> pics) {
         ScreenInfo screenInfo = new ScreenInfo(context);
-        MarginLayoutParams params = new MarginLayoutParams(screenInfo.getWidth() / 3 - 20 , screenInfo.getWidth() / 3
-            - 20);
+        MarginLayoutParams params = new MarginLayoutParams(screenInfo.getWidth() / 3 - 20, screenInfo.getWidth() / 3
+                - 20);
         int column = (size >= 1 && size <= 3) ? size : ((size == 4) ? 2 : 3);
         int row = (int) Math.ceil(size / 3);
         gridLayout.setColumnCount(column);
@@ -154,15 +171,16 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.notifyDataSetChanged();
     }
 
-    public Status getStatus(int position){
+    public Status getStatus(int position) {
         return statuses.get(position);
     }
+
     @Override
     public int getItemCount() {
         return statuses == null ? 0 : statuses.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
         @Bind(R.id.user_avatar)
         SimpleDraweeView userAvatar;
         @Bind(R.id.user_name)
@@ -174,9 +192,9 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         @Bind(R.id.content_text)
         TextView contentText;
         @Bind(R.id.retweeted_layout)
-        LinearLayout retweetedLayout;
-        @Bind(R.id.name_content)
-        TextView nameContent;
+        FrameLayout relayLayout;
+        @Bind(R.id.relay_content)
+        TextView relayContent;
         @Bind(R.id.status_pic_grid)
         GridLayout statusPicGrid;
         // 收藏
@@ -203,6 +221,10 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         LinearLayout likeBtn;
         @Bind(R.id.action_like_icon)
         ImageView likeIcon;
+        @Bind(R.id.card_view)
+        CardView cardView;
+        @Bind(R.id.action_divider)
+        View divider;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -213,17 +235,19 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         @Override
         public void onClick(View v) {
-            if(listener != null){
-                listener.onItemClick(getAdapterPosition());
+            if (listener != null) {
+                listener.onItemClick(v);
             }
         }
+
         private OnItemClickListener listener;
 
-        public void setOnItemClickListener(OnItemClickListener listener){
+        public void setOnItemClickListener(OnItemClickListener listener) {
             this.listener = listener;
         }
     }
-    public interface OnItemClickListener{
-        void onItemClick(int position);
+
+    public interface OnItemClickListener {
+        void onItemClick(View v);
     }
 }

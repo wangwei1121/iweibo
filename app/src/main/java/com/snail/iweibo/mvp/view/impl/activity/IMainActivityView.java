@@ -21,8 +21,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,15 +36,13 @@ import android.widget.TextView;
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.model.UserBean;
 import com.snail.iweibo.mvp.view.IBaseView;
-import com.snail.iweibo.oauth.AccessTokenKeeper;
-import com.snail.iweibo.ui.activity.UserDetailActivity;
 import com.snail.iweibo.ui.base.BasePresenterActivity;
 import com.snail.iweibo.ui.fragment.HomeFragment;
 import com.snail.iweibo.ui.fragment.SettingFragment;
+import com.snail.iweibo.util.LogUtils;
 import com.snail.iweibo.util.SharePreferencesUtil;
 import com.snail.iweibo.widget.theme.ThemeUIInterface;
 
@@ -83,6 +79,7 @@ public class IMainActivityView implements IBaseView {
     private SimpleDraweeView userAvatar;
     private TextView userName;
     private TextView userState;
+    private HomeFragment homeFragment;
     @Override
     public void init(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         mView = inflater.inflate(R.layout.activity_main, viewGroup, false);
@@ -98,7 +95,7 @@ public class IMainActivityView implements IBaseView {
     /**
      * 初始化View
      */
-    public void initViews() {
+    public void initViews(OnClickListener onClickListener) {
         // toolbar
         context.setSupportActionBar(mToolbar);
         final android.support.v7.app.ActionBar actionBar = context.getSupportActionBar();
@@ -114,7 +111,7 @@ public class IMainActivityView implements IBaseView {
         mDrawerLayout.setDrawerListener(drawerToggle);
         navigationView.setCheckedItem(R.id.main_frame);
         // 默认首页HomeFragment
-        final HomeFragment homeFragment = new HomeFragment();
+        homeFragment = new HomeFragment();
         homeFragment.setTabLayout(tabLayout);
         lastFragment = homeFragment;
 
@@ -142,18 +139,7 @@ public class IMainActivityView implements IBaseView {
         RoundingParams roundingParams = userAvatar.getHierarchy().getRoundingParams();
         roundingParams.setBorder(R.color.main_white , 2);
         userAvatar.getHierarchy().setRoundingParams(roundingParams);
-        userAvatar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 判断用户有没有登录
-                Oauth2AccessToken token = AccessTokenKeeper.readAccessToken(context);
-                if(!TextUtils.isEmpty(token.getToken())){
-                    UserDetailActivity.start(context , token);
-                }else{
-
-                }
-            }
-        });
+        userAvatar.setOnClickListener(onClickListener);
         // 用户名
         userName = (TextView) headerView.findViewById(R.id.user_name);
         // 用户描述
@@ -260,10 +246,13 @@ public class IMainActivityView implements IBaseView {
         navigationView.setBackgroundColor(context.getResources().getColor(colorId));
         // navigation view
         ObjectAnimator animator = ObjectAnimator.ofFloat(animView, "alpha", 0f).setDuration(200);
+
+        //
+
         animator.addListener(new AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-
+                homeFragment.changeTheme();
             }
 
             @Override
@@ -294,11 +283,11 @@ public class IMainActivityView implements IBaseView {
     public void changeTheme(View view, Resources.Theme theme) {
 
         if (view instanceof ThemeUIInterface) {
-            Log.i("IMainActivityView" , view.toString() +" - ");
+            LogUtils.info("ThemeUIInterface ： " + view.getClass().getName());
             ((ThemeUIInterface) view).setTheme(theme);
         }
         if (view instanceof ViewGroup) {
-
+            LogUtils.info(view.getClass().getName());
             int count = ((ViewGroup) view).getChildCount();
             for (int i = 0; i < count; i++) {
                 changeTheme(((ViewGroup) view).getChildAt(i), theme);
@@ -317,4 +306,5 @@ public class IMainActivityView implements IBaseView {
         userHeader.setImageURI(UriUtil.parseUriOrNull(userBean.getAvatar_hd()));
         tabUserName.setText(userBean.getScreen_name());
     }
+
 }

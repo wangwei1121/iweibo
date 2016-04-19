@@ -27,10 +27,11 @@
         <item name="navigation_back">@color/main_blue</item>
         <item name="theme_text_view">@color/main_black</item>
         <item name="theme_tab_layout">@color/main_blue</item>
-        <item name="theme_item_tab">@color/main_white</item>
         <item name="theme_background">@color/main_light_gray</item>
         <item name="theme_divider">@color/main_light_gray</item>
         <item name="theme_menu">@drawable/item_menu_selector</item>
+        <item name="theme_item_tab">@color/main_white</item>
+        <item name="theme_card_view">@color/main_white</item>
     </style>
 
     <!--night theme -->
@@ -49,5 +50,6 @@
         <item name="theme_divider">@color/main_dark_gray</item>
         <item name="theme_menu">@drawable/item_menu_selector</item>
         <item name="theme_item_tab">@color/color_primary_dark_inverse</item>
+        <item name="theme_card_view">@color/color_primary_dark_inverse</item>
     </style>
 </resources>

@@ -1,14 +1,18 @@
 package com.snail.iweibo.ui.fragment;
-import android.util.Log;
+import android.os.Bundle;
 
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.snail.iweibo.api.ApiServiceHelper;
 import com.snail.iweibo.api.WeiBoApiService;
+import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.StatusList;
 import com.snail.iweibo.mvp.view.impl.fragment.IUserDetailFragmentView;
 import com.snail.iweibo.oauth.AccessTokenKeeper;
 import com.snail.iweibo.oauth.Constants;
 import com.snail.iweibo.ui.base.BasePresenterFragment;
+import com.snail.iweibo.util.LogUtils;
+
+import java.util.ArrayList;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -31,20 +35,26 @@ public class UserDetailStatusFragment extends BasePresenterFragment<IUserDetailF
      * 加载用户最新微博信息
      */
     private void loadData() {
+        Bundle bundle = getArguments();
+        String name = bundle != null ? bundle.getString("name") : "";
         Oauth2AccessToken token = AccessTokenKeeper.readAccessToken(getActivity());
+        String uid = token.getUid();
+        LogUtils.info("name -> " + name + " uid -> " + uid);
         ApiServiceHelper
             .getApiService(Constants.WEIBO_BASE_URL, WeiBoApiService.class)
-            .getUserTimeLine(token.getToken(), token.getUid(), 0, 0, 50, 1, 0, 0, 0)
+            .getUserTimeLine(token.getToken(), name , 0, 0, 50, 1, 0, 0, 0)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Subscriber<StatusList>() {
                 @Override
                 public void onCompleted() {
+                    view.setProgressBarVisible(false);
                 }
 
                 @Override
                 public void onError(Throwable e) {
-                    Log.e("UserDetailFragment", "loadData - onError : " + e.getMessage());
+                    view.setProgressBarVisible(false);
+                    LogUtils.error("loadData - onError : " + e.getMessage());
                 }
 
                 @Override
@@ -52,6 +62,8 @@ public class UserDetailStatusFragment extends BasePresenterFragment<IUserDetailF
                     if (statuses != null && statuses.getStatuses() != null
                         && !statuses.getStatuses().isEmpty()) {
                         view.updateView(statuses.getStatuses());
+                    }else{
+                        view.updateView(new ArrayList<Status>());
                     }
                 }
             });

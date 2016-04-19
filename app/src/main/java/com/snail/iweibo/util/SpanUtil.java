@@ -29,6 +29,9 @@ public class SpanUtil {
     // 表情
     public static final Pattern EMOTION_URL = Pattern.compile("\\[(\\S+?)\\]");
 
+    public static final String WEB_SCHEME = "http://";
+    public static final String TOPIC_SCHEME = "com.snail.iweibo.topic://";
+    public static final String MENTION_SCHEME = "com.snail.iweibo://";
     public static SpannableString buildSpan(Context context , String text){
         if(TextUtils.isEmpty(text)){
             return null;
@@ -43,13 +46,13 @@ public class SpanUtil {
         // 格式化超链接
         String link = linkFormat(content);
         Spanned spanned = Html.fromHtml(link);
-        //
-        SpannableString ss = SpannableString.valueOf(spanned);
         // 格式化@和话题内容
-        Linkify.addLinks(ss, MENTION_URL, "");
-        Linkify.addLinks(ss, WEB_URL, "");
-        Linkify.addLinks(ss, TOPIC_URL, "");
+        SpannableString ss = SpannableString.valueOf(spanned);
+        Linkify.addLinks(ss, WEB_URL, WEB_SCHEME);
+        Linkify.addLinks(ss, TOPIC_URL, TOPIC_SCHEME);
+        Linkify.addLinks(ss, MENTION_URL, MENTION_SCHEME);
         URLSpan[] urls = ss.getSpans(0 , ss.length() , URLSpan.class);
+        // 添加可点击
         for (URLSpan url : urls){
             URLClickSpan clickSpan = new URLClickSpan(context , url.getURL());
             int start = ss.getSpanStart(url);
@@ -66,8 +69,8 @@ public class SpanUtil {
      * @param link link
      * @return String
      */
-    public static String linkFormat(String link){
-        String format = "<a href=\"%s\">链接</a>";
+    private static String linkFormat(String link){
+        String format = "<a href=\"%s\">☞ 网页链接</a>";
         Matcher matcher = WEB_URL.matcher(link);
         while (matcher.find()){
             int start = matcher.start();
