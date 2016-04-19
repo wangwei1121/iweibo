@@ -19,4 +19,6 @@
     <color name="color_primary_inverse">#424242</color>
     <color name="color_primary_dark">#1976D2</color>
     <color name="color_primary">#0f8ae6</color>
+    <color name="color_retweet">#f7585757</color>
+    <color name="color_retweet_light">#dfdfdf</color>
 </resources>

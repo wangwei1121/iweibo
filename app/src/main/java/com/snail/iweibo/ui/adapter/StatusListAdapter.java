@@ -8,14 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -97,12 +95,20 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         // 微博内容 TODO
         holder.contentText.setText(SpanUtil.buildSpan(context, bean.getText()));
         // 被转发的微博字段
-        Status status = bean.getRetweetedStatus();
-        if (status != null) {
-            Log.i("StatusListAdapter", status.toString());
+        Status relayStatus = bean.getRetweetedStatus();
+        if (relayStatus != null) {
+            Log.i("StatusListAdapter", relayStatus.toString());
             holder.relayLayout.setVisibility(View.VISIBLE);
-            String name = status.getUser() == null || status.getUser().getName() == null ? "" : status.getUser().getName();
-            holder.contentText.setText(SpanUtil.buildSpan(context, "@" + name + ":" + status.getText()));
+            String name = relayStatus.getUser() == null || relayStatus.getUser().getName() == null ? "" : relayStatus.getUser().getName();
+            holder.relayContent.setText(SpanUtil.buildSpan(context, "@" + name + ":" + relayStatus.getText()));
+            holder.relayPicGrid.removeAllViews();
+            holder.relayDataRelay.setText(Integer.toString(relayStatus.getRepostsCount()));
+            holder.relayDataComment.setText(Integer.toString(relayStatus.getCommentsCount()));
+            holder.relayDataLike.setText(Integer.toString(relayStatus.getAttitudesCount()));
+            if (relayStatus.getPicUrls() != null && !relayStatus.getPicUrls().isEmpty()) {
+                int size = relayStatus.getPicUrls().size();
+                updateGridLayout(size, holder.relayPicGrid, relayStatus.getPicUrls());
+            }
         } else {
             holder.relayLayout.setVisibility(View.GONE);
         }
@@ -191,8 +197,8 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         TextView from;
         @Bind(R.id.content_text)
         TextView contentText;
-        @Bind(R.id.retweeted_layout)
-        FrameLayout relayLayout;
+        @Bind(R.id.relayLayout)
+        LinearLayout relayLayout;
         @Bind(R.id.relay_content)
         TextView relayContent;
         @Bind(R.id.status_pic_grid)
@@ -225,6 +231,15 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         CardView cardView;
         @Bind(R.id.action_divider)
         View divider;
+        @Bind(R.id.relay_pic_grid)
+        GridLayout relayPicGrid;
+        @Bind(R.id.relay_data_relay)
+        TextView relayDataRelay;
+        @Bind(R.id.relay_data_like)
+        TextView relayDataLike;
+        @Bind(R.id.relay_data_comment)
+        TextView relayDataComment;
+
 
         public ViewHolder(View itemView) {
             super(itemView);

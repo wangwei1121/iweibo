@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.snail.iweibo.widget.theme.ThemeCardView
-    android:id="@+id/card_view"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.snail.iweibo.widget.theme.ThemeCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="?attr/theme_card_view"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    app:cardBackgroundColor="?attr/theme_card_view">
 
     <RelativeLayout
         android:id="@+id/header"
@@ -28,7 +27,7 @@
             fresco:roundBottomRight="true"
             fresco:roundTopLeft="true"
             fresco:roundTopRight="false"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
         <!-- 用户名 -->
         <com.snail.iweibo.widget.theme.ThemeTextView
             android:id="@+id/user_name"
@@ -39,7 +38,7 @@
             android:layout_toRightOf="@id/user_avatar"
             android:textColor="?attr/theme_text_view"
             android:textSize="14sp"
-            tools:text="alexwan"/>
+            tools:text="alexwan" />
 
         <TextView
             android:id="@+id/created_at"
@@ -50,7 +49,7 @@
             android:layout_toRightOf="@id/user_avatar"
             android:textColor="@color/main_orange"
             android:textSize="14sp"
-            tools:text="22分钟之前"/>
+            tools:text="22分钟之前" />
 
         <TextView
             android:id="@+id/from"
@@ -61,7 +60,7 @@
             android:layout_toRightOf="@id/created_at"
             android:textColor="@color/main_gray"
             android:textSize="14sp"
-            tools:text="@string/string_statuses_from"/>
+            tools:text="@string/string_statuses_from" />
 
         <LinearLayout
             android:id="@+id/content"
@@ -79,9 +78,9 @@
                 android:id="@+id/content_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
                 android:textColor="?attr/theme_text_view"
-                tools:text="微博内容"/>
+                android:textSize="15sp"
+                tools:text="微博内容" />
             <!--图片-->
             <android.support.v7.widget.GridLayout
                 android:id="@+id/status_pic_grid"
@@ -92,21 +91,39 @@
                 app:alignmentMode="alignBounds"
                 app:columnCount="3"
                 app:rowCount="3"
-                app:useDefaultMargins="true"/>
+                app:useDefaultMargins="true" />
             <!--转发的微博内容-->
-            <com.snail.iweibo.widget.theme.ThemeFrameLayout
-                android:id="@+id/retweeted_layout"
+            <LinearLayout
+                android:id="@+id/relayLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/theme_background"
-                android:visibility="gone">
+                android:orientation="vertical"
+                android:visibility="visible">
 
-                <com.snail.iweibo.widget.theme.ThemeTextView
+                <TextView
                     android:id="@+id/relay_content"
-                    android:textColor="?attr/theme_text_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.snail.iweibo.widget.theme.ThemeFrameLayout>
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.GridLayout
+                    android:id="@+id/relay_pic_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/relay_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    app:alignmentMode="alignBounds"
+                    app:columnCount="3"
+                    app:rowCount="3"
+                    app:useDefaultMargins="true" />
+                <!--retweeted 相關數據-->
+                <include
+                    layout="@layout/relaydata_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="26dp" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <com.snail.iweibo.widget.theme.ThemeDividerView
@@ -114,13 +131,13 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/content"
-            android:background="?attr/theme_divider"/>
+            android:background="?attr/theme_divider" />
 
         <include
             layout="@layout/item_action_layout"
             android:layout_width="match_parent"
             android:layout_height="26dp"
-            android:layout_below="@id/action_divider"/>
+            android:layout_below="@id/action_divider" />
     </RelativeLayout>
 
 

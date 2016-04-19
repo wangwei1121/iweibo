@@ -1,4 +1,5 @@
 package com.snail.iweibo.mvp.view.impl.activity;
+
 import android.content.Context;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
@@ -18,7 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -68,24 +69,34 @@ public class IStatusDetailActivityView implements IBaseView {
     Toolbar toolbar;
     @Bind(R.id.tab_layout)
     TabLayout tabLayout;
-//    @Bind(R.id.frame_layout)
+    //    @Bind(R.id.frame_layout)
 //    FrameLayout frameLayout;
     @Bind(R.id.tool_bar_layout)
     CollapsingToolbarLayout toolbarLayout;
     @Bind(R.id.list_view)
     RecyclerView listView;
     @Bind(R.id.retweeted_layout)
-    FrameLayout relayLayout;
+    LinearLayout relayLayout;
     @Bind(R.id.relay_content)
     TextView relayContent;
+    @Bind(R.id.relay_pic_grid)
+    GridLayout relayGridLayout;
     @Bind(R.id.progress)
     ProgressBar progressBar;
+    @Bind(R.id.relay_data_relay)
+    TextView relayDataRelay;
+    @Bind(R.id.relay_data_comment)
+    TextView relayDataComment;
+    @Bind(R.id.relay_data_like)
+    TextView relayDataLike;
+
     private CommentListAdapter commentAdapter;
+
     @Override
     public void init(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
-        mView = inflater.inflate(R.layout.activity_status_detail , viewGroup);
+        mView = inflater.inflate(R.layout.activity_status_detail, viewGroup);
         this.context = context;
-        ButterKnife.bind(this , mView);
+        ButterKnife.bind(this, mView);
     }
 
     @Override
@@ -93,8 +104,8 @@ public class IStatusDetailActivityView implements IBaseView {
         return mView;
     }
 
-    public void initView(final BasePresenterActivity context){
-        if(toolbar == null){
+    public void initView(final BasePresenterActivity context) {
+        if (toolbar == null) {
             return;
         }
 
@@ -117,7 +128,7 @@ public class IStatusDetailActivityView implements IBaseView {
         toolbarLayout.setTitleEnabled(false);
     }
 
-    public void updateView(final Status status){
+    public void updateView(final Status status) {
 
         this.status = status;
         final UserBean user = status.getUser();
@@ -125,30 +136,38 @@ public class IStatusDetailActivityView implements IBaseView {
         userAvatar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserDetailActivity.start(context , user);
+                UserDetailActivity.start(context, user);
             }
         });
         userName.setText(user.getName());
         createTime.setText(TimeUtils.formatUTCTimes(status.getCreatedAt()));
         Spanned span = Html.fromHtml(String.format(context.getResources().getString(R.string.string_statuses_from),
-            status.getSource()));
+                status.getSource()));
         from.setText(span);
-        content.setText(SpanUtil.buildSpan(context , status.getText()));
+        content.setText(SpanUtil.buildSpan(context, status.getText()));
         content.setMovementMethod(LinkMovementMethod.getInstance());
+        gridLayout.removeAllViews();
         if (status.getPicUrls() != null && !status.getPicUrls().isEmpty()) {
             int size = status.getPicUrls().size();
             updateGridLayout(size, gridLayout, status.getPicUrls());
         }
-
         // 转发微博内容
         Status relayStatus = status.getRetweetedStatus();
         if (relayStatus != null) {
             Log.i("StatusListAdapter", relayStatus.toString());
             relayLayout.setVisibility(View.VISIBLE);
             String reContent = "@" + relayStatus.getUser().getName() + ":" + relayStatus.getText();
-            relayContent.setText(SpanUtil.buildSpan(context , reContent));
+            relayContent.setText(SpanUtil.buildSpan(context, reContent));
             relayContent.setMovementMethod(LinkMovementMethod.getInstance());
-        }else{
+            relayDataRelay.setText(Integer.toString(relayStatus.getRepostsCount()));
+            relayDataComment.setText(Integer.toString(relayStatus.getCommentsCount()));
+            relayDataLike.setText(Integer.toString(relayStatus.getAttitudesCount()));
+            relayGridLayout.removeAllViews();
+            if (relayStatus.pic_urls != null && !relayStatus.getPicUrls().isEmpty()) {
+                int size = relayStatus.getPicUrls().size();
+                updateGridLayout(size, relayGridLayout, relayStatus.getPicUrls());
+            }
+        } else {
             relayLayout.setVisibility(View.GONE);
         }
         // ListView 必须设置LayoutManager和Adapter才能配合CoordinatorLayout使用
@@ -156,18 +175,18 @@ public class IStatusDetailActivityView implements IBaseView {
         listView.setLayoutManager(new LinearLayoutManager(context));
         listView.setAdapter(commentAdapter);
         // TAB
-        Tab tab1= tabLayout.newTab().setText("转发 "+ status.getRepostsCount());
+        Tab tab1 = tabLayout.newTab().setText("转发 " + status.getRepostsCount());
         tabLayout.addTab(tab1);
-        Tab tab2 = tabLayout.newTab().setText("评论 "+status.getCommentsCount());
+        Tab tab2 = tabLayout.newTab().setText("评论 " + status.getCommentsCount());
         tabLayout.addTab(tab2);
-        tabLayout.addTab(tabLayout.newTab().setText("赞 "+status.getAttitudesCount()));
+        tabLayout.addTab(tabLayout.newTab().setText("赞 " + status.getAttitudesCount()));
         tab2.select();
         tabLayout.setOnTabSelectedListener(new OnTabSelectedListener() {
             @Override
             public void onTabSelected(Tab tab) {
                 //
                 int position = tab.getPosition();
-                switch (position){
+                switch (position) {
                     case 0:
                         listView.setVisibility(View.GONE);
                         break;
@@ -197,9 +216,10 @@ public class IStatusDetailActivityView implements IBaseView {
 
     /**
      * 多图
-     * @param size size
+     *
+     * @param size       size
      * @param gridLayout gridLayout
-     * @param pics pics
+     * @param pics       pics
      */
     private void updateGridLayout(int size, GridLayout gridLayout, final List<ThumbnailPic> pics) {
         ScreenInfo info = new ScreenInfo(context);
@@ -232,8 +252,8 @@ public class IStatusDetailActivityView implements IBaseView {
         commentAdapter.setCommentList(comments);
     }
 
-    public void setProgressBarVisible(boolean isVisible){
-        if(progressBar != null){
+    public void setProgressBarVisible(boolean isVisible) {
+        if (progressBar != null) {
             progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         }
     }
