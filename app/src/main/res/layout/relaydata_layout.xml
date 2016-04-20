@@ -2,15 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="right"
     android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/action_relay_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="100dp"
-        android:layout_weight="1"
-        android:gravity="center">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -22,16 +20,14 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text=""
+            android:singleLine="true"
             android:textColor="@color/main_gray" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/action_comment_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -43,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text=""
+            android:singleLine="true"
             android:textColor="@color/main_gray" />
     </LinearLayout>
 
@@ -51,8 +47,7 @@
         android:id="@+id/action_like_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center">
+        android:layout_marginRight="5dp">
 
         <ImageView
             android:id="@+id/action_like_icon"
@@ -64,9 +59,8 @@
             android:id="@+id/relay_data_like"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:drawablePadding="5dp"
             android:gravity="center"
-            android:text=""
+            android:singleLine="true"
             android:textColor="@color/main_gray" />
     </LinearLayout>
 

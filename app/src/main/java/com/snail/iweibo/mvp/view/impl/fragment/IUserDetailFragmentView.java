@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.view.IBaseView;
+import com.snail.iweibo.ui.activity.StatusDetailActivity;
 import com.snail.iweibo.ui.adapter.StatusListAdapter;
 import com.snail.iweibo.ui.adapter.StatusListAdapter.OnItemClickListener;
 import com.snail.iweibo.ui.base.BasePresenterActivity;
@@ -24,7 +25,7 @@ import butterknife.ButterKnife;
  * IUserDetailFragmentView
  * Created by alexwan on 16/4/11.
  */
-public class IUserDetailFragmentView implements IBaseView , OnClickListener , OnItemClickListener{
+public class IUserDetailFragmentView implements IBaseView, OnClickListener, OnItemClickListener {
     private View view;
     private BasePresenterActivity context;
     private StatusListAdapter adapter;
@@ -32,6 +33,7 @@ public class IUserDetailFragmentView implements IBaseView , OnClickListener , On
     RecyclerView recyclerView;
     @Bind(R.id.progress_bar)
     ProgressBar progressBar;
+
     @Override
     public void init(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         view = inflater.inflate(R.layout.fragment_common_list, viewGroup, false);
@@ -54,11 +56,12 @@ public class IUserDetailFragmentView implements IBaseView , OnClickListener , On
         recyclerView.setAdapter(adapter);
     }
 
-    public void setProgressBarVisible(boolean isVisible){
-        if(progressBar != null){
+    public void setProgressBarVisible(boolean isVisible) {
+        if (progressBar != null) {
             progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         }
     }
+
     public void unBindView() {
         ButterKnife.unbind(this);
     }
@@ -70,6 +73,8 @@ public class IUserDetailFragmentView implements IBaseView , OnClickListener , On
 
     @Override
     public void onItemClick(View v) {
-
+        int position = recyclerView.getChildAdapterPosition(v);
+        Status status = ((StatusListAdapter) recyclerView.getAdapter()).getStatus(position);
+        StatusDetailActivity.start(context, status);
     }
 }
