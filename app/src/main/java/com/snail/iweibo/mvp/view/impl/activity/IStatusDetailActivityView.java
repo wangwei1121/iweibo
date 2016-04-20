@@ -1,7 +1,6 @@
 package com.snail.iweibo.mvp.view.impl.activity;
 
 import android.content.Context;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TabLayout.OnTabSelectedListener;
@@ -90,8 +89,6 @@ public class IStatusDetailActivityView implements IBaseView {
     TextView relayDataComment;
     @Bind(R.id.relay_data_like)
     TextView relayDataLike;
-    @Bind(R.id.app_bar_layout)
-    AppBarLayout appBarContent;
     private CommentListAdapter commentAdapter;
 
     @Override

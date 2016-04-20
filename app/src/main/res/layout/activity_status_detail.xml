@@ -7,11 +7,12 @@
     android:layout_height="match_parent"
     android:background="?attr/theme_background"
     android:orientation="vertical">
+
     <!-- title -->
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/app_bar_layout"
         android:background="?attr/theme_card_view"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <!-- title -->
@@ -153,7 +154,6 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:layout_below="@id/retweeted_layout"
             android:background="?attr/theme_divider"/>
 
         <android.support.design.widget.TabLayout
@@ -166,6 +166,7 @@
             app:tabTextColor="@color/main_gray"
             tools:ignore="PrivateResource"/>
     </android.support.design.widget.AppBarLayout>
+
     <!-- comment info -->
     <FrameLayout
         android:id="@+id/frame_layout"
@@ -187,6 +188,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
     </FrameLayout>
-
 
 </android.support.design.widget.CoordinatorLayout>

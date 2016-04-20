@@ -96,14 +96,20 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         // 微博内容 TODO
         holder.contentText.setText(SpanUtil.buildSpan(context, bean.getText()));
         holder.contentText.setMovementMethod(LinkMovementMethod.getInstance());
+        holder.contentText.setTextColor(context.getResources().getColor(isDarkTheme ? R.color.main_gray : R.color
+            .main_black));
         // 被转发的微博字段
         Status relayStatus = bean.getRetweetedStatus();
         if (relayStatus != null) {
             Log.i("StatusListAdapter", relayStatus.toString());
             holder.relayLayout.setVisibility(View.VISIBLE);
+            holder.relayLayout.setBackgroundColor(context.getResources().getColor(isDarkTheme ? R.color.color_primary_inverse
+                : R.color.main_light_gray));
             String name = relayStatus.getUser() == null || relayStatus.getUser().getName() == null ? "" : relayStatus.getUser().getName();
             holder.relayContent.setText(SpanUtil.buildSpan(context, "@" + name + ":" + relayStatus.getText()));
             holder.relayContent.setMovementMethod(LinkMovementMethod.getInstance());
+            holder.relayContent.setTextColor(context.getResources().getColor(isDarkTheme ? R.color.main_gray : R.color
+                .main_black));
             holder.relayPicGrid.removeAllViews();
             holder.relayDataRelay.setText(String.valueOf(relayStatus.getRepostsCount()));
             holder.relayDataComment.setText(String.valueOf(relayStatus.getCommentsCount()));
