@@ -20,7 +20,7 @@ public interface WeiBoApiService {
      */
     @GET("2/statuses/public_timeline.json")
     Observable<StatusList> getPublicTimeLine(@Query("access_token") String token, @Query("count") int count, @Query
-            ("page") int page, @Query("base_app") int app);
+        ("page") int page, @Query("base_app") int app);
 
     /**
      * @param token     采用OAuth授权方式为必填参数，OAuth授权后获得。 必选

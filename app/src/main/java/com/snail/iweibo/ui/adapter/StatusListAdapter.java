@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,6 +95,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.from.setText(span);
         // 微博内容 TODO
         holder.contentText.setText(SpanUtil.buildSpan(context, bean.getText()));
+        holder.contentText.setMovementMethod(LinkMovementMethod.getInstance());
         // 被转发的微博字段
         Status relayStatus = bean.getRetweetedStatus();
         if (relayStatus != null) {
@@ -101,10 +103,11 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
             holder.relayLayout.setVisibility(View.VISIBLE);
             String name = relayStatus.getUser() == null || relayStatus.getUser().getName() == null ? "" : relayStatus.getUser().getName();
             holder.relayContent.setText(SpanUtil.buildSpan(context, "@" + name + ":" + relayStatus.getText()));
+            holder.relayContent.setMovementMethod(LinkMovementMethod.getInstance());
             holder.relayPicGrid.removeAllViews();
-            holder.relayDataRelay.setText(Integer.toString(relayStatus.getRepostsCount()));
-            holder.relayDataComment.setText(Integer.toString(relayStatus.getCommentsCount()));
-            holder.relayDataLike.setText(Integer.toString(relayStatus.getAttitudesCount()));
+            holder.relayDataRelay.setText(String.valueOf(relayStatus.getRepostsCount()));
+            holder.relayDataComment.setText(String.valueOf(relayStatus.getCommentsCount()));
+            holder.relayDataLike.setText(String.valueOf(relayStatus.getAttitudesCount()));
             if (relayStatus.getPicUrls() != null && !relayStatus.getPicUrls().isEmpty()) {
                 int size = relayStatus.getPicUrls().size();
                 updateGridLayout(size, holder.relayPicGrid, relayStatus.getPicUrls());
