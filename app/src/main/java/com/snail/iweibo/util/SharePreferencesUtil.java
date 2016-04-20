@@ -12,22 +12,36 @@ public class SharePreferencesUtil {
 
     /**
      * 是否为黑夜模式
+     *
      * @param context context
      * @return boolean
      */
-    public static boolean isDarkTheme(Context context){
+    public static boolean isDarkTheme(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context)
-                                .getBoolean(THEME_CONFIG_KEY , false);
+                .getBoolean(THEME_CONFIG_KEY, false);
     }
 
     /**
      * 更换主题
+     *
      * @param context context
      */
-    public static void setDarkTheme(Context context){
+    public static void setDarkTheme(Context context) {
         boolean isDark = isDarkTheme(context);
         Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-        editor.putBoolean(THEME_CONFIG_KEY , !isDark);
+        editor.putBoolean(THEME_CONFIG_KEY, !isDark);
         editor.apply();
+    }
+
+    public static void setUserBean(Context context, UserBean userBean) {
+        Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+        editor.putString("screen_name", userBean.getScreen_name());
+        editor.apply();
+    }
+
+    public static UserBean getUserBean(Context context) {
+        UserBean userBean = new UserBean();
+        userBean.setScreen_name(PreferenceManager.getDefaultSharedPreferences(context).getString("screen_name", ""));
+        return userBean;
     }
 }

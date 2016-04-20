@@ -59,6 +59,10 @@
             android:name=".ui.activity.UserDetailActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".ui.activity.FollowersActivity"
+            android:label="@string/string_follows_title"></activity>
     </application>
 
 </manifest>

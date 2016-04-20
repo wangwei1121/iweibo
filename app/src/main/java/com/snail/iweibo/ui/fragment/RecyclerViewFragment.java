@@ -33,9 +33,10 @@ import rx.schedulers.Schedulers;
  * Created by alexwan on 16/1/30.
  */
 public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmentView> implements OnRefreshListener,
-    OnClickListener {
+        OnClickListener {
     private StatusListAdapter cardViewAdapter;
     private Status lastStatus;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,35 +71,35 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
         }
         view.refresh(true);
         ApiServiceHelper
-            .getApiService(Constants.WEIBO_BASE_URL, WeiBoApiService.class)
-            .getFriendsTimeLine(token, 0, 0, 50, 1, 0, 0, 0)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<StatusList>() {
-                @Override
-                public void onCompleted() {
-                    view.refresh(false);
-                    Log.i("RecyclerViewFragment ", "onCompleted : ");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    view.refresh(false);
-                    Log.i("RecyclerViewFragment ", "onError - Error :" + e.getMessage());
-                }
-
-                @Override
-                public void onNext(StatusList list) {
-                    if (list.getStatuses() != null && !list.getStatuses().isEmpty()) {
-                        List<Status> statuses =  list.getStatuses();
-                        Log.i("RecyclerViewFragment ", "onNext : " + list.getStatuses().toString());
-                        cardViewAdapter = new StatusListAdapter(getActivity(), statuses, RecyclerViewFragment
-                            .this, view);
-                        view.updateView(getActivity(), cardViewAdapter);
-                        lastStatus = statuses.get(statuses.size() - 1);
+                .getApiService(Constants.WEIBO_BASE_URL, WeiBoApiService.class)
+                .getFriendsTimeLine(token, 0, 0, 50, 1, 0, 0, 0)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<StatusList>() {
+                    @Override
+                    public void onCompleted() {
+                        view.refresh(false);
+                        Log.i("RecyclerViewFragment ", "onCompleted : ");
                     }
-                }
-            });
+
+                    @Override
+                    public void onError(Throwable e) {
+                        view.refresh(false);
+                        Log.i("RecyclerViewFragment ", "onError - Error :" + e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(StatusList list) {
+                        if (list.getStatuses() != null && !list.getStatuses().isEmpty()) {
+                            List<Status> statuses = list.getStatuses();
+                            Log.i("RecyclerViewFragment ", "onNext : " + list.getStatuses().toString());
+                            cardViewAdapter = new StatusListAdapter(getActivity(), statuses, RecyclerViewFragment
+                                    .this, view);
+                            view.updateView(getActivity(), cardViewAdapter);
+                            lastStatus = statuses.get(statuses.size() - 1);
+                        }
+                    }
+                });
 
 
     }
@@ -106,39 +107,39 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
     public void loadMore() {
         //
         Oauth2AccessToken token = AccessTokenKeeper.readAccessToken(getActivity());
-        long sinceID = lastStatus == null? 0 : lastStatus.getId();
+        long sinceID = lastStatus == null ? 0 : lastStatus.getId();
         ApiServiceHelper
-            .getApiService(Constants.WEIBO_BASE_URL, WeiBoApiService.class)
-            .getFriendsTimeLine(token.getToken(), sinceID , 0, 50, 1, 0, 0, 0)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<StatusList>() {
-                @Override
-                public void onCompleted() {
-                    view.refresh(false);
-                    Log.i("RecyclerViewFragment ", "onCompleted : ");
-                }
+                .getApiService(Constants.WEIBO_BASE_URL, WeiBoApiService.class)
+                .getFriendsTimeLine(token.getToken(), sinceID, 0, 50, 1, 0, 0, 0)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<StatusList>() {
+                    @Override
+                    public void onCompleted() {
+                        view.refresh(false);
+                        Log.i("RecyclerViewFragment ", "onCompleted : ");
+                    }
 
-                @Override
-                public void onError(Throwable e) {
-                    view.refresh(false);
-                    Log.i("RecyclerViewFragment ", "onError - Error :" + e.getMessage());
-                }
+                    @Override
+                    public void onError(Throwable e) {
+                        view.refresh(false);
+                        Log.i("RecyclerViewFragment ", "onError - Error :" + e.getMessage());
+                    }
 
-                @Override
-                public void onNext(StatusList list) {
-                    if (list.getStatuses() != null && !list.getStatuses().isEmpty()) {
-                        Log.i("RecyclerViewFragment ", "onNext : " + list.getStatuses().toString());
-                        if (cardViewAdapter == null) {
-                            cardViewAdapter = new StatusListAdapter(getActivity(),
-                                list.getStatuses(), RecyclerViewFragment.this, view);
-                            view.updateView(getActivity(), cardViewAdapter);
-                        }else{
-                            cardViewAdapter.addAll(list.getStatuses());
+                    @Override
+                    public void onNext(StatusList list) {
+                        if (list.getStatuses() != null && !list.getStatuses().isEmpty()) {
+                            Log.i("RecyclerViewFragment ", "onNext : " + list.getStatuses().toString());
+                            if (cardViewAdapter == null) {
+                                cardViewAdapter = new StatusListAdapter(getActivity(),
+                                        list.getStatuses(), RecyclerViewFragment.this, view);
+                                view.updateView(getActivity(), cardViewAdapter);
+                            } else {
+                                cardViewAdapter.addAll(list.getStatuses());
+                            }
                         }
                     }
-                }
-            });
+                });
     }
 
     @Override

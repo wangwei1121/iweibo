@@ -1,5 +1,6 @@
 package com.snail.iweibo.api;
 
+import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.StatusList;
 
 import retrofit2.http.GET;
@@ -65,4 +66,15 @@ public interface WeiBoApiService {
                                            @Query("base_app") int app,
                                            @Query("feature") int feature,
                                            @Query("trim_user") int trim_user);
+
+    /**
+     * 根据id获取单条微博
+     *
+     * @param token 采用OAuth授权方式为必填参数，OAuth授权后获得。
+     * @param id    需要获取的微博ID
+     */
+    @GET("2/statuses/show.json")
+    Observable<Status> getStatus(@Query("access_token") String token,
+                                 @Query("id") long id);
+
 }

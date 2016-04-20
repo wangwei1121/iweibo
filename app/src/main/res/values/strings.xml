@@ -196,5 +196,7 @@
     <string name="string_user_description">简介: %1$s</string>
     <string name="string_user_home_page">主页</string>
     <string name="string_user_status_page">微博</string>
-    <string name="string_user_gallery_page">相册</string>
+    <string name="string_user_gallery_page">相册</string>string_follows_title
+
+    <string name="string_follows_title">粉丝</string>
 </resources>
