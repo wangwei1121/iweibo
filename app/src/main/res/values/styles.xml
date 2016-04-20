@@ -3,9 +3,6 @@
     <!-- base light theme. -->
     <style name="AppTheme.Base.Light" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
     <!-- base dark theme-->
