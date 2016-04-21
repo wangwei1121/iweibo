@@ -47,7 +47,7 @@ public class IUserDetailFragmentView implements IBaseView , OnClickListener , On
 
     public void updateView(List<Status> statusList) {
         if (adapter == null) {
-            adapter = new StatusListAdapter(context, statusList, this, this);
+            adapter = new StatusListAdapter(context, statusList,this);
         } else {
             adapter.addAll(statusList);
         }

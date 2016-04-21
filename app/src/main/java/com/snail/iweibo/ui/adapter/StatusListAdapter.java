@@ -26,6 +26,7 @@ import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.Status.ThumbnailPic;
 import com.snail.iweibo.mvp.model.UserBean;
+import com.snail.iweibo.rxbinding.RxView;
 import com.snail.iweibo.ui.activity.UserDetailActivity;
 import com.snail.iweibo.ui.adapter.StatusListAdapter.ViewHolder;
 import com.snail.iweibo.util.ScreenInfo;
@@ -35,9 +36,11 @@ import com.snail.iweibo.util.TimeUtils;
 import com.snail.iweibo.widget.CompatClickTextView.CompatLinkMovementMethod;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.functions.Action1;
 
 
 /**
@@ -203,7 +206,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
         Toast.makeText(context, " id ->" + id, Toast.LENGTH_SHORT).show();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.user_avatar)
         SimpleDraweeView userAvatar;
         @Bind(R.id.user_name)
@@ -255,19 +258,19 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
         @Bind(R.id.relay_data_comment)
         TextView relayDataComment;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(this);
+            RxView.clicks(itemView).throttleFirst(1 , TimeUnit.SECONDS).subscribe(new Action1<Void>() {
+                @Override
+                public void call(Void aVoid) {
+                    if (listener != null) {
+                        listener.onItemClick(itemView);
+                    }
+                }
+            });
         }
 
-
-        @Override
-        public void onClick(View v) {
-            if (listener != null) {
-                listener.onItemClick(v);
-            }
-        }
 
         private OnItemClickListener listener;
 
