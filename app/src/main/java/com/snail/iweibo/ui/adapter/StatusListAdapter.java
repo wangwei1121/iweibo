@@ -27,6 +27,7 @@ import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.Status.ThumbnailPic;
 import com.snail.iweibo.mvp.model.UserBean;
 import com.snail.iweibo.rxbinding.RxView;
+import com.snail.iweibo.ui.activity.ImageBrowseActivity;
 import com.snail.iweibo.ui.activity.UserDetailActivity;
 import com.snail.iweibo.ui.adapter.StatusListAdapter.ViewHolder;
 import com.snail.iweibo.util.ScreenInfo;
@@ -121,7 +122,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
             holder.relayDataLike.setText(String.valueOf(relayStatus.getAttitudesCount()));
             if (relayStatus.getPicUrls() != null && !relayStatus.getPicUrls().isEmpty()) {
                 int size = relayStatus.getPicUrls().size();
-                updateGridLayout(size, holder.relayPicGrid, relayStatus.getPicUrls());
+                updateGridLayout(size, holder.relayPicGrid, relayStatus.getPicUrls() , relayStatus);
             }
         } else {
             holder.relayLayout.setVisibility(View.GONE);
@@ -130,7 +131,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
         holder.statusPicGrid.removeAllViews();
         if (bean.getPicUrls() != null && !bean.getPicUrls().isEmpty()) {
             int size = bean.getPicUrls().size();
-            updateGridLayout(size, holder.statusPicGrid, bean.getPicUrls());
+            updateGridLayout(size, holder.statusPicGrid, bean.getPicUrls() , bean);
         }
         holder.favorBtn.setOnClickListener(this);
         holder.relayBtn.setOnClickListener(this);
@@ -158,11 +159,11 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
      * @param gridLayout gridLayout
      * @param pics       pics
      */
-    private void updateGridLayout(int size, GridLayout gridLayout, final List<ThumbnailPic> pics) {
+    private void updateGridLayout(int size, GridLayout gridLayout, final List<ThumbnailPic> pics ,final Status status) {
         ScreenInfo screenInfo = new ScreenInfo(context);
         MarginLayoutParams params = new MarginLayoutParams(screenInfo.getWidth() / 3 - 20, screenInfo.getWidth() / 3
             - 20);
-        int column = (size >= 1 && size <= 3) ? size : ((size == 4) ? 2 : 3);
+        final int column = (size >= 1 && size <= 3) ? size : ((size == 4) ? 2 : 3);
         int row = (int) Math.ceil(size / 3);
         gridLayout.setColumnCount(column);
         gridLayout.setRowCount(row);
@@ -172,10 +173,19 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
             SimpleDraweeView imageView = (SimpleDraweeView) inflater.inflate(R.layout.item_status_grid, null);
             // 将缩略图替换为中等大小图
             final String url = pics.get(i).getThumbnailPic().replace("thumbnail", "bmiddle");
+
+            final int position = i;
             imageView.setImageURI(UriUtil.parseUriOrNull(url));
             imageView.setLayoutParams(params);
             imageView.setPadding(0, 0, 5, 5);
-            imageView.setOnClickListener(this);
+            RxView.clicks(imageView)
+                  .throttleFirst(1, TimeUnit.SECONDS)
+                  .subscribe(new Action1<Void>() {
+                      @Override
+                      public void call(Void aVoid) {
+                          ImageBrowseActivity.start(context , status , position);
+                      }
+                  });
             imageView.setTag(url);
             gridLayout.addView(imageView);
         }

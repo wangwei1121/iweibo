@@ -107,7 +107,6 @@ public class IStatusDetailActivityView implements IBaseView {
         if (toolbar == null) {
             return;
         }
-
         context.setSupportActionBar(toolbar);
         ActionBar actionBar = context.getSupportActionBar();
         if (actionBar != null) {
