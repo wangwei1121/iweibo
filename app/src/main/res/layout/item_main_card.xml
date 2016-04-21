@@ -74,7 +74,7 @@
             android:paddingRight="10dp"
             android:paddingStart="10dp">
             <!-- 文字内容 -->
-            <com.snail.iweibo.widget.theme.ThemeTextView
+            <com.snail.iweibo.widget.CompatClickTextView
                 android:id="@+id/content_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
                 android:orientation="vertical"
                 android:visibility="visible">
 
-                <com.snail.iweibo.widget.theme.ThemeTextView
+                <com.snail.iweibo.widget.CompatClickTextView
                     android:id="@+id/relay_content"
                     android:textColor="?attr/theme_text_view"
                     android:layout_width="match_parent"

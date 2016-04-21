@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +30,7 @@ import com.snail.iweibo.util.ScreenInfo;
 import com.snail.iweibo.util.SharePreferencesUtil;
 import com.snail.iweibo.util.SpanUtil;
 import com.snail.iweibo.util.TimeUtils;
+import com.snail.iweibo.widget.CompatClickTextView.CompatLinkMovementMethod;
 
 import java.util.List;
 
@@ -95,7 +95,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         holder.from.setText(span);
         // 微博内容 TODO
         holder.contentText.setText(SpanUtil.buildSpan(context, bean.getText()));
-        holder.contentText.setMovementMethod(LinkMovementMethod.getInstance());
+        holder.contentText.setMovementMethod(CompatLinkMovementMethod.getInstance());
         holder.contentText.setTextColor(context.getResources().getColor(isDarkTheme ? R.color.main_gray : R.color
             .main_black));
         // 被转发的微博字段
@@ -107,7 +107,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
                 : R.color.main_light_gray));
             String name = relayStatus.getUser() == null || relayStatus.getUser().getName() == null ? "" : relayStatus.getUser().getName();
             holder.relayContent.setText(SpanUtil.buildSpan(context, "@" + name + ":" + relayStatus.getText()));
-            holder.relayContent.setMovementMethod(LinkMovementMethod.getInstance());
+            holder.relayContent.setMovementMethod(CompatLinkMovementMethod.getInstance());
             holder.relayContent.setTextColor(context.getResources().getColor(isDarkTheme ? R.color.main_gray : R.color
                 .main_black));
             holder.relayPicGrid.removeAllViews();

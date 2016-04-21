@@ -86,7 +86,7 @@
                     tools:text="@string/string_statuses_from"/>
 
                 <!-- text content -->
-                <TextView
+                <com.snail.iweibo.widget.CompatClickTextView
                     android:id="@+id/content_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
                     android:padding="5dp"
                     android:visibility="gone">
 
-                    <TextView
+                    <com.snail.iweibo.widget.CompatClickTextView
                         android:id="@+id/relay_content"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
