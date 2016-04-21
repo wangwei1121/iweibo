@@ -35,6 +35,7 @@ import com.snail.iweibo.ui.activity.UserDetailActivity;
 import com.snail.iweibo.ui.adapter.CommentListAdapter;
 import com.snail.iweibo.ui.base.BasePresenterActivity;
 import com.snail.iweibo.util.ScreenInfo;
+import com.snail.iweibo.util.SharePreferencesUtil;
 import com.snail.iweibo.util.SpanUtil;
 import com.snail.iweibo.util.TimeUtils;
 
@@ -130,6 +131,7 @@ public class IStatusDetailActivityView implements IBaseView {
 
     public void updateView(final Status status) {
 
+        loadTheme();
         this.status = status;
         final UserBean user = status.getUser();
         userAvatar.setImageURI(UriUtil.parseUriOrNull(user.getAvatar_hd()));
@@ -256,5 +258,14 @@ public class IStatusDetailActivityView implements IBaseView {
         if (progressBar != null) {
             progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         }
+    }
+
+    private void loadTheme() {
+        if (!SharePreferencesUtil.isDarkTheme(context)) {
+            relayContent.setTextColor(context.getResources().getColor(R.color.color_retweet));
+        } else {
+            relayContent.setTextColor(context.getResources().getColor(R.color.color_retweet_light));
+        }
+
     }
 }
