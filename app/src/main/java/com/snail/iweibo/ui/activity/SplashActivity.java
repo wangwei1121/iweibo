@@ -21,6 +21,7 @@ import com.snail.iweibo.ui.base.BasePresenterActivity;
 import com.snail.iweibo.util.LogUtils;
 
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -32,7 +33,7 @@ public class SplashActivity extends BasePresenterActivity<ISplashActivityView>
     implements OnClickListener, WeiboAuthListener {
     // 注意：SsoHandler 仅当 SDK 支持 SSO 时有效
     private SsoHandler mSsoHandler;
-
+    private Subscription subscription;
     @Override
     protected void onBindView() {
         super.onBindView();
@@ -48,7 +49,7 @@ public class SplashActivity extends BasePresenterActivity<ISplashActivityView>
             view.setLoginViewVisible(false);
             LogUtils.info("initData");
             // 判断token是否过期
-            ApiServiceHelper
+            subscription = ApiServiceHelper
                 .getApiService(Constants.WEIBO_BASE_URL, OAuth2ApiService.class)
                 .getTokenInfo(accessToken.getToken()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -59,11 +60,9 @@ public class SplashActivity extends BasePresenterActivity<ISplashActivityView>
                     }
                     @Override
                     public void onError(Throwable e) {
-                        // 重新加载
+                        // 加载失败
                         view.setProgressBarVisible(false);
-                        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        view.setProgressBarVisible(false);
+                        MainActivity.start(SplashActivity.this);
                         finish();
                     }
                     @Override
@@ -83,6 +82,14 @@ public class SplashActivity extends BasePresenterActivity<ISplashActivityView>
     @Override
     protected Class<ISplashActivityView> getViewClass() {
         return ISplashActivityView.class;
+    }
+
+    @Override
+    protected void onDestroyView() {
+        if(subscription != null){
+            subscription.unsubscribe();
+        }
+        super.onDestroyView();
     }
 
     @Override
@@ -141,6 +148,6 @@ public class SplashActivity extends BasePresenterActivity<ISplashActivityView>
 
     @Override
     public void onBackPressed() {
-
+        super.onBackPressed();
     }
 }

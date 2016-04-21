@@ -47,7 +47,4 @@ public class HomeFragment extends BasePresenterFragment<IHomeFragmentView> {
         this.tabLayout = tabLayout;
     }
 
-    public void changeTheme(){
-        view.changeTheme();
-    }
 }

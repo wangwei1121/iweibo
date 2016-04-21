@@ -55,7 +55,7 @@ public class ISplashActivityView implements IBaseView {
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
         ViewGroup mContentView = (ViewGroup) context.findViewById(Window.ID_ANDROID_CONTENT);
-        View mChildView = mContentView.getChildAt(0);
+        View mChildView = mContentView != null ? mContentView.getChildAt(0) : null;
         if (mChildView != null) {
             //注意不是设置 ContentView 的 FitsSystemWindows, 而是设置 ContentView 的第一个子 View . 使其不为系统 View 预留空间.
             ViewCompat.setFitsSystemWindows(mChildView, false);
@@ -71,7 +71,6 @@ public class ISplashActivityView implements IBaseView {
 
     public void setLoginViewVisible(boolean visible){
         loginBtn.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-//        browseBtn.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     public void setProgressBarVisible(boolean visible){

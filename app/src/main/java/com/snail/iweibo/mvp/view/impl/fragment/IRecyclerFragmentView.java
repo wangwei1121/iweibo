@@ -15,6 +15,9 @@ import com.snail.iweibo.ui.activity.StatusDetailActivity;
 import com.snail.iweibo.ui.adapter.StatusListAdapter;
 import com.snail.iweibo.ui.adapter.StatusListAdapter.OnItemClickListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -29,13 +32,15 @@ public class IRecyclerFragmentView implements IBaseView, OnItemClickListener {
     @Bind(R.id.swipe_refresh_container)
     SwipeRefreshLayout refreshLayout;
     private Context context;
-
+    private StatusListAdapter adapter;
     @Override
     public void init(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         this.context = context;
         view = inflater.inflate(R.layout.frament_recycler, viewGroup, false);
         ButterKnife.bind(this, view);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        adapter = new StatusListAdapter(context, new ArrayList<Status>(), this);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -43,8 +48,8 @@ public class IRecyclerFragmentView implements IBaseView, OnItemClickListener {
         return view;
     }
 
-    public void updateView(Context context, StatusListAdapter adapter) {
-        recyclerView.setAdapter(adapter);
+    public void updateView(List<Status> statuses) {
+        adapter.addAll(statuses);
     }
 
     /**

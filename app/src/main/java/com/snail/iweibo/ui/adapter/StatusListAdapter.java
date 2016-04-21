@@ -2,6 +2,7 @@ package com.snail.iweibo.ui.adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -42,18 +44,15 @@ import butterknife.ButterKnife;
  * StatusListAdapter
  * Created by alexwan on 16/1/30.
  */
-public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implements OnClickListener {
 
     private List<Status> statuses;
     private Context context;
-    private OnClickListener onClickListener;
     private OnItemClickListener itemClick;
 
-    public StatusListAdapter(Context context, List<Status> statuses, OnClickListener onClickListener,
-                             OnItemClickListener itemClick) {
+    public StatusListAdapter(Context context, List<Status> statuses, OnItemClickListener itemClick) {
         this.context = context;
         this.statuses = statuses;
-        this.onClickListener = onClickListener;
         this.itemClick = itemClick;
     }
 
@@ -69,7 +68,8 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         Status bean = statuses.get(position);
         final UserBean user = bean.getUser();
         boolean isDarkTheme = SharePreferencesUtil.isDarkTheme(context);
-        holder.cardView.setCardBackgroundColor(context.getResources().getColor(isDarkTheme ? R.color.color_primary_dark_inverse : R.color.main_white));
+        holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, isDarkTheme ?
+            R.color.color_primary_dark_inverse : R.color.main_white));
         // 用户头像
         if (!TextUtils.isEmpty(user.getProfile_image_url())) {
             Uri uri = UriUtil.parseUriOrNull(user.getAvatar_large());
@@ -85,30 +85,32 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         });
         // 名称
         holder.userName.setText(user.getScreen_name());
-        holder.userName.setTextColor(context.getResources().getColor(isDarkTheme ? R.color.main_gray : R.color
-                .main_black));
+        holder.userName.setTextColor(ContextCompat.getColor(context, isDarkTheme ? R.color.main_gray : R.color
+            .main_black));
         // 时间
         holder.createTime.setText(TimeUtils.formatUTCTimes(bean.getCreatedAt()));
         // 来自
         Spanned span = Html.fromHtml(String.format(context.getResources().getString(R.string.string_statuses_from),
-                bean.getSource()));
+            bean.getSource()));
         holder.from.setText(span);
-        // 微博内容 TODO
+        // 微博内容
         holder.contentText.setText(SpanUtil.buildSpan(context, bean.getText()));
         holder.contentText.setMovementMethod(CompatLinkMovementMethod.getInstance());
-        holder.contentText.setTextColor(context.getResources().getColor(isDarkTheme ? R.color.main_gray : R.color
+        holder.contentText.setTextColor(ContextCompat.getColor(context, isDarkTheme ? R.color.main_gray : R.color
             .main_black));
         // 被转发的微博字段
         Status relayStatus = bean.getRetweetedStatus();
         if (relayStatus != null) {
             Log.i("StatusListAdapter", relayStatus.toString());
             holder.relayLayout.setVisibility(View.VISIBLE);
-            holder.relayLayout.setBackgroundColor(context.getResources().getColor(isDarkTheme ? R.color.color_primary_inverse
-                : R.color.main_light_gray));
-            String name = relayStatus.getUser() == null || relayStatus.getUser().getName() == null ? "" : relayStatus.getUser().getName();
+            holder.relayLayout
+                .setBackgroundColor(ContextCompat.getColor(context, isDarkTheme ? R.color.color_primary_inverse
+                    : R.color.main_light_gray));
+            String name = relayStatus.getUser() == null || relayStatus.getUser().getName() == null ? "" :
+                relayStatus.getUser().getName();
             holder.relayContent.setText(SpanUtil.buildSpan(context, "@" + name + ":" + relayStatus.getText()));
             holder.relayContent.setMovementMethod(CompatLinkMovementMethod.getInstance());
-            holder.relayContent.setTextColor(context.getResources().getColor(isDarkTheme ? R.color.main_gray : R.color
+            holder.relayContent.setTextColor(ContextCompat.getColor(context, isDarkTheme ? R.color.main_gray : R.color
                 .main_black));
             holder.relayPicGrid.removeAllViews();
             holder.relayDataRelay.setText(String.valueOf(relayStatus.getRepostsCount()));
@@ -127,10 +129,10 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
             int size = bean.getPicUrls().size();
             updateGridLayout(size, holder.statusPicGrid, bean.getPicUrls());
         }
-        holder.favorBtn.setOnClickListener(onClickListener);
-        holder.relayBtn.setOnClickListener(onClickListener);
-        holder.commentBtn.setOnClickListener(onClickListener);
-        holder.likeBtn.setOnClickListener(onClickListener);
+        holder.favorBtn.setOnClickListener(this);
+        holder.relayBtn.setOnClickListener(this);
+        holder.commentBtn.setOnClickListener(this);
+        holder.likeBtn.setOnClickListener(this);
         // 转发数
         if (bean.getRepostsCount() != 0) {
             holder.relayTxt.setText(String.valueOf(bean.getRepostsCount()));
@@ -156,7 +158,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
     private void updateGridLayout(int size, GridLayout gridLayout, final List<ThumbnailPic> pics) {
         ScreenInfo screenInfo = new ScreenInfo(context);
         MarginLayoutParams params = new MarginLayoutParams(screenInfo.getWidth() / 3 - 20, screenInfo.getWidth() / 3
-                - 20);
+            - 20);
         int column = (size >= 1 && size <= 3) ? size : ((size == 4) ? 2 : 3);
         int row = (int) Math.ceil(size / 3);
         gridLayout.setColumnCount(column);
@@ -170,7 +172,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
             imageView.setImageURI(UriUtil.parseUriOrNull(url));
             imageView.setLayoutParams(params);
             imageView.setPadding(0, 0, 5, 5);
-            imageView.setOnClickListener(onClickListener);
+            imageView.setOnClickListener(this);
             imageView.setTag(url);
             gridLayout.addView(imageView);
         }
@@ -193,6 +195,12 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public int getItemCount() {
         return statuses == null ? 0 : statuses.size();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        Toast.makeText(context, " id ->" + id, Toast.LENGTH_SHORT).show();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements OnClickListener {
@@ -229,7 +237,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         TextView commentTxt;
         @Bind(R.id.action_comment_layout)
         LinearLayout commentBtn;
-        // 点赞、取消点赞
+        // Like
         @Bind(R.id.action_like)
         TextView likeTxt;
         @Bind(R.id.action_like_layout)
@@ -238,8 +246,6 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         ImageView likeIcon;
         @Bind(R.id.card_view)
         CardView cardView;
-        @Bind(R.id.action_divider)
-        View divider;
         @Bind(R.id.relay_pic_grid)
         GridLayout relayPicGrid;
         @Bind(R.id.relay_data_relay)
@@ -248,7 +254,6 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> {
         TextView relayDataLike;
         @Bind(R.id.relay_data_comment)
         TextView relayDataComment;
-
 
         public ViewHolder(View itemView) {
             super(itemView);

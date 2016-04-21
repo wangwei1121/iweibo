@@ -247,12 +247,9 @@ public class IMainActivityView implements IBaseView {
         // navigation view
         ObjectAnimator animator = ObjectAnimator.ofFloat(animView, "alpha", 0f).setDuration(200);
 
-        //
-
         animator.addListener(new AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-                homeFragment.changeTheme();
             }
 
             @Override
