@@ -16,10 +16,12 @@ import android.support.design.widget.NavigationView.OnNavigationItemSelectedList
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -42,7 +44,6 @@ import com.snail.iweibo.mvp.view.IBaseView;
 import com.snail.iweibo.ui.base.BasePresenterActivity;
 import com.snail.iweibo.ui.fragment.HomeFragment;
 import com.snail.iweibo.ui.fragment.SettingFragment;
-import com.snail.iweibo.util.LogUtils;
 import com.snail.iweibo.util.SharePreferencesUtil;
 import com.snail.iweibo.widget.theme.ThemeUIInterface;
 
@@ -108,7 +109,7 @@ public class IMainActivityView implements IBaseView {
         // drawer toggle
         this.drawerToggle = new ActionBarDrawerToggle(context, mDrawerLayout, R.string.tool_name, R.string.tool_name);
         drawerToggle.setDrawerIndicatorEnabled(true);
-        mDrawerLayout.setDrawerListener(drawerToggle);
+        mDrawerLayout.addDrawerListener(drawerToggle);
         navigationView.setCheckedItem(R.id.main_frame);
         // 默认首页HomeFragment
         homeFragment = new HomeFragment();
@@ -228,8 +229,9 @@ public class IMainActivityView implements IBaseView {
         context.setTheme(isDark ? R.style.AppTheme_Dark : R.style.AppTheme);
         changeTheme(mDrawerLayout, context.getTheme());
         // change status bar
-        int statusColor =
-            context.getResources().getColor(isDark ? R.color.color_primary_dark_inverse : R.color.main_dark_blue);
+
+        int statusColor = ContextCompat.getColor(context , isDark ? R.color.color_primary_dark_inverse : R.color
+            .main_dark_blue);
         if (VERSION.SDK_INT > VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -237,13 +239,13 @@ public class IMainActivityView implements IBaseView {
         }
         // action bar
         ActionBar actionBar = context.getSupportActionBar();
-        int actionBarColor =
-            context.getResources().getColor(isDark ? R.color.color_primary_dark_inverse : R.color.main_blue);
+        int actionBarColor = ContextCompat.getColor(context , isDark ? R.color.color_primary_dark_inverse : R.color
+            .main_blue);
         if (actionBar != null) {
             actionBar.setBackgroundDrawable(new ColorDrawable(actionBarColor));
         }
         int colorId = isDark ? R.color.color_primary_dark_inverse : R.color.main_white;
-        navigationView.setBackgroundColor(context.getResources().getColor(colorId));
+        navigationView.setBackgroundColor(ContextCompat.getColor(context , colorId));
         // navigation view
         ObjectAnimator animator = ObjectAnimator.ofFloat(animView, "alpha", 0f).setDuration(200);
 
@@ -280,13 +282,15 @@ public class IMainActivityView implements IBaseView {
     public void changeTheme(View view, Resources.Theme theme) {
 
         if (view instanceof ThemeUIInterface) {
-            LogUtils.info("ThemeUIInterface ： " + view.getClass().getName());
             ((ThemeUIInterface) view).setTheme(theme);
         }
+
         if (view instanceof ViewGroup) {
-            LogUtils.info(view.getClass().getName());
             int count = ((ViewGroup) view).getChildCount();
             for (int i = 0; i < count; i++) {
+                if (view instanceof RecyclerView) {
+                    ((RecyclerView) view).getAdapter().notifyDataSetChanged();
+                }
                 changeTheme(((ViewGroup) view).getChildAt(i), theme);
             }
         }

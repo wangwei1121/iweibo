@@ -127,6 +127,10 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
         } else {
             holder.relayLayout.setVisibility(View.GONE);
         }
+        // 分割线
+        holder.divider.setBackgroundColor(ContextCompat.getColor(context , isDarkTheme ? R.color.main_dark_gray : R.color
+            .main_light_gray));
+
         // 组合图片
         holder.statusPicGrid.removeAllViews();
         if (bean.getPicUrls() != null && !bean.getPicUrls().isEmpty()) {
@@ -267,7 +271,8 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
         TextView relayDataLike;
         @Bind(R.id.relay_data_comment)
         TextView relayDataComment;
-
+        @Bind(R.id.action_divider)
+        View divider;
         public ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
