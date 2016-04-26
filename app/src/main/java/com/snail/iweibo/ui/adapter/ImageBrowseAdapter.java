@@ -7,11 +7,12 @@ import android.view.ViewGroup;
 
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.drawable.ProgressBarDrawable;
-import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.drawable.ScalingUtils.ScaleType;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.snail.iweibo.R;
 import com.snail.iweibo.widget.fresco.ZoomableDraweeView;
 
@@ -44,14 +45,18 @@ public class ImageBrowseAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(final ViewGroup container, int position) {
         final String url = urls.get(position);
-        ZoomableDraweeView image = (ZoomableDraweeView) LayoutInflater.from(context).inflate(R.layout.item_image_layout, container, false);
-        // TODO: 16/4/21
-        DraweeController ctrl = Fresco.newDraweeControllerBuilder().setUri(
-            UriUtil.parseUriOrNull(url)).setTapToRetryEnabled(true).build();
-        GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(context.getResources())
-            .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
-            .setProgressBarImage(new ProgressBarDrawable())
-            .build();
+        ZoomableDraweeView image = (ZoomableDraweeView) LayoutInflater.from(context)
+                                                                      .inflate(R.layout.item_image_layout, container, false);
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(UriUtil.parseUriOrNull(url))
+                                                  .build();
+        DraweeController ctrl = Fresco.newDraweeControllerBuilder()
+                                      .setTapToRetryEnabled(true)
+                                      .setImageRequest(request)
+                                      .build();
+        GenericDraweeHierarchy hierarchy =
+            new GenericDraweeHierarchyBuilder(context.getResources())
+                .setActualImageScaleType(ScaleType.FIT_CENTER)
+                .build();
         image.setController(ctrl);
         image.setHierarchy(hierarchy);
         container.addView(image);
@@ -60,7 +65,7 @@ public class ImageBrowseAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object view) {
-        container.removeView((View)view);
+        container.removeView((View) view);
     }
 
     @Override

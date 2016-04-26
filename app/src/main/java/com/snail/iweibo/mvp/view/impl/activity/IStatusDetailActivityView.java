@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +36,7 @@ import com.snail.iweibo.ui.base.BasePresenterActivity;
 import com.snail.iweibo.util.ScreenInfo;
 import com.snail.iweibo.util.SpanUtil;
 import com.snail.iweibo.util.TimeUtils;
+import com.snail.iweibo.widget.CompatClickTextView.CompatLinkMovementMethod;
 
 import java.util.List;
 
@@ -143,7 +143,7 @@ public class IStatusDetailActivityView implements IBaseView {
                 status.getSource()));
         from.setText(span);
         content.setText(SpanUtil.buildSpan(context, status.getText()));
-        content.setMovementMethod(LinkMovementMethod.getInstance());
+        content.setMovementMethod(CompatLinkMovementMethod.getInstance());
         gridLayout.removeAllViews();
         if (status.getPicUrls() != null && !status.getPicUrls().isEmpty()) {
             int size = status.getPicUrls().size();
@@ -156,10 +156,10 @@ public class IStatusDetailActivityView implements IBaseView {
             relayLayout.setVisibility(View.VISIBLE);
             String reContent = "@" + relayStatus.getUser().getName() + ":" + relayStatus.getText();
             relayContent.setText(SpanUtil.buildSpan(context, reContent));
-            relayContent.setMovementMethod(LinkMovementMethod.getInstance());
-            relayDataRelay.setText(Integer.toString(relayStatus.getRepostsCount()));
-            relayDataComment.setText(Integer.toString(relayStatus.getCommentsCount()));
-            relayDataLike.setText(Integer.toString(relayStatus.getAttitudesCount()));
+            relayContent.setMovementMethod(CompatLinkMovementMethod.getInstance());
+            relayDataRelay.setText(String.valueOf(relayStatus.getRepostsCount()));
+            relayDataComment.setText(String.valueOf(relayStatus.getCommentsCount()));
+            relayDataLike.setText(String.valueOf(relayStatus.getAttitudesCount()));
             relayGridLayout.removeAllViews();
             if (relayStatus.pic_urls != null && !relayStatus.getPicUrls().isEmpty()) {
                 int size = relayStatus.getPicUrls().size();

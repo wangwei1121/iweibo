@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.facebook.common.util.UriUtil;
 import com.snail.iweibo.R;
+import com.snail.iweibo.ui.activity.SnailWebViewActivity;
 import com.snail.iweibo.util.LogUtils;
 
 /**
@@ -30,6 +31,13 @@ public class URLClickSpan extends ClickableSpan implements ParcelableSpan {
         Uri uri = UriUtil.parseUriOrNull(url);
         if(uri.getScheme().startsWith("http")){
             LogUtils.debug(" Web Scheme -> " + uri.getScheme());
+            // go to webview
+//            Intent intent = n
+//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//            intent.putExtra(Browser.EXTRA_APPLICATION_ID, context.getPackageName());
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            context.startActivity(intent);
+            SnailWebViewActivity.start(context , url);
         }else {
             //
             LogUtils.debug(" Scheme -> " + uri.getScheme() + " , packageName -> " + context.getPackageName());

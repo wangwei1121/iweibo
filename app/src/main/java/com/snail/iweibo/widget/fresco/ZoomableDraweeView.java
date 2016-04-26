@@ -190,7 +190,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     invalidate();
   }
 
-  private void updateZoomableControllerBounds() {
+  private void updateZoomableControllerBounds() throws NullPointerException{
     getHierarchy().getActualImageBounds(mImageBounds);
     mViewBounds.set(0, 0, getWidth(), getHeight());
     mZoomableController.setImageBounds(mImageBounds);
