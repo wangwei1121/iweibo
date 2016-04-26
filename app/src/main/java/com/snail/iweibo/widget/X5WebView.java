@@ -2,12 +2,13 @@ package com.snail.iweibo.widget;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.snail.iweibo.util.LogUtils;
 import com.tencent.smtt.export.external.interfaces.HttpAuthHandler;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient.CustomViewCallback;
 import com.tencent.smtt.export.external.interfaces.JsResult;
@@ -22,6 +23,8 @@ import com.tencent.smtt.sdk.WebViewClient;
  */
 public class X5WebView extends WebView {
 
+    private CallBack callBack;
+    private Handler handler;
     public X5WebView(Context context) {
         super(context);
         initSettings();
@@ -144,7 +147,7 @@ public class X5WebView extends WebView {
             // builder.show();
             // arg3.confirm();
             // return true;
-            Log.i("yuanhaizhou", "setX5webview = null");
+            LogUtils.info("setX5webview = null");
             return super.onJsAlert(null, "www.baidu.com", "aa", arg3);
         }
 
@@ -167,10 +170,13 @@ public class X5WebView extends WebView {
         @Override
         public void onReceivedTitle(WebView arg0, final String arg1) {
             super.onReceivedTitle(arg0, arg1);
-            Log.i("yuanhaizhou", "webpage title is " + arg1);
-
+            LogUtils.info("WebView Title -> " + arg1);
+            if(X5WebView.this.callBack != null){
+                X5WebView.this.callBack.onReceivedTitle(arg1);
+            }
         }
     };
+
     private WebViewClient client = new WebViewClient() {
         /**
          * 防止加载网页时调起系统浏览器
@@ -184,4 +190,12 @@ public class X5WebView extends WebView {
             boolean flag = httpAuthHandlerhost.useHttpAuthUsernamePassword();
         }
     };
+
+    public void setCallBack(CallBack callBack){
+        this.callBack = callBack;
+    }
+
+    public interface CallBack{
+        void onReceivedTitle(String title);
+    }
 }

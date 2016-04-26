@@ -25,7 +25,14 @@ public class SnailWebViewActivity extends BasePresenterActivity<ISnailWebView> {
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         preinitX5WebCore();
         String url = getIntent().getStringExtra("url");
+
         view.loadUrl(url);
+    }
+
+    @Override
+    protected void onDestroyView() {
+        super.onDestroyView();
+        view.destroyView();
     }
 
     @Override
