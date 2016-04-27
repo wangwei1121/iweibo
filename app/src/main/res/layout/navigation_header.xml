@@ -61,4 +61,16 @@
         android:textColor="@android:color/white"
         android:textSize="14sp"
         tools:text="当前状态"/>
+    <ImageView
+        android:id="@+id/action_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/user_name"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/icon_logout"
+        tools:ignore="ContentDescription"/>
 </com.snail.iweibo.widget.theme.ThemeRelativeLayout>

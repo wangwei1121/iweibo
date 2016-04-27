@@ -91,7 +91,7 @@ public class RecyclerViewFragment extends BasePresenterFragment<IRecyclerFragmen
                         List<Status> statuses =  list.getStatuses();
                         Log.i("RecyclerViewFragment ", "onNext : " + list.getStatuses().toString());
                         view.updateView(statuses);
-                        lastStatus = statuses.get(statuses.size() - 1);
+                        lastStatus = statuses.get(0);
                     }
                 }
             });

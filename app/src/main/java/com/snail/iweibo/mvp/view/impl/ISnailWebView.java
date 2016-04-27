@@ -46,7 +46,6 @@ public class ISnailWebView implements IBaseView , CallBack {
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        toolbar.setTitle("...");
         toolbar.setNavigationOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

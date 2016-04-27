@@ -1,4 +1,5 @@
 package com.snail.iweibo.ui.activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -34,6 +35,13 @@ public class SplashActivity extends BasePresenterActivity<ISplashActivityView>
     // 注意：SsoHandler 仅当 SDK 支持 SSO 时有效
     private SsoHandler mSsoHandler;
     private Subscription subscription;
+
+    public static void start(Context context){
+        Intent intent = new Intent(context , SplashActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+    }
     @Override
     protected void onBindView() {
         super.onBindView();

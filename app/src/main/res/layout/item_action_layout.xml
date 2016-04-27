@@ -6,15 +6,15 @@
     android:layout_height="26dp"
     android:layout_marginBottom="5dp"
     android:layout_marginTop="5dp"
-    android:baselineAligned="false"
     android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/action_favorite_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
+        android:focusable="true"
         android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
 
@@ -36,10 +36,12 @@
 
     <LinearLayout
         android:id="@+id/action_relay_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
+        android:focusable="true"
+        android:orientation="horizontal"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
@@ -59,11 +61,12 @@
 
     <LinearLayout
         android:id="@+id/action_comment_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        tools:ignore="UseCompoundDrawables">
+        android:focusable="true"
+        android:orientation="horizontal">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -82,11 +85,12 @@
 
     <LinearLayout
         android:id="@+id/action_like_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        tools:ignore="UseCompoundDrawables">
+        android:orientation="horizontal"
+        android:focusable="true">
 
         <ImageView
             android:id="@+id/action_like_icon"

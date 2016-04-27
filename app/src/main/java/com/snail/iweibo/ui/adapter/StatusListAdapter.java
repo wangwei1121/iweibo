@@ -18,18 +18,25 @@ import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.snail.iweibo.R;
+import com.snail.iweibo.api.ApiServiceHelper;
+import com.snail.iweibo.api.FavoritesApiService;
+import com.snail.iweibo.mvp.model.Favorite;
 import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.Status.ThumbnailPic;
 import com.snail.iweibo.mvp.model.UserBean;
+import com.snail.iweibo.oauth.AccessTokenKeeper;
+import com.snail.iweibo.oauth.Constants;
 import com.snail.iweibo.rxbinding.RxView;
 import com.snail.iweibo.ui.activity.ImageBrowseActivity;
+import com.snail.iweibo.ui.activity.StatusDetailActivity;
 import com.snail.iweibo.ui.activity.UserDetailActivity;
 import com.snail.iweibo.ui.adapter.StatusListAdapter.ViewHolder;
+import com.snail.iweibo.util.LogUtils;
 import com.snail.iweibo.util.ScreenInfo;
 import com.snail.iweibo.util.SharePreferencesUtil;
 import com.snail.iweibo.util.SpanUtil;
@@ -41,7 +48,11 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 
 /**
@@ -53,11 +64,12 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
     private List<Status> statuses;
     private Context context;
     private OnItemClickListener itemClick;
-
+    private Oauth2AccessToken token;
     public StatusListAdapter(Context context, List<Status> statuses, OnItemClickListener itemClick) {
         this.context = context;
         this.statuses = statuses;
         this.itemClick = itemClick;
+        token = AccessTokenKeeper.readAccessToken(context);
     }
 
     @Override
@@ -107,9 +119,10 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
         if (relayStatus != null) {
             Log.i("StatusListAdapter", relayStatus.toString());
             holder.relayLayout.setVisibility(View.VISIBLE);
-            holder.relayLayout
-                .setBackgroundColor(ContextCompat.getColor(context, isDarkTheme ? R.color.color_primary_inverse
+            holder.relayLayout.setBackgroundColor(ContextCompat.getColor(context, isDarkTheme ? R.color.color_primary_inverse
                     : R.color.main_light_gray));
+            holder.relayLayout.setOnClickListener(this);
+            holder.relayLayout.setTag(position);
             String name = relayStatus.getUser() == null || relayStatus.getUser().getName() == null ? "" :
                 relayStatus.getUser().getName();
             holder.relayContent.setText(SpanUtil.buildSpan(context, "@" + name + ":" + relayStatus.getText()));
@@ -117,9 +130,6 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
             holder.relayContent.setTextColor(ContextCompat.getColor(context, isDarkTheme ? R.color.main_gray : R.color
                 .main_black));
             holder.relayPicGrid.removeAllViews();
-            holder.relayDataRelay.setText(String.valueOf(relayStatus.getRepostsCount()));
-            holder.relayDataComment.setText(String.valueOf(relayStatus.getCommentsCount()));
-            holder.relayDataLike.setText(String.valueOf(relayStatus.getAttitudesCount()));
             if (relayStatus.getPicUrls() != null && !relayStatus.getPicUrls().isEmpty()) {
                 int size = relayStatus.getPicUrls().size();
                 updateGridLayout(size, holder.relayPicGrid, relayStatus.getPicUrls() , relayStatus);
@@ -137,22 +147,35 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
             int size = bean.getPicUrls().size();
             updateGridLayout(size, holder.statusPicGrid, bean.getPicUrls() , bean);
         }
+
+        // 收藏
         holder.favorBtn.setOnClickListener(this);
-        holder.relayBtn.setOnClickListener(this);
-        holder.commentBtn.setOnClickListener(this);
-        holder.likeBtn.setOnClickListener(this);
+        holder.favorBtn.setTag(position);
+        holder.favorIcon.setImageResource(bean.isFavorited() ? R.drawable.action_favorite_icon : R.drawable.action_unfavorite_icon);
+
         // 转发数
+        holder.relayBtn.setOnClickListener(this);
+        holder.relayBtn.setTag(position);
         if (bean.getRepostsCount() != 0) {
             holder.relayTxt.setText(String.valueOf(bean.getRepostsCount()));
         }
+
         // 评论数
+        holder.commentBtn.setOnClickListener(this);
+        holder.commentBtn.setTag(position);
         if (bean.getCommentsCount() != 0) {
             holder.commentTxt.setText(String.valueOf(bean.getCommentsCount()));
         }
+
         // 赞
+        holder.likeBtn.setOnClickListener(this);
+        holder.likeBtn.setTag(position);
         if (bean.getAttitudesCount() != 0) {
             holder.likeTxt.setText(String.valueOf(bean.getAttitudesCount()));
         }
+        holder.likeIcon.setImageResource(bean.isTruncated() ? R.drawable.action_like_icon : R.drawable.action_unlike_icon);
+
+        //
         holder.setOnItemClickListener(itemClick);
     }
 
@@ -217,7 +240,61 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        Toast.makeText(context, " id ->" + id, Toast.LENGTH_SHORT).show();
+        final int position = (int) v.getTag();
+        switch (id){
+            case R.id.action_favorite_layout:
+                createFavorite(position);
+                break;
+            case R.id.action_relay_layout:
+                // 转发
+
+                break;
+            case R.id.action_comment_layout:
+                // 评论
+                break;
+            case R.id.action_like_layout:
+                // 点赞
+
+                break;
+            case R.id.relayLayout:
+                Status status = statuses.get(position).getRetweetedStatus();
+                StatusDetailActivity.start(context , status);
+                break;
+        }
+    }
+
+    /**
+     * 收藏或取消收藏
+     * @param position position
+     */
+    private void createFavorite(final int position) {
+        final Status status = statuses.get(position);
+        FavoritesApiService service = ApiServiceHelper.getApiService(Constants.WEIBO_BASE_URL, FavoritesApiService
+            .class);
+        Observable<Favorite> observable = status.isFavorited() ? service.createFavorites(token.getToken(), status.getId()) :
+            service.destroyFavorites(token.getToken(), status.getId());
+        observable.subscribeOn(Schedulers.io())
+                  .observeOn(AndroidSchedulers.mainThread())
+                  .subscribe(new Observer<Favorite>() {
+                      @Override
+                      public void onCompleted() {
+                          LogUtils.info("Action Favorite -> onCompleted");
+                          status.setFavorited(!status.isFavorited());
+                          StatusListAdapter.this.notifyItemChanged(position);
+                      }
+
+                      @Override
+                      public void onError(Throwable e) {
+                          LogUtils.error(e.getMessage());
+                          status.setFavorited(!status.isFavorited());
+                          StatusListAdapter.this.notifyItemChanged(position);
+                      }
+
+                      @Override
+                      public void onNext(Favorite s) {
+                          LogUtils.info(s.toString());
+                      }
+                  });
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -231,6 +308,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
         TextView from;
         @Bind(R.id.content_text)
         TextView contentText;
+        // 转发的微博
         @Bind(R.id.relayLayout)
         LinearLayout relayLayout;
         @Bind(R.id.relay_content)
@@ -240,8 +318,6 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
         // 收藏
         @Bind(R.id.action_favorite_layout)
         LinearLayout favorBtn;
-        @Bind(R.id.action_favorite)
-        TextView favoriteTxt;
         @Bind(R.id.action_favorite_icon)
         ImageView favorIcon;
         // 转发
@@ -254,7 +330,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
         TextView commentTxt;
         @Bind(R.id.action_comment_layout)
         LinearLayout commentBtn;
-        // Like
+        // 点赞
         @Bind(R.id.action_like)
         TextView likeTxt;
         @Bind(R.id.action_like_layout)
@@ -265,25 +341,24 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
         CardView cardView;
         @Bind(R.id.relay_pic_grid)
         GridLayout relayPicGrid;
-        @Bind(R.id.relay_data_relay)
-        TextView relayDataRelay;
-        @Bind(R.id.relay_data_like)
-        TextView relayDataLike;
-        @Bind(R.id.relay_data_comment)
-        TextView relayDataComment;
+
+        // 分割线
         @Bind(R.id.action_divider)
         View divider;
+
         public ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            RxView.clicks(itemView).throttleFirst(1 , TimeUnit.SECONDS).subscribe(new Action1<Void>() {
-                @Override
-                public void call(Void aVoid) {
-                    if (listener != null) {
-                        listener.onItemClick(itemView);
-                    }
-                }
-            });
+            RxView.clicks(itemView)
+                  .throttleFirst(1, TimeUnit.SECONDS)
+                  .subscribe(new Action1<Void>() {
+                      @Override
+                      public void call(Void aVoid) {
+                          if (listener != null) {
+                              listener.onItemClick(itemView);
+                          }
+                      }
+                  });
         }
 
 

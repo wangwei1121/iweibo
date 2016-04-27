@@ -53,6 +53,7 @@
         android:layout_gravity="start"
         app:itemIconTint="?attr/theme_menu"
         app:itemTextColor="?attr/theme_menu"
+        android:background="?attr/theme_card_view"
         app:headerLayout="@layout/navigation_header"
         app:itemBackground="@drawable/item_menu_color_selector"
         app:menu="@menu/navigation_menu"/>

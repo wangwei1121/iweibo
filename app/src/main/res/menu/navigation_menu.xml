@@ -7,19 +7,23 @@
             android:title="@string/string_menu_home"/>
         <item
             android:id="@+id/message_frame"
+            android:visible="false"
             android:icon="@drawable/icon_menu_message_gray"
             android:title="@string/string_menu_message"/>
         <item
             android:id="@+id/search_frame"
+            android:visible="false"
             android:icon="@drawable/icon_menu_search_gray"
             android:title="@string/string_menu_search"/>
         <item
             android:id="@+id/friend_frame"
+            android:visible="false"
             android:icon="@drawable/icon_menu_friends_gray"
             android:title="@string/string_menu_friend"/>
 
         <item
             android:id="@+id/oauth_frame"
+            android:visible="false"
             android:icon="@drawable/icon_menu_message_gray"
             android:title="认证"/>
     </group>

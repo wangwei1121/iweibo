@@ -41,6 +41,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.snail.iweibo.R;
 import com.snail.iweibo.mvp.model.UserBean;
 import com.snail.iweibo.mvp.view.IBaseView;
+import com.snail.iweibo.oauth.AccessTokenKeeper;
+import com.snail.iweibo.ui.activity.SplashActivity;
 import com.snail.iweibo.ui.base.BasePresenterActivity;
 import com.snail.iweibo.ui.fragment.HomeFragment;
 import com.snail.iweibo.ui.fragment.SettingFragment;
@@ -123,7 +125,6 @@ public class IMainActivityView implements IBaseView {
         //
         View headerView = navigationView.getHeaderView(0);
         final ImageView themeWitch = (ImageView) headerView.findViewById(R.id.theme_switch);
-
         themeWitch.setImageResource(SharePreferencesUtil.isDarkTheme(context) ? R.drawable.icon_theme_day :
             R.drawable.icon_theme_night);
         themeWitch.setOnClickListener(new OnClickListener() {
@@ -133,6 +134,13 @@ public class IMainActivityView implements IBaseView {
                 themeWitch.setImageResource(SharePreferencesUtil.isDarkTheme(context) ? R.drawable.icon_theme_day :
                     R.drawable.icon_theme_night);
                 switchTheme();
+            }
+        });
+        headerView.findViewById(R.id.action_logout).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AccessTokenKeeper.clear(context);
+                SplashActivity.start(context);
             }
         });
         // 用户头像

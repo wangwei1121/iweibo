@@ -15,6 +15,7 @@ import com.snail.iweibo.util.LogUtils;
 import java.util.ArrayList;
 
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -24,7 +25,7 @@ import rx.schedulers.Schedulers;
  */
 public class UserDetailStatusFragment extends BasePresenterFragment<IUserDetailFragmentView> {
 
-
+    private Subscription subscription;
     @Override
     protected void onBindView() {
         super.onBindView();
@@ -40,7 +41,7 @@ public class UserDetailStatusFragment extends BasePresenterFragment<IUserDetailF
         Oauth2AccessToken token = AccessTokenKeeper.readAccessToken(getActivity());
         String uid = token.getUid();
         LogUtils.info("name -> " + name + " uid -> " + uid);
-        ApiServiceHelper
+        subscription = ApiServiceHelper
             .getApiService(Constants.WEIBO_BASE_URL, WeiBoApiService.class)
             .getUserTimeLine(token.getToken(), name , 0, 0, 50, 1, 0, 0, 0)
             .subscribeOn(Schedulers.io())
@@ -70,6 +71,14 @@ public class UserDetailStatusFragment extends BasePresenterFragment<IUserDetailF
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(subscription != null){
+            subscription.unsubscribe();
+        }
+    }
+
+    @Override
     protected Class<IUserDetailFragmentView> getViewClass() {
         return IUserDetailFragmentView.class;
     }
@@ -78,6 +87,5 @@ public class UserDetailStatusFragment extends BasePresenterFragment<IUserDetailF
     protected void onDestroyVU() {
         super.onDestroyVU();
         view.unBindView();
-        view = null;
     }
 }

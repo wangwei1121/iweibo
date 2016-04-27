@@ -118,11 +118,6 @@
                     app:columnCount="3"
                     app:rowCount="3"
                     app:useDefaultMargins="true" />
-                <!--retweeted 相關數據-->
-                <include
-                    layout="@layout/relaydata_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="26dp" />
 
             </com.snail.iweibo.widget.theme.ThemeLinearLayout>
         </LinearLayout>
