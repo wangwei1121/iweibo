@@ -33,6 +33,7 @@ import com.snail.iweibo.oauth.AccessTokenKeeper;
 import com.snail.iweibo.oauth.Constants;
 import com.snail.iweibo.rxbinding.RxView;
 import com.snail.iweibo.ui.activity.ImageBrowseActivity;
+import com.snail.iweibo.ui.activity.RetweetActivity;
 import com.snail.iweibo.ui.activity.StatusDetailActivity;
 import com.snail.iweibo.ui.activity.UserDetailActivity;
 import com.snail.iweibo.ui.adapter.StatusListAdapter.ViewHolder;
@@ -247,7 +248,7 @@ public class StatusListAdapter extends RecyclerView.Adapter<ViewHolder> implemen
                 break;
             case R.id.action_relay_layout:
                 // 转发
-
+                RetweetActivity.start(context , statuses.get(position));
                 break;
             case R.id.action_comment_layout:
                 // 评论

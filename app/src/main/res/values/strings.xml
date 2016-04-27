@@ -197,4 +197,10 @@
     <string name="string_user_home_page">主页</string>
     <string name="string_user_status_page">微博</string>
     <string name="string_user_gallery_page">相册</string>
+    <!-- 转发 -->
+    <string name="string_retweet_action_image">图片</string>
+    <string name="string_retweet_action_at">\@</string>
+    <string name="string_retweet_action_topic">话题</string>
+    <string name="string_retweet_action_emotion">表情</string>
+    <string name="string_retweet_action_send">转发</string>
 </resources>

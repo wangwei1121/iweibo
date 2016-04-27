@@ -1,8 +1,12 @@
 package com.snail.iweibo.api;
 
+import com.snail.iweibo.mvp.model.Status;
 import com.snail.iweibo.mvp.model.StatusList;
 
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -65,4 +69,21 @@ public interface WeiBoApiService {
                                            @Query("base_app") int app,
                                            @Query("feature") int feature,
                                            @Query("trim_user") int trim_user);
+
+
+    /**
+     * 转发一条微博
+     * @param token 采用OAuth授权方式为必填参数，OAuth授权后获得。
+     * @param id 要转发的微博ID。
+     * @param repostTxt 添加的转发文本，必须做URLencode，内容不超过140个汉字，不填则默认为“转发微博”。
+     * @param isComment 是否在转发的同时发表评论，0：否、1：评论给当前微博、2：评论给原微博、3：都评论，默认为0 。
+     * @param ipAddress 开发者上报的操作用户真实IP，形如：211.156.0.1。
+     * @return Status
+     */
+    @FormUrlEncoded
+    @POST("2/statuses/repost.json")
+    Observable<Status> repostStatus(@Field("access_token") String token , @Field("id") long id ,
+                                    @Field(value= "status" ,encoded = false) String repostTxt ,
+                                    @Field("is_comment") int isComment ,
+                                    @Field("rip") String ipAddress);
 }

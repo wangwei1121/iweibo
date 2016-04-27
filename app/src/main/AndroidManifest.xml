@@ -55,6 +55,14 @@
             android:name=".ui.activity.StatusDetailActivity"
             android:label="@string/string_status_detail_title"
             android:screenOrientation="portrait"/>
+        <!--图片查看-->
+        <activity
+            android:name=".ui.activity.RetweetActivity"
+            android:label="转发微博"
+            android:configChanges="orientation"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
+
         <!--用户详情-->
         <activity
             android:name=".ui.activity.UserDetailActivity"

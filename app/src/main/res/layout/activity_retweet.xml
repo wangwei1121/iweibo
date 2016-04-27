@@ -1,28 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<cn.dreamtobe.kpswitch.widget.KPSwitchRootRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/theme_background"
     android:orientation="vertical">
     <!-- title -->
     <include
+        android:id="@+id/tool_bar"
         layout="@layout/item_toolbar_layout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"/>
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"/>
 
-    <LinearLayout
+    <EditText
+        android:id="@+id/edit_text"
         android:layout_width="match_parent"
-        android:padding="10dp"
-        android:layout_height="match_parent">
-        <EditText
-            android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_below="@id/tool_bar"
+        android:layout_margin="10dp"
+        android:background="@drawable/edit_view_background"
+        android:ellipsize="end"
+        android:gravity="top"
+        android:inputType="textAutoComplete|textAutoCorrect|textMultiLine"
+        android:maxHeight="150dp"
+        android:padding="5dp"
+        android:textColor="?attr/theme_text_view"
+        android:textSize="14sp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_text"
+        android:layout_marginEnd="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginStart="10dp"
+        android:background="?attr/theme_card_view"
+        android:padding="5dp">
+        <!--pic -->
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/image_view"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:background="?attr/theme_background"
+            app:placeholderImage="@drawable/default_load"/>
+        <!--name -->
+        <TextView
+            android:id="@+id/status_user_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxHeight="150dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/image_view"
+            android:layout_toRightOf="@id/image_view"
             android:textColor="?attr/theme_text_view"
-            android:inputType="textAutoComplete|textAutoCorrect"/>
+            android:textSize="16sp"
+            tools:text="AT Alex"/>
+        <!--content -->
+        <TextView
+            android:id="@+id/status_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/status_user_name"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@id/image_view"
+            android:layout_toRightOf="@id/image_view"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="3"
+            android:textColor="?attr/theme_text_view"
+            android:textSize="14sp"
+            tools:text="content"/>
+    </RelativeLayout>
 
-    </LinearLayout>
+    <include
+        layout="@layout/item_retweet_bar"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_above="@+id/panel_root"
+        android:layout_alignParentBottom="true"/>
 
-</LinearLayout>
+    <cn.dreamtobe.kpswitch.widget.KPSwitchPanelLinearLayout
+        android:id="@+id/panel_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+    </cn.dreamtobe.kpswitch.widget.KPSwitchPanelLinearLayout>
+</cn.dreamtobe.kpswitch.widget.KPSwitchRootRelativeLayout>

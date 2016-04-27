@@ -24,7 +24,7 @@ public interface FavoritesApiService {
     Observable<Favorite> createFavorites(@Field("access_token") String token , @Field("id") long id);
 
     /**
-     * 删除微博
+     * 取消收藏微博
      * @param token 采用OAuth授权方式为必填参数，OAuth授权后获得。
      * @param id 要收藏的微博ID
      * @return Observable
