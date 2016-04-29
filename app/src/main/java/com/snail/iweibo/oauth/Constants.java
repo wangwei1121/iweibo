@@ -6,6 +6,7 @@ package com.snail.iweibo.oauth;
 public interface Constants {
     String PROJECT_NAME = "iweibo";
     String SINA_TOKEN = "sina_token";
+    String PACKAGE = "com.snail.iweibo";
 
     String APP_KEY = "2160936024";           // 应用的APP_KEY
     String REDIRECT_URL = "http://www.sina.com";// 应用的回调页

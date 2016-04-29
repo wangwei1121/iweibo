@@ -9,8 +9,18 @@
     </style>
 
     <style name="AppTheme" parent="AppTheme.Base">
+        <item name="colorPrimary">#0f8ae6</item>
+        <item name="colorPrimaryDark">#000000</item>
+        <item name="colorAccent">#FD87A9</item>
+    </style>
+
+    <style name="AppTheme_2" parent="AppTheme.Base">
         <item name="colorPrimary">#000000</item>
         <item name="colorPrimaryDark">#0f8ae6</item>
         <item name="colorAccent">#f4511e</item>
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

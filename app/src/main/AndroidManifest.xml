@@ -28,16 +28,11 @@
             android:name=".ui.activity.WBAuthActivity"
             android:label="@string/title_activity_wbauth"
             android:theme="@style/AppTheme" />
-        <!-- 必须注册在微博授权，分享微博时候用到 -->
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
             android:configChanges="keyboardHidden|orientation"
             android:exported="false"
             android:windowSoftInputMode="adjustResize"></activity>
-        <activity
-            android:name=".ui.activity.NewsActivity"
-            android:label="@string/title_activity_news"></activity>
-
     </application>
 
 </manifest>
