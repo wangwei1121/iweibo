@@ -12,15 +12,22 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.snail.iweibo.R;
 import com.snail.iweibo.network.HttpUtils;
-import com.snail.iweibo.oauth.Constants;
 import com.snail.iweibo.ui.BaseActivity;
+import com.snail.iweibo.util.Constants;
 import com.snail.iweibo.util.Keys;
 import com.snail.iweibo.util.SharedPreferencesUtil;
 import com.snail.iweibo.util.StringUtils;
 
-import retrofit2.http.HTTP;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends BaseActivity {
@@ -71,16 +78,34 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initData(){
-        String token = SharedPreferencesUtil.getData(this, Constants.SINA_TOKEN);
+        String token = SharedPreferencesUtil.getData(this, Keys.SINA_TOKEN);
+        Log.d(Keys.PACKAGE,token);
         if(StringUtils.isBlank(token)){
             noSignText.setText("请先登录");
             noSignText.setVisibility(TextView.VISIBLE);
             return;
         }
 
-        HttpUtils.doGetAsyn(Constants.WEIBO_BASE_URL + Constants.FRIENDS_TIMELINE ,new HttpUtils.CallBack(){
+        HttpUtils.doGetAsyn(Constants.WEIBO_BASE_URL + Constants.FRIENDS_TIMELINE + "?access_token="
+                + token+"&page=1&count=2",new HttpUtils.CallBack(){
             public void onRequestComplete(String result){
-                Log.e(Constants.PACKAGE,result);
+                if(StringUtils.isNotBlank(result)){
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        JSONArray jsonArray = jsonObject.getJSONArray("statuses");
+                        Gson gson = new Gson();
+                        List<Map<String,Object>> list = gson.fromJson(jsonArray.toString(), new TypeToken<List<Map>>() {
+                        }.getType());
+                        Log.e(Keys.PACKAGE,list.size() + "");
+                        if(null != list && list.size() > 0){
+                            noSignText.setVisibility(TextView.GONE);
+                            listView.setVisibility(ListView.VISIBLE);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
     }

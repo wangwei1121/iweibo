@@ -2,7 +2,6 @@ package com.snail.iweibo.ui.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -21,7 +20,8 @@ import com.sina.weibo.sdk.auth.sso.SsoHandler;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.snail.iweibo.R;
 import com.snail.iweibo.oauth.AccessTokenKeeper;
-import com.snail.iweibo.oauth.Constants;
+import com.snail.iweibo.util.Constants;
+import com.snail.iweibo.util.Keys;
 import com.snail.iweibo.util.SharedPreferencesUtil;
 
 import java.text.SimpleDateFormat;
@@ -71,7 +71,7 @@ public class WBAuthActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.obtain_token_via_web:
-                mAuthInfo = new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE);
+                mAuthInfo = new AuthInfo(this, Keys.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE);
                 mSsoHandler = new SsoHandler(WBAuthActivity.this, mAuthInfo);
                 mSsoHandler.authorizeWeb(new AuthListener());
                 break;
@@ -156,7 +156,7 @@ public class WBAuthActivity extends AppCompatActivity implements View.OnClickLis
 
         Log.d("com.snail.iweibo", mAccessToken.getToken());
 
-        SharedPreferencesUtil.saveData(this,Constants.SINA_TOKEN,mAccessToken.getToken());
+        SharedPreferencesUtil.saveData(this,Keys.SINA_TOKEN,mAccessToken.getToken());
     }
 
 }

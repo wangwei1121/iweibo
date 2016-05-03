@@ -2,7 +2,6 @@ package com.snail.iweibo.network;
 
 import android.util.Log;
 
-import com.snail.iweibo.oauth.Constants;
 import com.snail.iweibo.util.Keys;
 import com.snail.iweibo.util.StringUtils;
 
@@ -27,14 +26,15 @@ public class HttpUtils {
     /**
      * 异步的Get请求
      *
-     * @param urlStr
+     * @param url
      * @param callBack
      */
-    public static void doGetAsyn(final String urlStr, final CallBack callBack) {
+    public static void doGetAsyn(final String url, final CallBack callBack) {
+        Log.e(Keys.PACKAGE,url);
         new Thread() {
             public void run() {
                 try {
-                    String result = doGet(urlStr);
+                    String result = doGet(url);
                     if (null != callBack) {
                         callBack.onRequestComplete(result);
                     }
@@ -78,16 +78,16 @@ public class HttpUtils {
     /**
      * Get请求，获得返回数据
      *
-     * @param urlStr
+     * @param url
      * @return
      * @throws Exception
      */
-    public static String doGet(String urlStr) {
+    public static String doGet(String url) {
         HttpURLConnection conn = null;
         InputStream inputStream = null;
         String result = null;
         try {
-            conn = (HttpURLConnection) new URL(urlStr).openConnection();
+            conn = (HttpURLConnection) new URL(url).openConnection();
             conn.setReadTimeout(TIMEOUT_IN_MILLIONS);
             conn.setConnectTimeout(TIMEOUT_IN_MILLIONS);
             conn.setRequestMethod("GET");
@@ -170,7 +170,7 @@ public class HttpUtils {
 
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e(Constants.PACKAGE,e.getMessage());
+            Log.e(Keys.PACKAGE,e.getMessage());
         }finally {
             try {
                 if (null != inputStream) {
@@ -189,8 +189,8 @@ public class HttpUtils {
     public static String reader(InputStream inputStream) throws IOException {
         StringBuilder builder = new StringBuilder();
         byte[] b = new byte[1024];
-        int i = inputStream.read(b);
-        while ((i = inputStream.read(b))!=-1) {
+        int i = 0;
+        while((i = inputStream.read(b)) != -1) {
             builder.append(new String(b, 0, i, Keys.SYS_ENCODING));
         }
         return builder.toString();
