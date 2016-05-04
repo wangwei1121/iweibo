@@ -2,6 +2,8 @@ package com.snail.iweibo.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.snail.iweibo.R;
+import com.snail.iweibo.adapter.FriendsTimelineAdapter;
 import com.snail.iweibo.network.HttpUtils;
 import com.snail.iweibo.ui.BaseActivity;
 import com.snail.iweibo.util.Constants;
@@ -36,8 +39,14 @@ public class MainActivity extends BaseActivity {
     private Toolbar toolbar;
     private ActionBarDrawerToggle drawerToggle;
     private TextView noSignText;
-    private LinearLayout linearLayout;
     private ListView listView;
+    private FriendsTimelineAdapter adapter;
+    private Handler handler = new Handler();
+
+    private static final int UI_UPDATE = 0x101;
+
+    private int page = 1;
+    private int pageCount = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +54,33 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         initView();
-        initData();
+
+        handler = new Handler(){
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case MainActivity.UI_UPDATE:
+                        List<Map<String,Object>> list = (List<Map<String,Object>>)msg.obj;
+                        if(null != list && list.size() > 0){
+                            Log.i(Keys.PACKAGE,list.size() + "");
+                            adapter = new FriendsTimelineAdapter(MainActivity.this,list,handler);
+                            listView.setAdapter(adapter);
+                        }
+                        break;
+                }
+            }
+        };
+
+        String token = SharedPreferencesUtil.getData(this, Keys.SINA_TOKEN);
+        Log.d(Keys.PACKAGE, token);
+        if(StringUtils.isBlank(token)){
+            noSignText.setText("请先登录");
+            noSignText.setVisibility(TextView.VISIBLE);
+            listView.setVisibility(ListView.GONE);
+        }else{
+            noSignText.setVisibility(TextView.GONE);
+            listView.setVisibility(ListView.VISIBLE);
+            initData(page,pageCount);
+        }
     }
 
     private void initView(){
@@ -73,21 +108,13 @@ public class MainActivity extends BaseActivity {
             }
         });
         noSignText = (TextView)findViewById(R.id.no_sign_text);
-        linearLayout = (LinearLayout)findViewById(R.id.include_content);
-        listView = (ListView)linearLayout.findViewById(R.id.list_view);
+        listView = (ListView)findViewById(R.id.list_view);
     }
 
-    private void initData(){
+    private void initData(int page,int pageCount){
         String token = SharedPreferencesUtil.getData(this, Keys.SINA_TOKEN);
-        Log.d(Keys.PACKAGE,token);
-        if(StringUtils.isBlank(token)){
-            noSignText.setText("请先登录");
-            noSignText.setVisibility(TextView.VISIBLE);
-            return;
-        }
-
         HttpUtils.doGetAsyn(Constants.WEIBO_BASE_URL + Constants.FRIENDS_TIMELINE + "?access_token="
-                + token+"&page=1&count=2",new HttpUtils.CallBack(){
+                + token+"&page="+page+"&count="+pageCount,new HttpUtils.CallBack(){
             public void onRequestComplete(String result){
                 if(StringUtils.isNotBlank(result)){
                     try {
@@ -97,11 +124,11 @@ public class MainActivity extends BaseActivity {
                         List<Map<String,Object>> list = gson.fromJson(jsonArray.toString(), new TypeToken<List<Map>>() {
                         }.getType());
                         Log.e(Keys.PACKAGE,list.size() + "");
-                        if(null != list && list.size() > 0){
-                            noSignText.setVisibility(TextView.GONE);
-                            listView.setVisibility(ListView.VISIBLE);
-                        }
 
+                        Message msg = new Message();
+                        msg.obj = list;
+                        msg.what = UI_UPDATE;
+                        MainActivity.this.handler.sendMessage(msg);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

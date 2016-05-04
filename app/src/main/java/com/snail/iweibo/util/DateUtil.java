@@ -54,6 +54,14 @@ public class DateUtil {
         return (int)diff;
     }
 
+    public static Integer minuteDiff(Date date1,Date date2){
+        if(null == date1 || null == date2){
+            return null;
+        }
+        long diff = (date1.getTime() - date2.getTime()) / (1000 * 60);
+        return (int)diff;
+    }
+
     public static Integer secondDiff(Date date1,Date date2){
         if(null == date1 || null == date2){
             return null;
