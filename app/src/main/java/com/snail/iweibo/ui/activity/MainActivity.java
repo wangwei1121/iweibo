@@ -2,6 +2,7 @@ package com.snail.iweibo.ui.activity;
 
 import android.content.Intent;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,9 +12,9 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,7 +24,7 @@ import com.snail.iweibo.R;
 import com.snail.iweibo.adapter.FriendsTimelineAdapter;
 import com.snail.iweibo.network.HttpUtils;
 import com.snail.iweibo.ui.BaseActivity;
-import com.snail.iweibo.util.BitmapUtil;
+import com.snail.iweibo.ui.view.LoadSwipeRefreshLayout;
 import com.snail.iweibo.util.Constants;
 import com.snail.iweibo.util.Keys;
 import com.snail.iweibo.util.SharedPreferencesUtil;
@@ -37,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener{
+public class MainActivity extends BaseActivity implements LoadSwipeRefreshLayout.OnRefreshListener,LoadSwipeRefreshLayout.OnLoadListener{
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -47,34 +48,46 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
     private FriendsTimelineAdapter adapter;
     private ImageView loadingImageView;
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private LoadSwipeRefreshLayout swipeRefreshLayout;
 
     private Handler handler = null;
 
-    private static final int UI_UPDATE = 0x101;
+    private static final int LIST_UPDATE = 0x101;
 
     private int page = 1;
     private int pageCount = 10;
+    List<Map<String,Object>> dataList = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initView();
-
         handler = new Handler(){
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case MainActivity.UI_UPDATE:
+                    case MainActivity.LIST_UPDATE:
                         loadingImageView.setVisibility(ImageView.GONE);
                         List<Map<String,Object>> list = (List<Map<String,Object>>)msg.obj;
-                        swipeRefreshLayout.setRefreshing(false);
-                        if(null != list && list.size() > 0){
-                            Log.i(Keys.PACKAGE,list.size() + "");
-                            adapter = new FriendsTimelineAdapter(MainActivity.this,list,handler);
+                        if(page == 1){
+                            adapter = new FriendsTimelineAdapter(MainActivity.this,list);
                             listView.setAdapter(adapter);
+                            dataList = list;
+                        }else{
+
                         }
+                        if(null != list && list.size() > 0){
+                            if(page == 1){
+                                dataList = list;
+                                adapter = new FriendsTimelineAdapter(MainActivity.this,dataList);
+                                listView.setAdapter(adapter);
+                            }else{
+                                dataList.addAll(list);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+                        //swipeRefreshLayout.setLoading(false);
+                        swipeRefreshLayout.setRefreshing(false);
                         break;
                 }
             }
@@ -89,17 +102,11 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             loadingImageView.setVisibility(ImageView.GONE);
         }else{
             noSignText.setVisibility(TextView.GONE);
-//            new Thread(){
-//                @Override
-//                public void run(){
-//                    for(int i=0;i<8;i++){
-////                        loadingImageView.setImageURI();
-//                   }
-//                }
-//            }.start();
-            loadingImageView.setVisibility(ImageView.VISIBLE);
+            loadingImageView.setVisibility(ImageView.GONE);
             listView.setVisibility(ListView.VISIBLE);
-            initData(1,pageCount);
+            swipeRefreshLayout.setProgressViewOffset(false, 0,  (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
+            swipeRefreshLayout.setRefreshing(true);
+            this.initData(this.page);
         }
     }
 
@@ -128,42 +135,54 @@ public class MainActivity extends BaseActivity implements SwipeRefreshLayout.OnR
             }
         });
         noSignText = (TextView)findViewById(R.id.no_sign_text);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout = (LoadSwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setColorSchemeColors(R.color.orange, R.color.green, R.color.blue);
+        swipeRefreshLayout.setOnLoadListener(this);
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light, android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         listView = (ListView)findViewById(R.id.list_view);
         loadingImageView = (ImageView) findViewById(R.id.loading_img);
     }
 
-    private void initData(int page,int pageCount){
-        swipeRefreshLayout.setRefreshing(true);
+    private void initData(int page){
         String token = SharedPreferencesUtil.getData(this, Keys.SINA_TOKEN);
         HttpUtils.doGetAsyn(Constants.WEIBO_BASE_URL + Constants.FRIENDS_TIMELINE + "?access_token="
                 + token+"&page="+page+"&count="+pageCount,new HttpUtils.CallBack(){
             public void onRequestComplete(String result){
+                List<Map<String,Object>> list = null;
                 if(StringUtils.isNotBlank(result)){
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         JSONArray jsonArray = jsonObject.getJSONArray("statuses");
                         Gson gson = new Gson();
-                        List<Map<String,Object>> list = gson.fromJson(jsonArray.toString(), new TypeToken<List<Map>>() {
+                        list = gson.fromJson(jsonArray.toString(), new TypeToken<List<Map>>() {
                         }.getType());
-                        Log.e(Keys.PACKAGE,list.size() + "");
-
                         Message msg = new Message();
                         msg.obj = list;
-                        msg.what = UI_UPDATE;
+                        msg.what = LIST_UPDATE;
                         MainActivity.this.handler.sendMessage(msg);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
+
             }
         });
     }
 
     @Override
     public void onRefresh() {
-        initData(1,pageCount);
+        this.page = 1;
+        initData(this.page);
+    }
+
+    @Override
+    public void onLoad() {
+        Log.d(Keys.PACKAGE,"isLoading-->" + swipeRefreshLayout.isLoading());
+        if(!swipeRefreshLayout.isLoading()){
+            initData(++this.page);
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.snail.iweibo.util.Keys;
 import com.snail.iweibo.util.StringUtils;
+import com.snail.iweibo.util.ThreadPoolUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +18,7 @@ import java.net.URL;
  */
 public class HttpUtils {
 
-    private static final int TIMEOUT_IN_MILLIONS = 5000;
+    private static final int TIMEOUT_IN_MILLIONS = 50000;
 
     public interface CallBack {
         void onRequestComplete(String result);
@@ -30,8 +31,9 @@ public class HttpUtils {
      * @param callBack
      */
     public static void doGetAsyn(final String url, final CallBack callBack) {
-        Log.e(Keys.PACKAGE,url);
-        new Thread() {
+        Log.d(Keys.PACKAGE,url);
+        ThreadPoolUtil.getInstance().execute(new Runnable() {
+            @Override
             public void run() {
                 try {
                     String result = doGet(url);
@@ -41,11 +43,8 @@ public class HttpUtils {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
-            ;
-        }.start();
+        });
     }
 
     /**
@@ -57,7 +56,8 @@ public class HttpUtils {
      */
     public static void doPostAsyn(final String urlStr, final String params,
                                   final CallBack callBack) throws Exception {
-        new Thread() {
+        ThreadPoolUtil.getInstance().execute(new Runnable() {
+            @Override
             public void run() {
                 try {
                     String result = doPost(urlStr, params);
@@ -67,11 +67,8 @@ public class HttpUtils {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
-            ;
-        }.start();
+        });
 
     }
 

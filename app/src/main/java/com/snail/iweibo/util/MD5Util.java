@@ -47,14 +47,15 @@ public class MD5Util {
     }
 
     public static String encode(String origin) {
-        String resultString = null;
-        try {
-            resultString = new String(origin);
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            resultString = byteArrayToString(md.digest(resultString.getBytes()));
-        } catch (Exception ex) {
+        if(null == origin){
+            return null;
         }
-        return resultString;
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            return byteArrayToString(md.digest(origin.getBytes()));
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     /**
@@ -70,7 +71,7 @@ public class MD5Util {
             return true;
         }
         try {
-            java.security.MessageDigest alga = java.security.MessageDigest.getInstance("MD5");
+            MessageDigest alga = MessageDigest.getInstance("MD5");
             flag = alga.isEqual(md5a.getBytes(), md5b.getBytes());
         } catch (Exception ex) {
         }
@@ -78,7 +79,7 @@ public class MD5Util {
     }
 
     public static void main(String args[]) {
-        String m = MD5Util.encode("aisa100");
+        String m = MD5Util.encode(null);
         System.out.println(m);
 
         String m1 = MD5Util.encode("fb271113cf95966bfc917a735d065ffa");

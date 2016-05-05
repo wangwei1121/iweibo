@@ -1,6 +1,7 @@
 package com.snail.iweibo.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.snail.iweibo.R;
+import com.snail.iweibo.util.BitmapTask;
 import com.snail.iweibo.util.BitmapUtil;
 import com.snail.iweibo.util.DateUtil;
 import com.snail.iweibo.util.Keys;
@@ -36,12 +38,10 @@ import java.util.Map;
 public class FriendsTimelineAdapter extends BaseAdapter {
     private Context context;
     private List<Map<String,Object>> list;
-    private Handler handler;
 
-    public FriendsTimelineAdapter(Context context, List<Map<String, Object>> list,Handler handler) {
+    public FriendsTimelineAdapter(Context context, List<Map<String, Object>> list) {
         this.context = context;
         this.list = list;
-        this.handler = handler;
     }
 
     @Override
@@ -86,7 +86,7 @@ public class FriendsTimelineAdapter extends BaseAdapter {
             holder = (ViewHolder)convertView.getTag();
         }
         if(null != userMap.get("profile_image_url")){
-            BitmapUtil.initAsynBitmap(userMap.get("profile_image_url").toString(), holder.profileImage,handler);
+            BitmapUtil.initAsynBitmap(this.context,holder.profileImage,userMap.get("profile_image_url").toString());
         }
         holder.userNameText.setText(null == userMap.get("name") ? "" : userMap.get("name").toString());
         Date publicTime = DateUtil.formatUS(map.get("created_at").toString());
@@ -135,6 +135,7 @@ public class FriendsTimelineAdapter extends BaseAdapter {
         public TextView comeFromText;
         public TextView itemContentText;
         public ImageView itemContentImg;
+
     }
 
     private static class MyURLSpan extends ClickableSpan {

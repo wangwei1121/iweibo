@@ -19,10 +19,14 @@ public class BitmapFileCache {
 
     private File cacheDir;
 
-    public BitmapFileCache(Context context) {
+    private BitmapFileCache(){
+        this(BaseApplication.getContext());
+    }
+
+    private BitmapFileCache(Context context) {
         if (android.os.Environment.getExternalStorageState()
                 .equals(android.os.Environment.MEDIA_MOUNTED)) {
-            cacheDir = new File(android.os.Environment.getExternalStorageDirectory(),"");
+            cacheDir = new File(android.os.Environment.getExternalStorageDirectory(),"cache");
         }else {
             cacheDir = context.getCacheDir();
         }
@@ -31,6 +35,11 @@ public class BitmapFileCache {
         }
         Log.d(Keys.PACKAGE, "cache dir: " + cacheDir.getAbsolutePath());
     }
+
+    public static BitmapFileCache getInstance(){
+        return SingletonHolder.instance;
+    }
+
 
     /**
      * Search the specific image file with a unique key.
@@ -93,5 +102,9 @@ public class BitmapFileCache {
 
     public File getCacheDir(){
         return this.cacheDir;
+    }
+
+    private static class SingletonHolder{
+        private static BitmapFileCache instance = new BitmapFileCache();
     }
 }

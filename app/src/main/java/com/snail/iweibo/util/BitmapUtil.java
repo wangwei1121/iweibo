@@ -1,8 +1,10 @@
 package com.snail.iweibo.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
@@ -20,13 +22,11 @@ import java.net.URL;
  */
 public class BitmapUtil {
 
-    private static BitmapFileCache cache = new BitmapFileCache(BaseApplication.getContext());
 
     public static Bitmap getBitmap(String url) {
         String encodeURL = MD5Util.encode(url);
-        File file = cache.getFile(encodeURL);
+        File file = BitmapFileCache.getInstance().getFile(encodeURL);
         Bitmap bitmap = decodeFile(file);
-        Log.e(Keys.PACKAGE,url + "-->" + (bitmap == null));
         if(null != bitmap){
             return bitmap;
         }
@@ -52,7 +52,7 @@ public class BitmapUtil {
             }
             os.flush();
             bitmap = decodeFile(file);
-            cache.put(encodeURL,bitmap);
+            BitmapFileCache.getInstance().put(encodeURL, bitmap);
             Log.e(Keys.PACKAGE,file.getAbsolutePath());
             return bitmap;
         } catch (Exception e) {
@@ -80,13 +80,14 @@ public class BitmapUtil {
         return BitmapFactory.decodeFile(file.getAbsolutePath());
     }
 
-    public static void initAsynBitmap(final String url, final ImageView imageView,final Handler handler){
-        new Thread(){
+    public static void initAsynBitmap(final Context context,final ImageView imageView,final String url){
+        ThreadPoolUtil.getInstance().execute(new Runnable() {
             @Override
-            public void run(){
+            public void run() {
                 final Bitmap bitmap = getBitmap(url);
-                if(null != bitmap){
-                    handler.post(new Runnable() {
+                if (null != bitmap) {
+                    Activity activity = (Activity)context;
+                    activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             imageView.setImageBitmap(bitmap);
@@ -94,7 +95,7 @@ public class BitmapUtil {
                     });
                 }
             }
-        }.start();
+        });
     }
 
 }
