@@ -3,6 +3,7 @@ package com.snail.iweibo.ui.view;
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.snail.iweibo.R;
+import com.snail.iweibo.util.Keys;
 
 /**
  * Created by wang.weib on 2016/5/5.
@@ -65,7 +67,6 @@ public class LoadSwipeRefreshLayout extends SwipeRefreshLayout implements AbsLis
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         final int action = event.getAction();
-
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mYDown = (int) event.getRawY();
@@ -116,7 +117,6 @@ public class LoadSwipeRefreshLayout extends SwipeRefreshLayout implements AbsLis
         if (mOnLoadListener != null) {
             mOnLoadListener.onLoad();
         }
-        // 设置状态
         setLoading(true);
     }
 

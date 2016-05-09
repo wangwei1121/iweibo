@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:orientation="horizontal">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_image"
@@ -79,6 +81,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
         android:orientation="vertical">
@@ -91,12 +95,15 @@
             android:textColor="#6b717b"
             android:textSize="13dp" />
 
-        <ImageView
-            android:id="@+id/item_content_img"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.GridLayout
+            android:id="@+id/grid_image"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:src="@drawable/loading_0"
-            android:visibility="gone" />
+            android:gravity="center"
+            android:horizontalSpacing="4dp"
+            android:verticalSpacing="4dp"
+            app:rowCount="3"
+            app:columnCount="3"
+        />
     </LinearLayout>
 </LinearLayout>

@@ -18,7 +18,7 @@ import java.net.URL;
  */
 public class HttpUtils {
 
-    private static final int TIMEOUT_IN_MILLIONS = 50000;
+    public static final int TIMEOUT_IN_MILLIONS = 50000;
 
     public interface CallBack {
         void onRequestComplete(String result);
@@ -106,7 +106,9 @@ public class HttpUtils {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            conn.disconnect();
+            if(null != conn){
+                conn.disconnect();
+            }
         }
 
         return result;
@@ -136,12 +138,13 @@ public class HttpUtils {
     }
 
     public static String doPost(String url, byte[] bytes) {
+        HttpURLConnection conn = null;
         OutputStream outputStream = null;
         InputStream inputStream = null;
         String result = null;
         try {
             // 打开和URL之间的连接
-            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+            conn = (HttpURLConnection) new URL(url).openConnection();
             // 设置通用的请求属性
             conn.setRequestProperty("accept", "*/*");
             conn.setRequestProperty("connection", "Keep-Alive");
@@ -178,6 +181,9 @@ public class HttpUtils {
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
+            }
+            if(null != conn){
+                conn.disconnect();
             }
         }
         return result;

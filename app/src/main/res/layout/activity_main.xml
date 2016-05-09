@@ -38,12 +38,6 @@
             android:text="Hello World"
             android:visibility="visible"
             android:textSize="30sp"/>
-        <ImageView
-            android:id="@+id/loading_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/loading_0"/>
         <com.snail.iweibo.ui.view.LoadSwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
@@ -52,9 +46,7 @@
             <ListView
                 android:id="@+id/list_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp">
+                android:layout_height="wrap_content">
             </ListView>
         </com.snail.iweibo.ui.view.LoadSwipeRefreshLayout>
 

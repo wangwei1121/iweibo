@@ -53,7 +53,6 @@ public class BitmapUtil {
             os.flush();
             bitmap = decodeFile(file);
             BitmapFileCache.getInstance().put(encodeURL, bitmap);
-            Log.e(Keys.PACKAGE,file.getAbsolutePath());
             return bitmap;
         } catch (Exception e) {
             e.printStackTrace();

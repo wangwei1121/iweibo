@@ -33,7 +33,7 @@ public class BitmapFileCache {
         if (!cacheDir.exists()){
             cacheDir.mkdirs();
         }
-        Log.d(Keys.PACKAGE, "cache dir: " + cacheDir.getAbsolutePath());
+//        Log.d(Keys.PACKAGE, "cache dir: " + cacheDir.getAbsolutePath());
     }
 
     public static BitmapFileCache getInstance(){
@@ -72,9 +72,9 @@ public class BitmapFileCache {
                 e.printStackTrace();
             }
         if (saveBitmap(f, value)) {
-            Log.d(Keys.PACKAGE, "Save file to sdcard successfully!");
+//            Log.d(Keys.PACKAGE, "Save file to sdcard successfully!");
         }else{
-            Log.w(Keys.PACKAGE, "Save file to sdcard failed!");
+//            Log.w(Keys.PACKAGE, "Save file to sdcard failed!");
         }
     }
 
