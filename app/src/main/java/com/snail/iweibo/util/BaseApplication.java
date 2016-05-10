@@ -14,6 +14,7 @@ public class BaseApplication extends Application {
         super.onCreate();
 
         context = getApplicationContext();
+        BitmapFileCache.getInstance().clear();
     }
     public static Context getContext(){
         return context;

@@ -1,19 +1,10 @@
 package com.snail.iweibo.adapter;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.DropBoxManager;
 import android.support.v7.widget.GridLayout;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -21,30 +12,22 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.snail.iweibo.R;
-import com.snail.iweibo.network.HttpUtils;
-import com.snail.iweibo.ui.activity.LargeImageActivity;
 import com.snail.iweibo.util.BitmapFileCache;
 import com.snail.iweibo.util.BitmapUtil;
 import com.snail.iweibo.util.CommonUtil;
 import com.snail.iweibo.util.DateUtil;
 import com.snail.iweibo.util.Keys;
 import com.snail.iweibo.util.MD5Util;
-import com.snail.iweibo.util.NetworkUtil;
-import com.snail.iweibo.util.PicassoHelper;
 import com.snail.iweibo.util.StringUtils;
-import com.squareup.picasso.Downloader;
 
 import android.text.Spannable;
 import android.widget.Toast;
@@ -56,6 +39,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -155,31 +139,33 @@ public class FriendsTimelineAdapter extends BaseAdapter {
 
         if(map.containsKey("pic_urls")){
             List<Map<String,Object>> picList = (List<Map<String,Object>>)map.get("pic_urls");
-            String[] thumbnails = new String[picList.size()];
+            List<String> thumbnails = new ArrayList<String>(picList.size());
             for(int i = 0;i<picList.size();i++){
-                thumbnails[i] = (String)((Map<String,Object>)picList.get(i)).get("thumbnail_pic");
-
+                String picUrl = (String)((Map<String,Object>)picList.get(i)).get("thumbnail_pic");
+                if(!thumbnails.contains(picUrl)){
+                    thumbnails.add(picUrl);
+                }
             }
             int gridImageWidth = CommonUtil.getScreenWidth() / 3;
             holder.imageGridLayout.removeAllViews();
-            if(thumbnails.length < 3) {
+            if(thumbnails.size() < 3) {
 //                holder.imageGridLayout.setRowCount(1);
-                for(int i=0;i<thumbnails.length;i++){
+                for(int i=0;i<thumbnails.size();i++){
                     initGridImage(holder,thumbnails,i);
                 }
-            }else if(thumbnails.length % 3 == 0){
+            }else if(thumbnails.size() % 3 == 0){
 //                holder.imageGridLayout.setRowCount(thumbnails.length / 3);
-                for(int i=0;i<thumbnails.length / 3;i++){
+                for(int i=0;i<thumbnails.size() / 3;i++){
                     for(int j=0;j<3;j++){
                         initGridImage(holder, thumbnails, i);
                     }
                 }
             }else{
 //                holder.imageGridLayout.setRowCount(thumbnails.length / 3 + 1);
-                for(int i=0;i<thumbnails.length / 3 + 1;i++){
+                for(int i=0;i<thumbnails.size() / 3 + 1;i++){
                     int cols = 3;
-                    if(i == thumbnails.length / 3){
-                        cols = thumbnails.length%3;
+                    if(i == thumbnails.size() / 3){
+                        cols = thumbnails.size() % 3;
                     }
                     Log.d(Keys.PACKAGE,cols + "");
                     for(int j=0;j<cols;j++){
@@ -192,7 +178,7 @@ public class FriendsTimelineAdapter extends BaseAdapter {
     }
 
 
-    private void initGridImage(ViewHolder holder,final String[] thumbnails,final int index){
+    private void initGridImage(ViewHolder holder,final List<String> thumbnails,final int index){
         int gridImageWidth = CommonUtil.getScreenWidth() / 3;
         ImageView imageView = new ImageView(context);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(gridImageWidth, gridImageWidth);
@@ -222,9 +208,9 @@ public class FriendsTimelineAdapter extends BaseAdapter {
 //                context.startActivity(intent);
             }
         });
-        BitmapUtil.initAsynBitmap(context, imageView, thumbnails[index].replace("thumbnail","bmiddle"));
+        BitmapUtil.initAsynBitmap(context, imageView, thumbnails.get(index).replace("thumbnail", "bmiddle"));
 //        BitmapUtil.initAsynBitmap(context, imageView, thumbnails[index]);
-//        PicassoHelper.loadImage(context, thumbnails[index], imageView);
+//        PicassoHelper.loadImage(context, thumbnails[index].replace("thumbnail","bmiddle"), imageView);
 
         holder.imageGridLayout.addView(imageView);
     }
@@ -255,9 +241,11 @@ public class FriendsTimelineAdapter extends BaseAdapter {
     }
 
     class LargeImageDialog extends Dialog{
-        private String[] imageUrls;
+        private List<String> imageUrls;
         private int imageIndex;
-        public LargeImageDialog(Context context,String[] imageUrls,int imageIndex) {
+        private TextView loadingText;
+        private ImageView imageView;
+        public LargeImageDialog(Context context,List<String> imageUrls,int imageIndex) {
             super(context,R.style.NobackDialog);
             this.imageUrls = imageUrls;
             this.imageIndex = imageIndex;
@@ -266,81 +254,89 @@ public class FriendsTimelineAdapter extends BaseAdapter {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             super.setContentView(R.layout.dialog_image_entry);
-            ImageView imageView = (ImageView)this.findViewById(R.id.large_image);
+            imageView = (ImageView)this.findViewById(R.id.large_image);
+            loadingText = (TextView)this.findViewById(R.id.load_text);
+            loadingText.setVisibility(TextView.VISIBLE);
+            Log.d(Keys.PACKAGE,loadingText.getText().toString());
 //            PicassoHelper.loadImage(this.getContext(), imageUrls[imageIndex], imageView);
-            BitmapUtil.initAsynBitmap(context, imageView, imageUrls[imageIndex].replace("thumbnail","bmiddle"));
-            AsyncTask asyncTask = new DownloadFilesTask(imageView);
-            asyncTask.execute(imageUrls[imageIndex].replace("thumbnail", "large"));
+            BitmapUtil.initAsynBitmap(context, imageView, imageUrls.get(imageIndex).replace("thumbnail","bmiddle"));
+            AsyncTask asyncTask = new DownloadFilesTask();
+            asyncTask.execute(imageUrls.get(imageIndex).replace("thumbnail", "large"));
 
 //            PicassoHelper.loadImage(this.getContext(), imageUrls[imageIndex].replace("thumbnail", "large"), img);
         }
-    }
 
-    private class DownloadFilesTask extends AsyncTask<Object, Integer, Bitmap> {
-        private ImageView imageView;
-        public DownloadFilesTask(ImageView imageView){
-            this.imageView = imageView;
-        }
-        protected Bitmap doInBackground(Object... urls) {
-            String url = (String)urls[0];
-            String encodeURL = MD5Util.encode(url);
-            HttpURLConnection conn = null;
-            InputStream inputStream = null;
-            InputStream is = null;
-            OutputStream os = null;
-            int buffer_size = 1024;
-            try {
-                File file = BitmapFileCache.getInstance().getFile(encodeURL);
-                Bitmap bitmap = BitmapUtil.decodeFile(file);
-                if(null != bitmap){
-                    return bitmap;
-                }
-                URL ImageUrl = new URL(url);
-                conn = (HttpURLConnection) ImageUrl.openConnection();
-                conn.setConnectTimeout(50000);
-                conn.setReadTimeout(50000);
-                conn.setInstanceFollowRedirects(true);
-                int length = conn.getContentLength();
-                Log.d(Keys.PACKAGE,url + "-->" + length);
-                is = conn.getInputStream();
-                os = new FileOutputStream(file);
-                byte[] bytes=new byte[buffer_size];
-                for(;;){
-                    int count = is.read(bytes, 0, buffer_size);
-                    if(count == -1)
-                        break;
-                    os.write(bytes, 0, count);
-                    publishProgress((int) ((count / (float) length) * 100));
-                }
-                os.flush();
-                bitmap = BitmapUtil.decodeFile(file);
-                BitmapFileCache.getInstance().put(encodeURL, bitmap);
-                return bitmap;
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
+        private class DownloadFilesTask extends AsyncTask<Object, Integer, Bitmap> {
+            protected Bitmap doInBackground(Object... urls) {
+                String url = (String)urls[0];
+                Log.d(Keys.PACKAGE,"doInBackground-->" + url);
+                String encodeURL = MD5Util.encode(url);
+                HttpURLConnection conn = null;
+                InputStream inputStream = null;
+                InputStream is = null;
+                OutputStream os = null;
+                int buffer_size = 1024;
                 try {
-                    if (null != inputStream) {
-                        inputStream.close();
+                    File file = BitmapFileCache.getInstance().getFile(encodeURL);
+                    Bitmap bitmap = BitmapUtil.decodeFile(file);
+                    if(null != bitmap){
+                        return bitmap;
                     }
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                    URL ImageUrl = new URL(url);
+                    conn = (HttpURLConnection) ImageUrl.openConnection();
+                    conn.setConnectTimeout(50000);
+                    conn.setReadTimeout(50000);
+                    conn.setInstanceFollowRedirects(true);
+                    int length = conn.getContentLength();
+                    int sumCount = 0;
+                    Log.d(Keys.PACKAGE,url + "-->" + length);
+                    is = conn.getInputStream();
+                    os = new FileOutputStream(file);
+                    byte[] bytes=new byte[buffer_size];
+                    for(;;){
+                        int count = is.read(bytes, 0, buffer_size);
+                        if(count == -1)
+                            break;
+                        os.write(bytes, 0, count);
+                        sumCount += count;
+                        Log.d(Keys.PACKAGE,sumCount + ";" + count);
+                        publishProgress((int) ((sumCount / (float)length) * 100));
+                        Log.d(Keys.PACKAGE,(int) ((sumCount / (float)length) * 100) + "");
+                    }
+                    os.flush();
+                    bitmap = BitmapUtil.decodeFile(file);
+                    BitmapFileCache.getInstance().put(encodeURL, bitmap);
+                    return bitmap;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (null != inputStream) {
+                            inputStream.close();
+                        }
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    if(null != conn){
+                        conn.disconnect();
+                    }
                 }
-                if(null != conn){
-                    conn.disconnect();
-                }
+                return BitmapUtil.getBitmap(url);
             }
-            return BitmapUtil.getBitmap(url);
-        }
 
-        protected void onProgressUpdate(Integer progress) {
-            Log.d(Keys.PACKAGE,progress + "");
-            Toast.makeText(context,progress,Toast.LENGTH_SHORT);
-        }
+            protected void onProgressUpdate(Integer... progress) {
+                Log.d(Keys.PACKAGE, progress[0] + "################");
+                loadingText.setText("loading..." + progress[0]);
+//              Toast.makeText(context,progress[0],Toast.LENGTH_SHORT);
+            }
 
-        protected void onPostExecute(Bitmap result) {
-            this.imageView.setImageBitmap(result);
+            protected void onPostExecute(Bitmap result) {
+                Log.d(Keys.PACKAGE,result.getWidth() + ";" + result.getHeight());
+                loadingText.setVisibility(TextView.GONE);
+                imageView.setImageBitmap(result);
+            }
         }
     }
+
 
 }
