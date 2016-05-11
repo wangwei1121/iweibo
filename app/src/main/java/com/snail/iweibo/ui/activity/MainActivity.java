@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
+import android.view.accessibility.AccessibilityManager;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -36,6 +37,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,8 +57,10 @@ public class MainActivity extends BaseActivity implements LoadSwipeRefreshLayout
 
     private Runnable networkRunnable;
 
-    private static final int LIST_UPDATE = 0x101;
-    private static final int NETWORK_CONNECTED = 0x102;
+    private static final int LIST_UPDATE = 0x1;
+    private static final int NETWORK_CONNECTED = 0x2;
+    private static final int EXPIRED_TOKEN = 0x3;
+    private static final int NETWORK_DISCONNECTED = 0x4;
 
     private int page = 1;
     private int pageCount = 10;
@@ -71,23 +75,24 @@ public class MainActivity extends BaseActivity implements LoadSwipeRefreshLayout
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case MainActivity.LIST_UPDATE:
+                        noSignText.setVisibility(TextView.GONE);
+                        listView.setVisibility(ListView.VISIBLE);
                         List<Map<String, Object>> list = (List<Map<String, Object>>) msg.obj;
-                        if (page == 1) {
-                            adapter = new FriendsTimelineAdapter(MainActivity.this, list);
+                        if(null == adapter){
+                            dataList = new ArrayList<>(list);
+                            adapter = new FriendsTimelineAdapter(MainActivity.this, dataList);
                             listView.setAdapter(adapter);
-                            dataList = list;
-                        } else {
-
-                        }
-                        if (null != list && list.size() > 0) {
+                        }else if (null != list && list.size() > 0) {
                             if (page == 1) {
-                                dataList = list;
-                                adapter = new FriendsTimelineAdapter(MainActivity.this, dataList);
-                                listView.setAdapter(adapter);
+                                dataList.clear();
+                                dataList.addAll(list);
                             } else {
                                 dataList.addAll(list);
-                                adapter.notifyDataSetChanged();
                             }
+                            adapter.notifyDataSetChanged();
+                        }else{
+                            dataList = new ArrayList<>(0);
+                            adapter.notifyDataSetChanged();
                         }
                         swipeRefreshLayout.setLoading(false);
                         swipeRefreshLayout.setRefreshing(false);
@@ -101,50 +106,25 @@ public class MainActivity extends BaseActivity implements LoadSwipeRefreshLayout
                         swipeRefreshLayout.setProgressViewOffset(false, 0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
                         swipeRefreshLayout.setRefreshing(true);
                         initData(page);
+                        break;
+                    case EXPIRED_TOKEN:
+                        noSignText.setVisibility(TextView.VISIBLE);
+                        listView.setVisibility(ListView.GONE);
+                        noSignText.setText("密码过期，请先登录");
+                        swipeRefreshLayout.setLoading(false);
+                        swipeRefreshLayout.setRefreshing(false);
+                    case NETWORK_DISCONNECTED:
+                        swipeRefreshLayout.setLoading(false);
+                        swipeRefreshLayout.setRefreshing(false);
+                        Toast.makeText(MainActivity.this,"网络连接超时", Toast.LENGTH_LONG);
                 }
             }
         };
-        if (NetworkUtil.isNetConnected()) {
-            String token = SharedPreferencesUtil.getData(this, Keys.SINA_TOKEN);
-            Log.d(Keys.PACKAGE, token);
-            if (StringUtils.isBlank(token)) {
-                noSignText.setText("请先登录");
-                noSignText.setVisibility(TextView.VISIBLE);
-                listView.setVisibility(ListView.GONE);
-            } else {
-                noSignText.setVisibility(TextView.GONE);
-                listView.setVisibility(ListView.VISIBLE);
-                swipeRefreshLayout.setProgressViewOffset(false, 0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
-                swipeRefreshLayout.setRefreshing(true);
-                this.initData(this.page);
-            }
-        }else{
-            noSignText.setVisibility(TextView.VISIBLE);
-            noSignText.setText(getText(R.string.connect_network));
-            listView.setVisibility(ListView.GONE);
-            Toast.makeText(this,getText(R.string.connect_network),Toast.LENGTH_LONG).show();
+        initView();
+    }
 
-            networkRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        while(true){
-                            Thread.sleep(5 * 1000);
-                            if(NetworkUtil.isNetConnected()){
-                                Message msg = new Message();
-                                msg.what = NETWORK_CONNECTED;
-                                MainActivity.this.handler.sendMessage(msg);
-                                break;
-                            }
-                            Log.d(Keys.PACKAGE,"network not connected");
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-            ThreadPoolUtil.getInstance().execute(networkRunnable);
-        }
+    public void onResume(){
+        super.onResume();
     }
 
     private void initView() {
@@ -180,6 +160,47 @@ public class MainActivity extends BaseActivity implements LoadSwipeRefreshLayout
                 android.R.color.holo_red_light);
         swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         listView = (ListView) findViewById(R.id.list_view);
+
+        if (NetworkUtil.isNetConnected()) {
+            String token = SharedPreferencesUtil.getData(this, Keys.SINA_TOKEN);
+            Log.d(Keys.PACKAGE, token);
+            if (StringUtils.isBlank(token)) {
+                noSignText.setText("请先登录");
+                noSignText.setVisibility(TextView.VISIBLE);
+                listView.setVisibility(ListView.GONE);
+            } else {
+                noSignText.setVisibility(TextView.GONE);
+                listView.setVisibility(ListView.VISIBLE);
+                swipeRefreshLayout.setProgressViewOffset(false, 0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources().getDisplayMetrics()));
+                swipeRefreshLayout.setRefreshing(true);
+                this.initData(this.page);
+            }
+        }else{
+            noSignText.setVisibility(TextView.VISIBLE);
+            noSignText.setText(getText(R.string.connect_network));
+            listView.setVisibility(ListView.GONE);
+            Toast.makeText(this,getText(R.string.connect_network),Toast.LENGTH_LONG).show();
+
+            networkRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        while(true){
+                            Thread.sleep(5 * 1000);
+                            if(NetworkUtil.isNetConnected()){
+                                Message msg = new Message();
+                                msg.what = NETWORK_CONNECTED;
+                                MainActivity.this.handler.sendMessage(msg);
+                                break;
+                            }
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            ThreadPoolUtil.getInstance().execute(networkRunnable);
+        }
     }
 
     private void initData(int page) {
@@ -191,14 +212,26 @@ public class MainActivity extends BaseActivity implements LoadSwipeRefreshLayout
                 if (StringUtils.isNotBlank(result)) {
                     try {
                         JSONObject jsonObject = new JSONObject(result);
-                        JSONArray jsonArray = jsonObject.getJSONArray("statuses");
-                        Gson gson = new Gson();
-                        list = gson.fromJson(jsonArray.toString(), new TypeToken<List<Map>>() {
-                        }.getType());
-                        Message msg = new Message();
-                        msg.obj = list;
-                        msg.what = LIST_UPDATE;
-                        MainActivity.this.handler.sendMessage(msg);
+                        if(jsonObject.has("error_code")){
+                            Message msg = new Message();
+                            msg.obj = jsonObject.getString("error");
+                            if(jsonObject.getString("error_code").equals("1000")){
+                                msg.what = NETWORK_DISCONNECTED;
+                            }else{
+                                msg.what = EXPIRED_TOKEN;
+                            }
+
+                            MainActivity.this.handler.sendMessage(msg);
+                        }else{
+                            JSONArray jsonArray = jsonObject.getJSONArray("statuses");
+                            Gson gson = new Gson();
+                            list = gson.fromJson(jsonArray.toString(), new TypeToken<List<Map>>() {
+                            }.getType());
+                            Message msg = new Message();
+                            msg.obj = list;
+                            msg.what = LIST_UPDATE;
+                            MainActivity.this.handler.sendMessage(msg);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

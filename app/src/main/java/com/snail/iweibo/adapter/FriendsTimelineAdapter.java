@@ -1,7 +1,9 @@
 package com.snail.iweibo.adapter;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.snail.iweibo.R;
+import com.snail.iweibo.ui.activity.LargeImageActivity;
 import com.snail.iweibo.util.BitmapFileCache;
 import com.snail.iweibo.util.BitmapUtil;
 import com.snail.iweibo.util.CommonUtil;
@@ -167,7 +170,6 @@ public class FriendsTimelineAdapter extends BaseAdapter {
                     if(i == thumbnails.size() / 3){
                         cols = thumbnails.size() % 3;
                     }
-                    Log.d(Keys.PACKAGE,cols + "");
                     for(int j=0;j<cols;j++){
                         initGridImage(holder, thumbnails, i);
                     }
@@ -200,12 +202,13 @@ public class FriendsTimelineAdapter extends BaseAdapter {
 //                        dialog.cancel();
 //                    }
 //                });
-                Dialog largeImageDialog = new LargeImageDialog(context, thumbnails, index);
-                largeImageDialog.show();
-//                Intent intent = new Intent(context, LargeImageActivity.class);
-//                intent.putExtra("imageUrls", thumbnails);
-//                intent.putExtra("imageIndex",index);
-//                context.startActivity(intent);
+//                Dialog largeImageDialog = new LargeImageDialog(context, thumbnails, index);
+//                largeImageDialog.show();
+                Intent intent = new Intent(context, LargeImageActivity.class);
+                intent.putExtra("imageUrls", thumbnails.toArray(new String[0]));
+                intent.putExtra("imageIndex",index);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                context.startActivity(intent);
             }
         });
         BitmapUtil.initAsynBitmap(context, imageView, thumbnails.get(index).replace("thumbnail", "bmiddle"));
@@ -257,16 +260,15 @@ public class FriendsTimelineAdapter extends BaseAdapter {
             imageView = (ImageView)this.findViewById(R.id.large_image);
             loadingText = (TextView)this.findViewById(R.id.load_text);
             loadingText.setVisibility(TextView.VISIBLE);
-            Log.d(Keys.PACKAGE,loadingText.getText().toString());
 //            PicassoHelper.loadImage(this.getContext(), imageUrls[imageIndex], imageView);
             BitmapUtil.initAsynBitmap(context, imageView, imageUrls.get(imageIndex).replace("thumbnail","bmiddle"));
-            AsyncTask asyncTask = new DownloadFilesTask();
+            AsyncTask asyncTask = new LargeImageTask();
             asyncTask.execute(imageUrls.get(imageIndex).replace("thumbnail", "large"));
 
 //            PicassoHelper.loadImage(this.getContext(), imageUrls[imageIndex].replace("thumbnail", "large"), img);
         }
 
-        private class DownloadFilesTask extends AsyncTask<Object, Integer, Bitmap> {
+        private class LargeImageTask extends AsyncTask<Object, Integer, Bitmap> {
             protected Bitmap doInBackground(Object... urls) {
                 String url = (String)urls[0];
                 Log.d(Keys.PACKAGE,"doInBackground-->" + url);

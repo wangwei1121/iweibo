@@ -149,7 +149,6 @@ public class LoadSwipeRefreshLayout extends SwipeRefreshLayout implements AbsLis
         if (isFastDoubleClick(100))
             return;
         // 滚动时到了最底部也可以加载更多
-        isLoading = false;
         if (canLoad()) {
             loadData();
         }

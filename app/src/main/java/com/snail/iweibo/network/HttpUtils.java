@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 
 /**
@@ -94,11 +95,14 @@ public class HttpUtils {
                 inputStream = conn.getInputStream();
                 result = reader(inputStream);
             } else {
-                throw new RuntimeException("ResponseCode:" + conn.getResponseCode());
+                result = "{\"error\":\"expired_token\",\"error_code\":21327}";
+                new RuntimeException("ResponseCode:" + conn.getResponseCode());
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
+            result = "{\"error\":\"connection_time_out\",\"error_code\":1000}";
+            new RuntimeException(e.getMessage());
+        }  finally {
             try {
                 if (null != inputStream) {
                     inputStream.close();
@@ -110,7 +114,6 @@ public class HttpUtils {
                 conn.disconnect();
             }
         }
-
         return result;
 
     }
