@@ -49,4 +49,9 @@
         <item name="theme_item_tab">@color/color_primary_dark_inverse</item>
         <item name="theme_card_view">@color/color_primary_dark_inverse</item>
     </style>
+
+    <style name="TransparentTitle" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
 </resources>
