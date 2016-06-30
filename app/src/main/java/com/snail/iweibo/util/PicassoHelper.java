@@ -32,6 +32,7 @@ public class PicassoHelper {
      * @param context   context
      * @param url       url
      * @param imageView imageView
+	 * 
      */
     public static void loadImage(Context context, String url, ImageView imageView,int[] resize) {
         picasso(context).load(url).resize(resize[0], resize[1]).centerCrop().into(imageView);
