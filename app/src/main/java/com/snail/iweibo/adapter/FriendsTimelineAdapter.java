@@ -30,6 +30,7 @@ import com.snail.iweibo.util.CommonUtil;
 import com.snail.iweibo.util.DateUtil;
 import com.snail.iweibo.util.Keys;
 import com.snail.iweibo.util.MD5Util;
+import com.snail.iweibo.util.PicassoHelper;
 import com.snail.iweibo.util.StringUtils;
 
 import android.text.Spannable;
@@ -211,9 +212,8 @@ public class FriendsTimelineAdapter extends BaseAdapter {
                 context.startActivity(intent);
             }
         });
-        BitmapUtil.initAsynBitmap(context, imageView, thumbnails.get(index).replace("thumbnail", "bmiddle"));
-//        BitmapUtil.initAsynBitmap(context, imageView, thumbnails[index]);
-//        PicassoHelper.loadImage(context, thumbnails[index].replace("thumbnail","bmiddle"), imageView);
+//        BitmapUtil.initAsynBitmap(context, imageView, thumbnails.get(index).replace("thumbnail", "bmiddle"));
+        PicassoHelper.loadImage(context, thumbnails.get(index).replace("thumbnail","bmiddle"), imageView);
 
         holder.imageGridLayout.addView(imageView);
     }

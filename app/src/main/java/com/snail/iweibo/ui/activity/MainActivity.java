@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
+import android.util.Xml;
 import android.view.MenuItem;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.ImageView;
@@ -68,6 +69,7 @@ public class MainActivity extends BaseActivity implements LoadSwipeRefreshLayout
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Xml.newPullParser();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
